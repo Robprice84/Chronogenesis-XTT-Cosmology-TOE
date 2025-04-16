@@ -1,4 +1,4 @@
-# Chronogenesis: From Expanse-Time Theory (XTT) to a Unified Theory of Everything
+# CNG-Theory (Chronogenesis): Unified Theory of Time, Matter, and Quantum Reality: From Expanse-Time Theory (XTT)
 
 This repository contains the official release and full validation of **Chronogenesis (CNG)** — a comprehensive theoretical framework developed by **Robert Anthony Price**. Chronogenesis emerged from the earlier **Expanse-Time Theory (XTT)** and now stands as a falsifiable, predictive **Theory of Everything** based on the geometry of time itself.
 
