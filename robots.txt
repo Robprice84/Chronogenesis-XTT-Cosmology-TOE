@@ -1,0 +1,3 @@
+User-agent: *
+Allow: /
+Sitemap: https://robprice84.github.io/Chronogenesis-XTT-Cosmology-TOE/sitemap.xml
