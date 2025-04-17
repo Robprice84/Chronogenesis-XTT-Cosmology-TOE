@@ -1,3 +1,25 @@
+# robots.txt for Chronogenesis Theory
+
 User-agent: *
 Allow: /
+
+# Reduce crawl delay for efficiency (GitHub Pages is fast)
+Crawl-delay: 5
+
+# Clean crawl paths
+Disallow: /404.html
+Disallow: /LICENSE
+Disallow: /README.md
+
+# Sitemap declaration
 Sitemap: https://robprice84.github.io/Chronogenesis-XTT-Cosmology-TOE/sitemap.xml
+
+# Prefetching assets is OK
+Allow: /*.css$
+Allow: /*.js$
+Allow: /*.png$
+Allow: /*.ico$
+Allow: /*.webmanifest$
+
+# Friendly note
+# Site maintained by Robert Anthony Price — Open science FTW 🚀
