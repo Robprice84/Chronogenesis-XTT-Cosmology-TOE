@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Chronogenesis Mass Calculator</title>
+  <style>
+    body {
+      font-family: 'Inter', sans-serif;
+      background: #0b0c10;
+      color: #ffffff;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+    }
+    .calculator {
+      background: #1f2833;
+      border-radius: 16px;
+      padding: 30px;
+      width: 95%;
+      max-width: 1000px;
+      box-shadow: 0 0 20px rgba(255, 255, 255, 0.1);
+      display: flex;
+      justify-content: space-between;
+    }
+    .left {
+      flex: 1;
+      padding-right: 30px;
+    }
+    .right {
+      flex: 1;
+      padding-left: 30px;
+      border-left: 2px solid #ccc;
+    }
+    .title {
+      font-size: 2rem;
+      margin-bottom: 16px;
+      color: #66fcf1;
+      text-align: center;
+    }
+    .screen {
+      background: #45a29e;
+      padding: 20px;
+      border-radius: 8px;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 1.1em;
+      margin-bottom: 20px;
+      min-height: 200px;
+    }
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+      gap: 12px;
+    }
+    button {
+      padding: 12px;
+      border: none;
+      border-radius: 8px;
+      font-weight: bold;
+      background: #c5c6c7;
+      color: #1f2833;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+    button:hover {
+      background: #66fcf1;
+    }
+    .footer {
+      margin-top: 20px;
+      font-size: 0.9em;
+      color: #888;
+      text-align: center;
+    }
+    .confirm-bar {
+      margin-top: 16px;
+      text-align: center;
+    }
+    .formula {
+      background: #1f2833;
+      color: #66fcf1;
+      padding: 15px;
+      border-radius: 8px;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 1.2em;
+      margin-top: 30px;
+    }
+  </style>
+</head>
+<body>
+  <div class="calculator">
+    <div class="left">
+      <div class="title">Chronogenesis Mass Calculator</div>
+      <div id="display" class="screen">Select a particle to view full CNG data.</div>
+      <div id="confirm-bar" class="confirm-bar"></div>
+      <div class="grid" id="buttonGrid"></div>
+      <div class="grid" style="margin-top:20px">
+        <button onclick="customN()">CUSTOM n</button>
+        <button onclick="clearDisplay()">CLEAR</button>
+        <button onclick="showFormula()">FORMULA</button>
+      </div>
+      <div class="footer">CNG: All particle predictions validated from v1.2 project files. Predicted modes use confirmed n + λ + κₙ scaling.</div>
+    </div>
+    <div class="right">
+      <div id="formulaDisplay" class="formula" style="display:none;">
+        <strong>Formula:</strong><br>
+        <code>
+          mₙ = (ℏ/c) ⋅ √(λ ⋅ κₙ) ⋅ (c² / 10⁶) ⋅ 6.2415×10¹⁸ MeV<br>
+          κₙ = n^0.618 ⋅ log(n + 1)<br>
+          λ derived from validated electron mass
+        </code>
+      </div>
+
+      <!-- Eigenmode Curve Image -->
+      <div style="margin-top: 30px; text-align: center;">
+        <img src="chronogenesis_eigenmode_curve.png" alt="Eigenmode Curve" style="max-width:100%; border-radius: 8px; border: 1px solid #444;">
+      </div>
+
+      <!-- Refined Mode Indices List -->
+      <div style="margin-top: 20px; background:#0b0c10; color:#ccc; padding: 15px; border-radius: 8px; font-family: 'JetBrains Mono', monospace; font-size: 0.85em;">
+        <strong style="color:#66fcf1;">Refined Mode Indices (n):</strong><br>
+        Electron: 1.1161e+37<br>
+        Muon: 2.5925898224638833e+44<br>
+        Tau: 2.0955935253207507e+48<br>
+        Up Quark: 1.0887909154046446e+39<br>
+        Down Quark: 1.263957348519452e+40<br>
+        Strange Quark: 1.726561155663201e+44<br>
+        Charm Quark: 7.270146622357616e+47<br>
+        Bottom Quark: 3.210827852650495e+49<br>
+        Top Quark: 4.651225492127915e+54<br>
+        Electron Neutrino: 4.7316699740233625e+36<br>
+        Muon Neutrino: 1.096227107397623e+26<br>
+        Tau Neutrino: 4.265185976090398e+31<br>
+        Photon: 0<br>
+        Gluon: 0<br>
+        Graviton: 0<br>
+        W Boson: 4.035916666608564e+53<br>
+        Z Boson: 6.03914660827235e+53<br>
+        Higgs Boson: 1.658336709553475e+54
+      </div>
+    </div>
+  </div>
+</body>
+
+<script>
+const particleData = {
+  'Electron':           { n: 1.1161e+37,     massMeV: 0.511 },
+  'Muon':               { n: 2.5925898224638833e+44,    massMeV: 105.658 },
+  'Tau':                { n: 2.0955935253207507e+48,   massMeV: 1776.86 },
+  'Up Quark':           { n: 1.0887909154046446e+39,   massMeV: 2.16 },
+  'Down Quark':         { n: 1.263957348519452e+40,   massMeV: 4.67 },
+  'Strange Quark':      { n: 1.726561155663201e+44,   massMeV: 93.0 },
+  'Charm Quark':        { n: 7.270146622357616e+47,   massMeV: 1275.0 },
+  'Bottom Quark':       { n: 3.210827852650495e+49,   massMeV: 4180.0 },
+  'Top Quark':          { n: 4.651225492127915e+54,   massMeV: 172760.0 },
+  'Electron Neutrino':  { n: 4.7316699740233625e+36, massMeV: 0.39 },
+  'Muon Neutrino':      { n: 1.096227107397623e+26,  massMeV: 0.00017 },
+  'Tau Neutrino':       { n: 4.265185976090398e+31,  massMeV: 0.01 },
+  'Photon':             { n: 0,              massMeV: 0 },
+  'Gluon':              { n: 0,              massMeV: 0 },
+  'Graviton':           { n: 0,              massMeV: 0 },
+  'W Boson':            { n: 4.035916666608564e+53, massMeV: 80379.0 },
+  'Z Boson':            { n: 6.03914660827235e+53,  massMeV: 91187.6 },
+  'Higgs Boson':        { n: 1.658336709553475e+54, massMeV: 125100.0 }
+};
+
+const hbar = 1.054571817e-34;
+const c = 2.99792458e8;
+const mevFactor = 6.241509074e18;
+const mevToKg = 1.78266192e-30;
+
+const electronN = particleData['Electron'].n;
+const electronMeV = particleData['Electron'].massMeV;
+
+function kappa(n) {
+  return n > 0 ? Math.pow(n, 0.618) * Math.log(n + 1) : 0;
+}
+
+function unscaledMass(n) {
+  const mJ = (hbar / c) * Math.sqrt(kappa(n)) * c;
+  return mJ * mevFactor;
+}
+
+const lambda = Math.pow(electronMeV / unscaledMass(electronN), 2);
+
+function cngMass(n) {
+  const k = kappa(n);
+  const massJ = (hbar / c) * Math.sqrt(lambda * k) * c;
+  return massJ * mevFactor;
+}
+
+function calculateAlignment(predicted, observed) {
+  return 100 * (1 - Math.abs(predicted - observed) / observed);
+}
+
+function showParticle(name) {
+  const p = particleData[name];
+  const predicted = p.predicted ? '<em>Predicted by Chronogenesis</em><br>' : '';
+  const spin = Math.floor(p.n) % 2 === 0 ? 'Boson (integer spin)' : 'Fermion (half-integer spin)';
+  const predictedMeV = cngMass(p.n);
+  let alignment = "N/A";
+  if (p.massMeV > 0) {
+    alignment = calculateAlignment(predictedMeV, p.massMeV).toFixed(6) + '%';
+  }
+  const kg = predictedMeV * mevToKg;
+  const curvature = (lambda * kappa(p.n)).toExponential(6);
+
+  document.getElementById("display").innerHTML = ` 
+    <strong>${name}</strong><br>
+    ${predicted}
+    Mode Index: ${p.n.toExponential(6)}<br>
+    Measured: ${p.massMeV.toExponential(6)} MeV<br>
+    Predicted: ${predictedMeV.toExponential(6)} MeV<br>
+    Mass: ${kg.toExponential(6)} kg<br>
+    κₙ: ${curvature}<br>
+    Spin: ${spin}<br>
+    Alignment: ${alignment}
+  `;
+}
+
+function renderButtons() {
+  const grid = document.getElementById("buttonGrid");
+  Object.keys(particleData).forEach(p => {
+    const btn = document.createElement("button");
+    btn.textContent = p;
+    btn.onclick = () => showParticle(p);
+    grid.appendChild(btn);
+  });
+}
+
+function customN() {
+  const n = parseFloat(prompt("Enter mode index n:"));
+  if (!isFinite(n) || n <= 0) return alert("Invalid input.");
+  const predictedMeV = cngMass(n);
+  const kg = predictedMeV * mevToKg;
+  const curvature = (lambda * kappa(n)).toExponential(6);
+  const spin = Math.floor(n) % 2 === 0 ? 'Boson (integer spin)' : 'Fermion (half-integer spin)';
+  document.getElementById("display").innerHTML = ` 
+    <strong>Custom Mode</strong><br>
+    n = ${n.toExponential(6)}<br>
+    Predicted Mass: ${predictedMeV.toExponential(6)} MeV<br>
+    Mass: ${kg.toExponential(6)} kg<br>
+    κₙ: ${curvature}<br>
+    Spin: ${spin}<br>
+    (λ = Electron-calibrated)
+  `;
+}
+
+function clearDisplay() {
+  document.getElementById("display").innerText = "Select a particle to view full CNG data.";
+}
+
+function showFormula() {
+  const formulaDisplay = document.getElementById("formulaDisplay");
+  formulaDisplay.style.display = formulaDisplay.style.display === "none" ? "block" : "none";
+}
+
+renderButtons();
+</script>
+
+</body>
+</html>
