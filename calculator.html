@@ -145,119 +145,129 @@
 </body>
 
 <script>
-const particleData = {
-  'Electron':           { n: 1.1161e+37,     massMeV: 0.511 },
-  'Muon':               { n: 2.5925898224638833e+44,    massMeV: 105.658 },
-  'Tau':                { n: 2.0955935253207507e+48,   massMeV: 1776.86 },
-  'Up Quark':           { n: 1.0887909154046446e+39,   massMeV: 2.16 },
-  'Down Quark':         { n: 1.263957348519452e+40,   massMeV: 4.67 },
-  'Strange Quark':      { n: 1.726561155663201e+44,   massMeV: 93.0 },
-  'Charm Quark':        { n: 7.270146622357616e+47,   massMeV: 1275.0 },
-  'Bottom Quark':       { n: 3.210827852650495e+49,   massMeV: 4180.0 },
-  'Top Quark':          { n: 4.651225492127915e+54,   massMeV: 172760.0 },
-  'Electron Neutrino':  { n: 4.7316699740233625e+36, massMeV: 0.39 },
-  'Muon Neutrino':      { n: 1.096227107397623e+26,  massMeV: 0.00017 },
-  'Tau Neutrino':       { n: 4.265185976090398e+31,  massMeV: 0.01 },
-  'Photon':             { n: 0,              massMeV: 0 },
-  'Gluon':              { n: 0,              massMeV: 0 },
-  'Graviton':           { n: 0,              massMeV: 0 },
-  'W Boson':            { n: 4.035916666608564e+53, massMeV: 80379.0 },
-  'Z Boson':            { n: 6.03914660827235e+53,  massMeV: 91187.6 },
-  'Higgs Boson':        { n: 1.658336709553475e+54, massMeV: 125100.0 }
-};
+	const particleData = {
+	  'Electron':           { n: 1.1161e+37, massMeV: 0.511, spin: 0.5, charge: "-1" },
+	  'Muon':               { n: 2.5925898224638833e+44, massMeV: 105.658, spin: 0.5, charge: "-1" },
+	  'Tau':                { n: 2.0955935253207507e+48, massMeV: 1776.86, spin: 0.5, charge: "-1" },
+	  'Up Quark':           { n: 1.0887909154046446e+39, massMeV: 2.16, spin: 0.5, charge: "+2/3" },
+	  'Down Quark':         { n: 1.263957348519452e+40, massMeV: 4.67, spin: 0.5, charge: "-1/3" },
+	  'Strange Quark':      { n: 1.726561155663201e+44, massMeV: 93.0, spin: 0.5, charge: "-1/3" },
+	  'Charm Quark':        { n: 7.270146622357616e+47, massMeV: 1275.0, spin: 0.5, charge: "+2/3" },
+	  'Bottom Quark':       { n: 3.210827852650495e+49, massMeV: 4180.0, spin: 0.5, charge: "-1/3" },
+	  'Top Quark':          { n: 4.651225492127915e+54, massMeV: 172760.0, spin: 0.5, charge: "+2/3" },
+	  'Electron Neutrino':  { n: 4.7316699740233625e+36, massMeV: 0.39, spin: 0.5, charge: "0" },
+	  'Muon Neutrino':      { n: 1.096227107397623e+26, massMeV: 0.00017, spin: 0.5, charge: "0" },
+	  'Tau Neutrino':       { n: 4.265185976090398e+31, massMeV: 0.01, spin: 0.5, charge: "0" },
+	  'Photon':             { n: 0, massMeV: 0, spin: 1, charge: "0" },
+	  'Gluon':              { n: 0, massMeV: 0, spin: 1, charge: "0" },
+	  'Graviton':           { n: 0, massMeV: 0, spin: 2, charge: "0" },
+	  'W Boson':            { n: 4.035916666608564e+53, massMeV: 80379.0, spin: 1, charge: "±1" },
+	  'Z Boson':            { n: 6.03914660827235e+53, massMeV: 91187.6, spin: 1, charge: "0" },
+	  'Higgs Boson':        { n: 1.658336709553475e+54, massMeV: 125100.0, spin: 0, charge: "0" }
+	};
 
-const hbar = 1.054571817e-34;
-const c = 2.99792458e8;
-const mevFactor = 6.241509074e18;
-const mevToKg = 1.78266192e-30;
+	const hbar = 1.054571817e-34;
+	const c = 2.99792458e8;
+	const mevFactor = 6.241509074e18;
+	const mevToKg = 1.78266192e-30;
 
-const electronN = particleData['Electron'].n;
-const electronMeV = particleData['Electron'].massMeV;
+	const electronN = particleData['Electron'].n;
+	const electronMeV = particleData['Electron'].massMeV;
 
-function kappa(n) {
-  return n > 0 ? Math.pow(n, 0.618) * Math.log(n + 1) : 0;
-}
+	function kappa(n) {
+	  return n > 0 ? Math.pow(n, 0.618) * Math.log(n + 1) : 0;
+	}
 
-function unscaledMass(n) {
-  const mJ = (hbar / c) * Math.sqrt(kappa(n)) * c;
-  return mJ * mevFactor;
-}
+	function unscaledMass(n) {
+	  const mJ = (hbar / c) * Math.sqrt(kappa(n)) * c;
+	  return mJ * mevFactor;
+	}
 
-const lambda = Math.pow(electronMeV / unscaledMass(electronN), 2);
+	const lambda = Math.pow(electronMeV / unscaledMass(electronN), 2);
 
-function cngMass(n) {
-  const k = kappa(n);
-  const massJ = (hbar / c) * Math.sqrt(lambda * k) * c;
-  return massJ * mevFactor;
-}
+	function cngMass(n) {
+	  const k = kappa(n);
+	  const massJ = (hbar / c) * Math.sqrt(lambda * k) * c;
+	  return massJ * mevFactor;
+	}
 
-function calculateAlignment(predicted, observed) {
-  return 100 * (1 - Math.abs(predicted - observed) / observed);
-}
+	function calculateAlignment(predicted, observed) {
+	  return 100 * (1 - Math.abs(predicted - observed) / observed);
+	}
 
-function showParticle(name) {
-  const p = particleData[name];
-  const predicted = p.predicted ? '<em>Predicted by Chronogenesis</em><br>' : '';
-  const spin = Math.floor(p.n) % 2 === 0 ? 'Boson (integer spin)' : 'Fermion (half-integer spin)';
-  const predictedMeV = cngMass(p.n);
-  let alignment = "N/A";
-  if (p.massMeV > 0) {
-    alignment = calculateAlignment(predictedMeV, p.massMeV).toFixed(6) + '%';
-  }
-  const kg = predictedMeV * mevToKg;
-  const curvature = (lambda * kappa(p.n)).toExponential(6);
+	function showParticle(name) {
+	  const p = particleData[name];
+	  const predictedMeV = cngMass(p.n);
+	  const kg = predictedMeV * mevToKg;
+	  const curvature = (lambda * kappa(p.n)).toExponential(6);
+	  const alignment = p.massMeV > 0 ? calculateAlignment(predictedMeV, p.massMeV).toFixed(6) + '%' : 'N/A';
 
-  document.getElementById("display").innerHTML = ` 
-    <strong>${name}</strong><br>
-    ${predicted}
-    Mode Index: ${p.n.toExponential(6)}<br>
-    Measured: ${p.massMeV.toExponential(6)} MeV<br>
-    Predicted: ${predictedMeV.toExponential(6)} MeV<br>
-    Mass: ${kg.toExponential(6)} kg<br>
-    κₙ: ${curvature}<br>
-    Spin: ${spin}<br>
-    Alignment: ${alignment}
-  `;
-}
+	  const spinLabel = (p.spin === 0.5) ? 'Fermion (spin ½)'
+					  : (p.spin === 1)   ? 'Boson (spin 1)'
+					  : (p.spin === 0)   ? 'Boson (spin 0)'
+					  : `Spin: ${p.spin}`;
 
-function renderButtons() {
-  const grid = document.getElementById("buttonGrid");
-  Object.keys(particleData).forEach(p => {
-    const btn = document.createElement("button");
-    btn.textContent = p;
-    btn.onclick = () => showParticle(p);
-    grid.appendChild(btn);
-  });
-}
+	  const chargeLabel = `Charge: ${p.charge}`;
 
-function customN() {
-  const n = parseFloat(prompt("Enter mode index n:"));
-  if (!isFinite(n) || n <= 0) return alert("Invalid input.");
-  const predictedMeV = cngMass(n);
-  const kg = predictedMeV * mevToKg;
-  const curvature = (lambda * kappa(n)).toExponential(6);
-  const spin = Math.floor(n) % 2 === 0 ? 'Boson (integer spin)' : 'Fermion (half-integer spin)';
-  document.getElementById("display").innerHTML = ` 
-    <strong>Custom Mode</strong><br>
-    n = ${n.toExponential(6)}<br>
-    Predicted Mass: ${predictedMeV.toExponential(6)} MeV<br>
-    Mass: ${kg.toExponential(6)} kg<br>
-    κₙ: ${curvature}<br>
-    Spin: ${spin}<br>
-    (λ = Electron-calibrated)
-  `;
-}
+	  document.getElementById("display").innerHTML = `
+		<strong>${name}</strong><br>
+		Mode Index: ${p.n.toExponential(6)}<br>
+		Measured: ${p.massMeV.toExponential(6)} MeV<br>
+		Predicted: ${predictedMeV.toExponential(6)} MeV<br>
+		Mass: ${kg.toExponential(6)} kg<br>
+		κₙ: ${curvature}<br>
+		${spinLabel}<br>
+		${chargeLabel}<br>
+		Alignment: ${alignment}
+	  `;
+	}
 
-function clearDisplay() {
-  document.getElementById("display").innerText = "Select a particle to view full CNG data.";
-}
+	function renderButtons() {
+	  const grid = document.getElementById("buttonGrid");
+	  if (!grid) return;
+	  grid.innerHTML = '';
+	  Object.keys(particleData).forEach(p => {
+		const btn = document.createElement("button");
+		btn.textContent = p;
+		btn.onclick = () => showParticle(p);
+		grid.appendChild(btn);
+	  });
+	}
 
-function showFormula() {
-  const formulaDisplay = document.getElementById("formulaDisplay");
-  formulaDisplay.style.display = formulaDisplay.style.display === "none" ? "block" : "none";
-}
+	function customN() {
+	  const n = parseFloat(prompt("Enter mode index n:"));
+	  if (!isFinite(n) || n <= 0) return alert("Invalid input.");
 
-renderButtons();
+	  const predictedMeV = cngMass(n);
+	  const kg = predictedMeV * mevToKg;
+	  const curvature = (lambda * kappa(n)).toExponential(6);
+	  const spin = Math.floor(n) % 2 === 0 ? 'Boson (even mode)' : 'Fermion (odd mode)';
+
+	  document.getElementById("display").innerHTML = `
+		<strong>Custom Mode</strong><br>
+		n = ${n.toExponential(6)}<br>
+		Predicted Mass: ${predictedMeV.toExponential(6)} MeV<br>
+		Mass: ${kg.toExponential(6)} kg<br>
+		κₙ: ${curvature}<br>
+		Spin (heuristic): ${spin}<br>
+		(λ = Electron-calibrated)
+	  `;
+	}
+
+	function clearDisplay() {
+	  document.getElementById("display").innerText = "Select a particle to view full CNG data.";
+	}
+
+	function showFormula() {
+	  const formulaDisplay = document.getElementById("formulaDisplay");
+	  if (formulaDisplay) {
+		formulaDisplay.style.display =
+		  formulaDisplay.style.display === "none" ? "block" : "none";
+	  }
+	}
+
+	// Initialize buttons
+	renderButtons();
 </script>
 
 </body>
