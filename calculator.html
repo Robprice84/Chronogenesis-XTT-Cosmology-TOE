@@ -201,26 +201,27 @@
 	  const kg = predictedMeV * mevToKg;
 	  const curvature = (lambda * kappa(p.n)).toExponential(6);
 	  const alignment = p.massMeV > 0 ? calculateAlignment(predictedMeV, p.massMeV).toFixed(6) + '%' : 'N/A';
-
+	
 	  const spinLabel = (p.spin === 0.5) ? 'Fermion (spin ½)'
-					  : (p.spin === 1)   ? 'Boson (spin 1)'
-					  : (p.spin === 0)   ? 'Boson (spin 0)'
-					  : `Spin: ${p.spin}`;
-
+	                   : (p.spin === 1)   ? 'Boson (spin 1)'
+	                   : (p.spin === 0)   ? 'Boson (spin 0)'
+	                   : `Spin: ${p.spin}`;
+	
 	  const chargeLabel = `Charge: ${p.charge}`;
-
+	
 	  document.getElementById("display").innerHTML = `
-		<strong>${name}</strong><br>
-		Mode Index: ${p.n.toExponential(6)}<br>
-		Measured: ${p.massMeV.toExponential(6)} MeV<br>
-		Predicted: ${predictedMeV.toExponential(6)} MeV<br>
-		Mass: ${kg.toExponential(6)} kg<br>
-		κₙ: ${curvature}<br>
-		${spinLabel}<br>
-		${chargeLabel}<br>
-		Alignment: ${alignment}
+	    <strong>${name}</strong><br>
+	    Mode Index: ${p.n.toExponential(6)}<br>
+	    Measured: ${p.massMeV.toExponential(6)} MeV<br>
+	    Predicted: ${predictedMeV.toExponential(6)} MeV<br>
+	    Mass: ${kg.toExponential(6)} kg<br>
+	    κ<sub>n</sub>: ${curvature}<br>
+	    ${spinLabel}<br>
+	    ${chargeLabel}<br>
+	    Alignment: ${alignment}
 	  `;
 	}
+
 
 	function renderButtons() {
 	  const grid = document.getElementById("buttonGrid");
