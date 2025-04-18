@@ -6,20 +6,24 @@ Allow: /
 # Reduce crawl delay for efficiency (GitHub Pages is fast)
 Crawl-delay: 5
 
-# Clean crawl paths
+# Clean crawl paths (Avoid crawling unnecessary files)
 Disallow: /404.html
 Disallow: /LICENSE
 Disallow: /README.md
 
-# Sitemap declaration
+# Sitemap declaration (Ensure Google and other search engines find your sitemap)
 Sitemap: https://robprice84.github.io/Chronogenesis-XTT-Cosmology-TOE/sitemap.xml
 
-# Prefetching assets is OK
+# Allowing specific assets to be crawled for optimal performance and usability
 Allow: /*.css$
 Allow: /*.js$
 Allow: /*.png$
 Allow: /*.ico$
 Allow: /*.webmanifest$
 
-# Friendly note
+# Block certain paths if needed (e.g., admin, private sections)
+# Disallow: /admin/
+# Disallow: /private/
+
+# Friendly note (This is for indexing bots, and a quick note to crawlers)
 # Site maintained by Robert Anthony Price — Open science FTW 🚀
