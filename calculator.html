@@ -192,7 +192,7 @@ function curvatureKappa(n) {
     return N.pow(0.618).times(N.plus(1).ln());
 }
 
-const kappaElectron = new Decimal("6.7061e24");
+const kappaElectron = new Decimal("6.7060821879436456799748104656833798181752300741342e+24");
 const alphaMeV = new Decimal(particleData['Electron'].massMeV).div(kappaElectron.sqrt());
 
 function massMeV(n) {
