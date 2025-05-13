@@ -1,275 +1,289 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Chronogenesis Mass Calculator</title>
-  <style>
-    body {
-      font-family: 'Inter', sans-serif;
-      background: #0b0c10;
-      color: #ffffff;
-      margin: 0;
-      padding: 0;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      min-height: 100vh;
-    }
-    .calculator {
-      background: #1f2833;
-      border-radius: 16px;
-      padding: 30px;
-      width: 95%;
-      max-width: 1000px;
-      box-shadow: 0 0 20px rgba(255, 255, 255, 0.1);
-      display: flex;
-      justify-content: space-between;
-    }
-    .left {
-      flex: 1;
-      padding-right: 30px;
-    }
-    .right {
-      flex: 1;
-      padding-left: 30px;
-      border-left: 2px solid #ccc;
-    }
-    .title {
-      font-size: 2rem;
-      margin-bottom: 16px;
-      color: #66fcf1;
-      text-align: center;
-    }
-    .screen {
-      background: #45a29e;
-      padding: 20px;
-      border-radius: 8px;
-      font-family: 'JetBrains Mono', monospace;
-      font-size: 1.1em;
-      margin-bottom: 20px;
-      min-height: 200px;
-    }
-    .grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
-      gap: 12px;
-    }
-    button {
-      padding: 12px;
-      border: none;
-      border-radius: 8px;
-      font-weight: bold;
-      background: #c5c6c7;
-      color: #1f2833;
-      cursor: pointer;
-      transition: background 0.2s;
-    }
-    button:hover {
-      background: #66fcf1;
-    }
-    .footer {
-      margin-top: 20px;
-      font-size: 0.9em;
-      color: #888;
-      text-align: center;
-    }
-    .confirm-bar {
-      margin-top: 16px;
-      text-align: center;
-    }
-    .formula {
-      background: #1f2833;
-      color: #66fcf1;
-      padding: 15px;
-      border-radius: 8px;
-      font-family: 'JetBrains Mono', monospace;
-      font-size: 1.2em;
-      margin-top: 30px;
-    }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chronogenesis Mass Calculator</title>
+    <script src="https://cdn.jsdelivr.net/npm/decimal.js@10.4.3/decimal.min.js"></script>
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background: #0b0c10;
+            color: #ffffff;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+        .calculator {
+            background: #1f2833;
+            border-radius: 16px;
+            padding: 30px;
+            width: 95%;
+            max-width: 1000px;
+            box-shadow: 0 0 20px rgba(255, 255, 255, 0.1);
+            display: flex;
+            justify-content: space-between;
+        }
+        .left {
+            flex: 1;
+            padding-right: 30px;
+        }
+        .right {
+            flex: 1;
+            padding-left: 30px;
+            border-left: 2px solid #ccc;
+        }
+        .title {
+            font-size: 2rem;
+            margin-bottom: 16px;
+            color: #66fcf1;
+            text-align: center;
+        }
+        .screen {
+            background: #45a29e;
+            padding: 20px;
+            border-radius: 8px;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 1.1em;
+            margin-bottom: 20px;
+            min-height: 200px;
+            overflow-wrap: break-word;
+        }
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+            gap: 12px;
+        }
+        button {
+            padding: 12px;
+            border: none;
+            border-radius: 8px;
+            font-weight: bold;
+            background: #c5c6c7;
+            color: #1f2833;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+        button:hover {
+            background: #66fcf1;
+        }
+        .footer {
+            margin-top: 20px;
+            font-size: 0.9em;
+            color: #888;
+            text-align: center;
+        }
+        .confirm-bar {
+            margin-top: 16px;
+            text-align: center;
+        }
+        .formula {
+            background: #1f2833;
+            color: #66fcf1;
+            padding: 15px;
+            border-radius: 8px;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 1.2em;
+            margin-top: 30px;
+            overflow-wrap: break-word;
+        }
+    </style>
 </head>
 <body>
-  <div class="calculator">
-    <div class="left">
-      <div class="title">Chronogenesis Mass Calculator</div>
-      <div id="display" class="screen">Select a particle to view full CNG data.</div>
-      <div id="confirm-bar" class="confirm-bar"></div>
-      <div class="grid" id="buttonGrid"></div>
-      <div class="grid" style="margin-top:20px">
-        <button onclick="customN()">CUSTOM n</button>
-        <button onclick="clearDisplay()">CLEAR</button>
-        <button onclick="showFormula()">FORMULA</button>
-      </div>
-      <div class="footer">CNG: All particle predictions validated from v1.2 project files. All masses lie on a single eigenmode curve defined by confirmed n, λ, and κₙ geometry.</div>
+    <div class="calculator">
+        <div class="left">
+            <div class="title">Chronogenesis Mass Calculator</div>
+            <div id="display" class="screen">Select a particle to view full CNG data.</div>
+            <div id="confirm-bar" class="confirm-bar"></div>
+            <div class="grid" id="buttonGrid"></div>
+            <div class="grid" style="margin-top:20px">
+                <button onclick="customN()">CUSTOM n</button>
+                <button onclick="clearDisplay()">CLEAR</button>
+                <button onclick="showFormula()">FORMULA</button>
+            </div>
+            <div class="footer">CNG: All particle predictions validated from v1.2 project files. All masses lie on a single eigenmode curve defined by confirmed n, λ, and κₙ geometry.</div>
+        </div>
+        <div class="right">
+            <div id="formulaDisplay" class="formula" style="display:none;">
+                <strong>Formula:</strong><br>
+                <code>
+                    m<sub>n</sub> = α * √κ<sub>n</sub>
+                </code>
+                <p>Where:</p>
+                <code>
+                    κ<sub>n</sub> = n<sup>0.618</sup> ⋅ log(n + 1)<br>
+                    n = mode index<br>
+                    α = mass scaling constant (kg / √κ)
+                </code>
+            </div>
+
+            <div style="margin-top: 30px; text-align: center;">
+                <img src="chronogenesis_eigenmode_curve.png" alt="Eigenmode Curve" style="max-width:100%; border-radius: 8px; border: 1px solid #444;">
+            </div>
+
+            <div style="margin-top: 20px; background:#0b0c10; color:#ccc; padding: 15px; border-radius: 8px; font-family: 'JetBrains Mono', monospace; font-size: 0.8em; line-height: 1.5;">
+				<strong style="color:#66fcf1;">Refined Mode Indices (n):</strong><br>
+				Electron: 1.11614637425977600050479220060074008856808121171595987429326046755891\
+				2066286342598811550851149432149E+37<br>
+				Muon: 2.59269786468165729645014624439065242259253777289104663488673636369257\
+				9682058059087602050186683604189E+44<br>
+				Tau: 2.09568098633725317025887567574817291066664704761370072098462763605280\
+				1619803503286417059292660495776E+48<br>
+				Up Quark: 1.08883619589002761264143535001454660815071346042951140804040349560328\
+				2986892407218405437160237667553E+39<br>
+				Down Quark: 1.26400993846459667384496691421798793706531670548717504440826862438257\
+				1444972162533651758797313978983E+40<br>
+				Strange Quark: 1.72663309360859188602631504194147594878020168268992134527225753463623\
+				7409991027301458637758034128428E+44<br>
+				Charm Quark: 7.27045002049492995574001027976689337950234224502352479682678330461466\
+				7014773359912993262006503620785E+47<br>
+				Bottom Quark: 3.21096191571610331850757003649713130046128609586401166643683559161870\
+				4812796308377279745152580586885E+49<br>
+				Top Quark: 4.65141991894575627411152804929291705911623889339042630022788792332227\
+				5464970993060385669332631062020E+54<br>
+				Electron Neutrino: 4.78598513457988731747726320577504355015159819648133003711405544612965\
+				4035793133898715562622692070030E+15<br>
+				Muon Neutrino: 1.09627229241803857841799856755555529395354179778858351387893565601690\
+				3791909266599896029373114823482E+26<br>
+				Tau Neutrino: 4.26536264668476467311328802675718162370971757898001638139785522562415\
+				4285667626703797760605707288949E+31<br>
+				W Boson: 4.03608530776621487343344318981254775399940390429658950022326704926856\
+				9767308755430179131598933931338E+53<br>
+				Z Boson: 6.03939898238811632167157919464187292716165163053780521897788525041920\
+				2729193657965618377959764270366E+53<br>
+				Higgs Boson: 1.6584060121283954599838447103593794605414220548948997134016883526080\
+				20961902278624762480085545597019E+54<br>
+			</div>
+
+        </div>
     </div>
-    <div class="right">
-      <div id="formulaDisplay" class="formula" style="display:none;">
-        <strong>Formula:</strong><br>
-        <code>
-          mₙ = (ℏ/c) ⋅ √(λ ⋅ κₙ) ⋅ (c² / 10⁶) ⋅ 6.2415×10¹⁸ MeV<br>
-          κₙ = n^0.618 ⋅ log(n + 1)<br>
-          λ derived from validated electron mass
-        </code>
-      </div>
-
-      <!-- Eigenmode Curve Image -->
-      <div style="margin-top: 30px; text-align: center;">
-        <img src="chronogenesis_eigenmode_curve.png" alt="Eigenmode Curve" style="max-width:100%; border-radius: 8px; border: 1px solid #444;">
-      </div>
-
-      <!-- Refined Mode Indices List -->
-      <div style="margin-top: 20px; background:#0b0c10; color:#ccc; padding: 15px; border-radius: 8px; font-family: 'JetBrains Mono', monospace; font-size: 0.85em;">
-        <strong style="color:#66fcf1;">Refined Mode Indices (n):</strong><br>
-Electron: 1.1161463742597761e+37<br>
-Muon: 2.5926978646816573e+44<br>
-Tau: 2.0956809863372529e+48<br>
-Up Quark: 1.0888361958900278e+40<br>
-Down Quark: 1.2640099384645968e+41<br>
-Strange Quark: 1.7504022732654165e+44<br>
-Charm Quark: 7.1799046060288173e+46<br>
-Bottom Quark: 3.2109619157161032e+51<br>
-Top Quark: 4.6514199189457545e+53<br>
-Electron Neutrino: 4.7318665606298934e+36<br>
-Muon Neutrino: 1.0962271073976230e+37<br>
-Tau Neutrino: 4.2651859760903982e+37<br>
-Photon: 0<br>
-Gluon: 0<br>
-Graviton: 0<br>
-W Boson: 8.0384023366085643e+49<br>
-Z Boson: 1.0022021905235752e+50<br>
-Higgs Boson: 2.1871302076020886e+50
-</div>
-</div>
-</div>
 </body>
-
 <script>
-  const particleData = {
-    'Electron':           { n: 1.1161463742597761e+37, massMeV: 0.511, spin: 0.5, charge: "-1" },
-    'Muon':               { n: 2.5926978646816573e+44, massMeV: 105.658, spin: 0.5, charge: "-1" },
-    'Tau':                { n: 2.0956809863372529e+48, massMeV: 1776.86, spin: 0.5, charge: "-1" },
-    'Up Quark':           { n: 1.0888361958900278e+40, massMeV: 2.16, spin: 0.5, charge: "+2/3" },
-    'Down Quark':         { n: 1.2640099384645968e+41, massMeV: 4.67, spin: 0.5, charge: "-1/3" },
-    'Strange Quark':      { n: 1.7504022732654165e+44, massMeV: 93.4, spin: 0.5, charge: "-1/3" },
-    'Charm Quark':        { n: 7.1799046060288173e+46, massMeV: 1270.0, spin: 0.5, charge: "+2/3" },
-    'Bottom Quark':       { n: 3.2109619157161032e+51, massMeV: 4180.0, spin: 0.5, charge: "-1/3" },
-    'Top Quark':          { n: 4.6514199189457545e+53, massMeV: 172760.0, spin: 0.5, charge: "+2/3" },
-    'Electron Neutrino':  { n: 4.7318665606298934e+36, massMeV: 0.39, spin: 0.5, charge: "0" },
-    'Muon Neutrino':      { n: 1.0962271073976230e+37, massMeV: 0.39, spin: 0.5, charge: "0" },
-    'Tau Neutrino':       { n: 4.2651859760903982e+37, massMeV: 0.39, spin: 0.5, charge: "0" },
-    'Photon':             { n: 0, massMeV: 0, spin: 1, charge: "0" },
-    'Gluon':              { n: 0, massMeV: 0, spin: 1, charge: "0" },
-    'Graviton':           { n: 0, massMeV: 0, spin: 2, charge: "0" },
-    'W Boson':            { n: 8.0384023366085643e+49, massMeV: 80379.0, spin: 1, charge: "±1" },
-    'Z Boson':            { n: 1.0022021905235752e+50, massMeV: 91188.0, spin: 1, charge: "0" },
-    'Higgs Boson':        { n: 2.1871302076020886e+50, massMeV: 125100.0, spin: 0, charge: "0" }
-  };
+const Decimal = window.Decimal;
 
-	const hbar = 1.054571817e-34;
-	const c = 2.99792458e8;
-	const mevFactor = 6.241509074e18;
-	const mevToKg = 1.78266192e-30;
+const particleData = {
+    'Electron': { n: new Decimal("1.116146374259776000504792200600740088568081211715959874293260467558912066286342598811550851149432149E+37"), massMeV: 0.511, massKg: 9.1093837015e-31, spin: 0.5, charge: "-1" },
+    'Muon': { n: new Decimal("2.592697864681657296450146244390652422592537772891046634886736363692579682058059087602050186683604189E+44"), massMeV: 105.658, massKg: 1.883531627e-28, spin: 0.5, charge: "-1" },
+    'Tau': { n: new Decimal("2.095680986337253170258875675748172910666647047613700720984627636052801619803503286417059292660495776E+48"), massMeV: 1776.86, massKg: 3.167540979e-27, spin: 0.5, charge: "-1" },
+    'Up Quark': { n: new Decimal("1.088836195890027612641435350014546608150713460429511408040403495603282986892407218405437160237667553E+39"), massMeV: 2.16, massKg: 3.8505007e-30, spin: 0.5, charge: "+2/3" },
+    'Down Quark': { n: new Decimal("1.264009938464596673844966914217987937065316705487175044408268624382571444972162533651758797313978983E+40"), massMeV: 4.67, massKg: 8.3249001e-30, spin: 0.5, charge: "-1/3" },
+    'Strange Quark': { n: new Decimal("1.726633093608591886026315041941475948780201682689921345272257534636237409991027301458637758034128428E+44"), massMeV: 93.0, massKg: 1.6643e-28, spin: 0.5, charge: "-1/3" },
+    'Charm Quark': { n: new Decimal("7.270450020494929955740010279766893379502342245023524796826783304614667014773359912993262006503620785E+47"), massMeV: 1275.0, massKg: 2.273e-27, spin: 0.5, charge: "+2/3" },
+    'Bottom Quark': { n: new Decimal("3.210961915716103318507570036497131300461286095864011666436835591618704812796308377279745152580586885E+49"), massMeV: 4180.0, massKg: 7.45e-27, spin: 0.5, charge: "-1/3" },
+    'Top Quark': { n: new Decimal("4.651419918945756274111528049292917059116238893390426300227887923322275464970993060385669332631062020E+54"), massMeV: 172760.0, massKg: 3.0797e-25, spin: 0.5, charge: "+2/3" },
+    'Electron Neutrino': { n: new Decimal("4.785985134579887317477263205775043550151598196481330037114055446129654035793133898715562622692070030E+15"), massMeV: 8.3e-8, massKg: 1.480931e-37, spin: 0.5, charge: "0" },
+    'Muon Neutrino': { n: new Decimal("1.096272292418038578417998567555555293953541797788583513878935656016903791909266599896029373114823482E+26"), massMeV: 0.00017, massKg: 3.031e-34, spin: 0.5, charge: "0" },
+    'Tau Neutrino': { n: new Decimal("4.265362646684764673113288026757181623709717578980016381397855225624154285667626703797760605707288949E+31"), massMeV: 0.01, massKg: 1.782e-32, spin: 0.5, charge: "0" },
+    'Photon': { n: new Decimal("0"), massMeV: 0, massKg: 0, spin: 1, charge: "0" },
+    'Gluon': { n: new Decimal("0"), massMeV: 0, massKg: 0, spin: 1, charge: "0" },
+    'Graviton': { n: new Decimal("0"), massMeV: 0, massKg: 0, spin: 2, charge: "0" },
+    'W Boson': { n: new Decimal("4.036085307766214873433443189812547753999403904296589500223267049268569767308755430179131598933931338E+53"), massMeV: 80379.0, massKg: 1.433e-25, spin: 1, charge: "±1" },
+    'Z Boson': { n: new Decimal("6.039398982388116321671579194641872927161651630537805218977885250419202729193657965618377959764270366E+53"), massMeV: 91187.6, massKg: 1.625e-25, spin: 1, charge: "0" },
+    'Higgs Boson': { n: new Decimal("1.658406012128395459983844710359379460541422054894899713401688352608020961902278624762480085545597019E+54"), massMeV: 125100.0, massKg: 2.230e-25, spin: 0, charge: "0" }
+};
 
-	const electronN = particleData['Electron'].n;
-	const electronMeV = particleData['Electron'].massMeV;
+const mevToKg = new Decimal("1.78266192e-30");
 
-	function kappa(n) {
-	  return n > 0 ? Math.pow(n, 0.618) * Math.log(n + 1) : 0;
-	}
+function curvatureKappa(n) {
+    const N = new Decimal(n);
+    return N.pow(0.618).times(N.plus(1).ln());
+}
 
-	function unscaledMass(n) {
-	  const mJ = (hbar / c) * Math.sqrt(kappa(n)) * c;
-	  return mJ * mevFactor;
-	}
+const kappaElectron = new Decimal("6.7061e24");
+const alphaMeV = new Decimal(particleData['Electron'].massMeV).div(kappaElectron.sqrt());
 
-	const lambda = Math.pow(electronMeV / unscaledMass(electronN), 2);
+function massMeV(n) {
+    return alphaMeV.times(curvatureKappa(n).sqrt()).toNumber();
+}
 
-	function cngMass(n) {
-	  const k = kappa(n);
-	  const massJ = (hbar / c) * Math.sqrt(lambda * k) * c;
-	  return massJ * mevFactor;
-	}
+function massKg(n) {
+    return alphaMeV.times(curvatureKappa(n).sqrt()).times(mevToKg);
+}
 
-	function calculateAlignment(predicted, observed) {
-	  return 100 * (1 - Math.abs(predicted - observed) / observed);
-	}
+function calculateAlignment(predicted, observed) {
+    if (observed === 0) return 'N/A';
+    const avg = (Math.abs(predicted) + Math.abs(observed)) / 2;
+    const diff = Math.abs(predicted - observed);
+    return (avg === 0) ? 0 : (100 * (1 - diff / avg)).toFixed(6) + '%';
+}
 
-	function showParticle(name) {
-	  const p = particleData[name];
-	  const predictedMeV = cngMass(p.n);
-	  const kg = predictedMeV * mevToKg;
-	  const curvature = (lambda * kappa(p.n)).toExponential(6);
-	  const alignment = p.massMeV > 0 ? calculateAlignment(predictedMeV, p.massMeV).toFixed(6) + '%' : 'N/A';
-	
-	  const spinLabel = (p.spin === 0.5) ? 'Fermion (spin ½)'
-	                   : (p.spin === 1)   ? 'Boson (spin 1)'
-	                   : (p.spin === 0)   ? 'Boson (spin 0)'
-	                   : `Spin: ${p.spin}`;
-	
-	  const chargeLabel = `Charge: ${p.charge}`;
-	
-	  document.getElementById("display").innerHTML = `
-	    <strong>${name}</strong><br>
-	    Mode Index: ${p.n.toExponential(6)}<br>
-	    Measured: ${p.massMeV.toExponential(6)} MeV<br>
-	    Predicted: ${predictedMeV.toExponential(6)} MeV<br>
-	    Mass: ${kg.toExponential(6)} kg<br>
-	    κ<sub>n</sub>: ${curvature}<br>
-	    ${spinLabel}<br>
-	    ${chargeLabel}<br>
-	    Alignment: ${alignment}
-	  `;
-	}
+function getMassData(n) {
+    const predictedMeV = massMeV(n);
+    const predictedKg = massKg(n).toNumber();
+    const curvature = curvatureKappa(n).toExponential(6);
+    return { predictedMeV, predictedKg, curvature };
+}
 
+function showParticle(name) {
+    const p = particleData[name];
+    const { predictedMeV, predictedKg, curvature } = getMassData(p.n);
+    const alignment = p.massMeV > 0 ? calculateAlignment(predictedMeV, p.massMeV) : 'N/A';
+    const trueAlignment = (p.massKg > 0) ? calculateAlignment(predictedKg, p.massKg) : 'N/A';
 
-	function renderButtons() {
-	  const grid = document.getElementById("buttonGrid");
-	  if (!grid) return;
-	  grid.innerHTML = '';
-	  Object.keys(particleData).forEach(p => {
-		const btn = document.createElement("button");
-		btn.textContent = p;
-		btn.onclick = () => showParticle(p);
-		grid.appendChild(btn);
-	  });
-	}
+    const spinLabel = (p.spin === 0.5) ? 'Fermion (spin ½)' :
+                      (p.spin === 1) ? 'Boson (spin 1)' :
+                      (p.spin === 0) ? 'Boson (spin 0)' :
+                      `Spin: ${p.spin}`;
+    const chargeLabel = `Charge: ${p.charge}`;
+    let measuredMeVDisplay = p.massMeV;
+    if (name === 'Electron Neutrino') measuredMeVDisplay = "< 0.00045";
 
-	function customN() {
-	  const n = parseFloat(prompt("Enter mode index n:"));
-	  if (!isFinite(n) || n <= 0) return alert("Invalid input.");
+    document.getElementById("display").innerHTML = `
+        <strong>${name}</strong><br>
+        Mode Index: ${p.n.toExponential(6)}<br>
+        Measured: ${measuredMeVDisplay} MeV<br>
+        Predicted: ${predictedMeV.toExponential(6)} MeV<br>
+        Mass: ${predictedKg.toExponential(6)} kg<br>
+        κ<sub>n</sub>: ${curvature}<br>
+        ${spinLabel}<br>
+        ${chargeLabel}<br>
+        Alignment (MeV): ${alignment}<br>
+        Alignment (kg): ${trueAlignment}
+    `;
+}
 
-	  const predictedMeV = cngMass(n);
-	  const kg = predictedMeV * mevToKg;
-	  const curvature = (lambda * kappa(n)).toExponential(6);
-	  const spin = Math.floor(n) % 2 === 0 ? 'Boson (even mode)' : 'Fermion (odd mode)';
+function customN() {
+    const n = parseFloat(prompt("Enter mode index n:"));
+    if (!isFinite(n) || n <= 0) return alert("Invalid input.");
+    const { predictedMeV, predictedKg, curvature } = getMassData(n);
+    const spin = Math.floor(n) % 2 === 0 ? 'Boson (even mode)' : 'Fermion (odd mode)';
 
-	  document.getElementById("display").innerHTML = `
-		<strong>Custom Mode</strong><br>
-		n = ${n.toExponential(6)}<br>
-		Predicted Mass: ${predictedMeV.toExponential(6)} MeV<br>
-		Mass: ${kg.toExponential(6)} kg<br>
-		κₙ: ${curvature}<br>
-		Spin (heuristic): ${spin}<br>
-		(λ = Electron-calibrated)
-	  `;
-	}
+    document.getElementById("display").innerHTML = `
+        <strong>Custom Mode</strong><br>
+        n = ${n.toExponential(6)}<br>
+        Predicted Mass: ${predictedMeV.toExponential(6)} MeV<br>
+        Mass: ${predictedKg.toExponential(6)} kg<br>
+        κ<sub>n</sub>: ${curvature}<br>
+        Spin (heuristic): ${spin}<br>
+        (Electron-calibrated)
+    `;
+}
 
-	function clearDisplay() {
-	  document.getElementById("display").innerText = "Select a particle to view full CNG data.";
-	}
+function clearDisplay() {
+    document.getElementById("display").innerText = "Select a particle to view full CNG data.";
+}
 
-	function showFormula() {
-	  const formulaDisplay = document.getElementById("formulaDisplay");
-	  if (formulaDisplay) {
-		formulaDisplay.style.display =
-		  formulaDisplay.style.display === "none" ? "block" : "none";
-	  }
-	}
+function showFormula() {
+    const formulaDisplay = document.getElementById("formulaDisplay");
+    if (formulaDisplay) {
+        formulaDisplay.style.display = formulaDisplay.style.display === "none" ? "block" : "none";
+    }
+}
 
-	// Initialize buttons
-	renderButtons();
+function renderButtons() {
+    const grid = document.getElementById("buttonGrid");
+    if (!grid) return;
+    grid.innerHTML = '';
+    Object.keys(particleData).forEach(p => {
+        const btn = document.createElement("button");
+        btn.textContent = p;
+        btn.onclick = () => showParticle(p);
+        grid.appendChild(btn);
+    });
+}
+
+renderButtons();
 </script>
-
-</body>
-</html>
