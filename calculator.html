@@ -2,321 +2,685 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=1024, initial-scale=1, maximum-scale=1.0, user-scalable=no">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Chronogenesis Mass Calculator</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&family=JetBrains+Mono:wght@400&display=swap" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/decimal.js@10.4.3/decimal.min.js"></script>
     <style>
-		@media (max-width: 768px) {
-		body {
-			transform: scale(0.85);
-			transform-origin: top center;
-			zoom: 0.85;
-		  }
-		}
         body {
             font-family: 'Inter', sans-serif;
-			font-size: 80%;
-            background: #0b0c10;
-            color: #ffffff;
-            margin: 0;
-            padding: 0;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            min-height: 100vh;
         }
-		body {
-			overflow-x: hidden;
-		}
-
-        .calculator {
-            background: #1f2833;
-            border-radius: 16px;
-            padding: 30px;
-            width: 95%;
-            max-width: 1000px;
-            box-shadow: 0 0 20px rgba(255, 255, 255, 0.1);
-            display: flex;
-            justify-content: space-between;
-        }
-        .left {
-            flex: 1;
-            padding-right: 30px;
-        }
-        .right {
-            flex: 1;
-            padding-left: 30px;
-            border-left: 2px solid #ccc;
-        }
-        .title {
-            font-size: 2rem;
-            margin-bottom: 16px;
-            color: #66fcf1;
-            text-align: center;
-        }
-        .screen {
-            background: #45a29e;
-            padding: 20px;
-            border-radius: 8px;
+        #display, .formula, .mode-indices, .full-index-display {
             font-family: 'JetBrains Mono', monospace;
-            font-size: 1.1em;
-            margin-bottom: 20px;
-            min-height: 200px;
-            overflow-wrap: break-word;
         }
-        .grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
-            gap: 12px;
+        /* Ensure the image scales correctly */
+        .responsive-img {
+            max-width: 100%;
+            height: auto;
         }
-        button {
-            padding: 12px;
-            border: none;
-            border-radius: 8px;
-            font-weight: bold;
-            background: #c5c6c7;
-            color: #1f2833;
-            cursor: pointer;
-            transition: background 0.2s;
+        /* Removed max-height and overflow-y for mode-indices to show all content */
+        .mode-indices {
+            /* max-height: 300px; */ /* Removed */
+            /* overflow-y: auto; */ /* Removed */
+            cursor: default; /* Default cursor for the container */
+            word-break: break-all; /* Ensure long numbers wrap */
         }
-        button:hover {
+        /* Container for each particle item */
+        .mode-index-item-container {
+            border-bottom: 1px solid #2f3b4a; /* Subtle separator */
+            padding: 4px 0; /* Add some padding */
+        }
+        .mode-index-item-container:last-child {
+            border-bottom: none; /* No border on the last item */
+        }
+        /* Style for clickable particle name */
+        .mode-index-item {
+            transition: background-color 0.2s ease;
+            cursor: pointer; /* Indicate items are clickable */
+            padding: 2px 0; /* Smaller padding for the clickable name */
+        }
+        .mode-index-item:hover {
+            background-color: #2f3b4a; /* Highlight on hover */
+        }
+        /* Style for the displayed full mode index */
+        .full-index-display {
+            margin-top: 5px; /* Space below the name */
+            padding: 8px; /* Padding inside the display box */
+            background-color: #2f3b4a;
+            border-radius: 6px;
+            font-size: 0.9em;
+            word-break: break-all;
+            display: none; /* Hidden by default */
+        }
+
+        /* Custom scrollbar styles (still included but won't be active without overflow-y) */
+        .mode-indices::-webkit-scrollbar {
+            width: 8px;
+        }
+        .mode-indices::-webkit-scrollbar-track {
+            background: #1f2833;
+            border-radius: 10px;
+        }
+        .mode-indices::-webkit-scrollbar-thumb {
+            background: #45a29e;
+            border-radius: 10px;
+        }
+        .mode-indices::-webkit-scrollbar-thumb:hover {
             background: #66fcf1;
         }
-        .footer {
-            margin-top: 20px;
-            font-size: 0.9em;
-            color: #888;
-            text-align: center;
+        /* Added min-height to the display area to prevent jumping */
+        #display {
+            min-height: 200px; /* Adjust this value as needed */
+            overflow-y: auto; /* Add scrollbar if content exceeds height */
+            max-width: 100%; /* Ensure it doesn't exceed container width */
+            box-sizing: border-box; /* Include padding and border in the element's total width */
         }
-        .confirm-bar {
-            margin-top: 16px;
-            text-align: center;
+         /* Custom scrollbar for the display area */
+        #display::-webkit-scrollbar {
+            width: 8px;
         }
-        .formula {
+        #display::-webkit-scrollbar-track {
             background: #1f2833;
-            color: #66fcf1;
+            border-radius: 10px;
+        }
+        #display::-webkit-scrollbar-thumb {
+            background: #45a29e;
+            border-radius: 10px;
+        }
+        #display::-webkit-scrollbar-thumb:hover {
+            background: #66fcf1;
+        }
+
+        /* Style for the info section */
+        .info-section {
+            margin-top: 20px;
             padding: 15px;
+            background-color: #2f3b4a;
             border-radius: 8px;
-            font-family: 'JetBrains Mono', monospace;
-            font-size: 1.2em;
-            margin-top: 30px;
-            overflow-wrap: break-word;
+            color: #c5c6c7;
+            font-size: 0.9em;
+        }
+        .info-section strong {
+            color: #66fcf1;
         }
     </style>
 </head>
-<body>
-    <div class="calculator">
-        <div class="left">
-            <div class="title">Chronogenesis Mass Calculator</div>
-            <div id="display" class="screen">Select a particle to view full CNG data.</div>
-            <div id="confirm-bar" class="confirm-bar"></div>
-            <div class="grid" id="buttonGrid"></div>
-            <div class="grid" style="margin-top:20px">
-                <button onclick="customN()">CUSTOM n</button>
-                <button onclick="clearDisplay()">CLEAR</button>
-                <button onclick="showFormula()">FORMULA</button>
+<body class="bg-[#0b0c10] text-[#ffffff] flex justify-center items-center min-h-screen p-4 overflow-x-hidden">
+    <div class="calculator bg-[#1f2833] rounded-2xl p-8 shadow-2xl w-full max-w-6xl flex flex-col md:flex-row">
+        <div class="left flex-1 md:pr-8 md:border-r-2 md:border-[#c5c6c7] mb-8 md:mb-0">
+            <div class="title text-3xl md:text-4xl mb-6 text-[#66fcf1] text-center font-bold">Chronogenesis Mass Calculator</div>
+
+            <div id="display" class="screen bg-[#45a29e] text-[#1f2833] p-6 rounded-xl text-lg mb-6 min-h-[200px] overflow-wrap break-word leading-relaxed">
+                Select a particle or prediction to view data.<br>
+                <span class="text-sm text-[#1f2833]">This calculator uses the Chronogenesis model to predict particle masses based on their mode index (n) and a time-curvature relationship (κ).</span>
             </div>
-            <div class="footer">CNG: Particle masses validated against PDG/CODATA references. All predicted values arise from a single eigenmode curve (n, λ, κₙ) defined in the Chronogenesis v1.2 dataset.</div>
-        </div>
-        <div class="right">
-            <div id="formulaDisplay" class="formula" style="display:none;">
-                <strong>Formula:</strong><br>
-                <code>
+
+            <div id="confirm-bar" class="confirm-bar text-center mb-6"></div>
+
+            <div id="buttonGrid" class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4">
+                </div>
+
+            <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-3 gap-4 mt-6">
+                <button onclick="customN()" class="p-3 rounded-lg font-bold bg-[#c5c6c7] text-[#1f2833] hover:bg-[#66fcf1] transition duration-200">CUSTOM n</button>
+                <button onclick="clearDisplay()" class="p-3 rounded-lg font-bold bg-[#c5c6c7] text-[#1f2833] hover:bg-[#66fcf1] transition duration-200">CLEAR</button>
+                <button onclick="showFormula()" class="p-3 rounded-lg font-bold bg-[#c5c6c7] text-[#1f2833] hover:bg-[#66fcf1] transition duration-200">FORMULA</button>
+            </div>
+
+            <div id="formulaDisplay" class="formula bg-[#1f2833] text-[#66fcf1] p-6 rounded-xl text-lg overflow-wrap break-word hidden mt-6">
+                <strong class="text-xl block mb-2">Formula:</strong>
+                <code class="block mb-4">
                     m<sub>n</sub> = α * √κ<sub>n</sub>
                 </code>
-                <p>Where:</p>
-                <code>
+                <p class="mb-2">Where:</p>
+                <code class="block">
                     κ<sub>n</sub> = n<sup>0.618</sup> ⋅ log(n + 1)<br>
                     n = mode index<br>
                     α = mass scaling constant (kg / √κ)
                 </code>
             </div>
 
-            <div style="margin-top: 30px; text-align: center;">
-                <img src="chronogenesis_eigenmode_curve.png" alt="Eigenmode Curve" style="max-width:100%; border-radius: 8px; border: 1px solid #444;">
+            <div class="info-section">
+                <strong>About the Chronogenesis Model:</strong>
+                <p class="mt-2">This calculator is based on the Chronogenesis model, which proposes that fundamental particle masses are quantized energy states (modes) of a universal time-curvature field. The mass of a particle is related to its mode index (n) through the formula shown above. The model suggests a deep connection between particle physics and the geometry of spacetime.</p>
             </div>
 
-            <div style="margin-top: 20px; background:#0b0c10; color:#ccc; padding: 15px; border-radius: 10px; font-family: 'JetBrains Mono', monospace; font-size: 0.7em; line-height: 1.5;">
-				<strong style="color:#66fcf1;">Refined Mode Indices (n):</strong><br>
-				Electron: 1.11614637425977600050479220060074008856808121171595987429326046755891\
-				2066286342598811550851149432149E+37<br>
-				Muon: 2.59269786468165729645014624439065242259253777289104663488673636369257\
-				9682058059087602050186683604189E+44<br>
-				Tau: 2.09568098633725317025887567574817291066664704761370072098462763605280\
-				1619803503286417059292660495776E+48<br>
-				Up Quark: 1.08883619589002761264143535001454660815071346042951140804040349560328\
-				2986892407218405437160237667553E+39<br>
-				Down Quark: 1.26400993846459667384496691421798793706531670548717504440826862438257\
-				1444972162533651758797313978983E+40<br>
-				Strange Quark: 1.72663309360859188602631504194147594878020168268992134527225753463623\
-				7409991027301458637758034128428E+44<br>
-				Charm Quark: 7.27045002049492995574001027976689337950234224502352479682678330461466\
-				7014773359912993262006503620785E+47<br>
-				Bottom Quark: 3.21096191571610331850757003649713130046128609586401166643683559161870\
-				4812796308377279745152580586885E+49<br>
-				Top Quark: 4.65141991894575627411152804929291705911623889339042630022788792332227\
-				5464970993060385669332631062020E+54<br>
-				Electron Neutrino: 4.78598513457988731747726320577504355015159819648133003711405544612965\
-				4035793133898715562622692070030E+15<br>
-				Muon Neutrino: 1.09627229241803857841799856755555529395354179778858351387893565601690\
-				3791909266599896029373114823482E+26<br>
-				Tau Neutrino: 4.26536264668476467311328802675718162370971757898001638139785522562415\
-				4285667626703797760605707288949E+31<br>
-				W Boson: 4.03608530776621487343344318981254775399940390429658950022326704926856\
-				9767308755430179131598933931338E+53<br>
-				Z Boson: 6.03939898238811632167157919464187292716165163053780521897788525041920\
-				2729193657965618377959764270366E+53<br>
-				Higgs Boson: 1.6584060121283954599838447103593794605414220548948997134016883526080\
-				20961902278624762480085545597019E+54<br>
-			</div>
 
+            <div class="footer mt-8 text-sm text-[#888] text-center">
+                CNG: Particle masses validated against PDG/CODATA references. All predicted values arise from a single eigenmode curve (n, λ, κₙ) defined in the Chronogenesis v1.2 dataset.
+            </div>
+        </div>
+
+        <div class="right flex-1 md:pl-8">
+            <div class="mt-8 text-center md:mt-0"> <img src="https://placehold.co/800x400/45a29e/1f2833?text=Chronogenesis+Eigenmode+Curve+Placeholder" alt="Eigenmode Curve" class="responsive-img rounded-xl border border-[#444]">
+            </div>
+
+            <div class="mt-8 bg-[#0b0c10] text-[#ccc] p-6 rounded-xl text-sm leading-relaxed mode-indices" id="modeIndicesListContainer">
+                <strong class="text-[#66fcf1] text-base block mb-2">Refined Mode Indices (n):</strong>
+                </div>
         </div>
     </div>
 </body>
 <script>
 const Decimal = window.Decimal;
 
+// Configure Decimal.js to prevent exponential notation for large numbers unless necessary
+Decimal.set({ toExpNeg: -100, toExpPos: 100 });
+
 const particleData = {
-  'Electron': { n: new Decimal("1.116146374259776000504792200600740088568081211715959874293260467558912066286342598811550851149432149E+37"), massMeV: 0.511, massKg: 9.1094024112e-31, spin: 0.5, charge: "-1" },
-  'Muon': { n: new Decimal("2.592697864681657296450146244390652422592537772891046634886736363692579682058059087602050186683604189E+44"), massMeV: 105.658, massKg: 1.8835249314336e-28, spin: 0.5, charge: "-1" },
-  'Tau': { n: new Decimal("2.095680986337253170258875675748172910666647047613700720984627636052801619803503286417059292660495776E+48"), massMeV: 1776.86, massKg: 3.1675406591712e-27, spin: 0.5, charge: "-1" },
-  'Up Quark': { n: new Decimal("1.088836195890027612641435350014546608150713460429511408040403495603282986892407218405437160237667553E+39"), massMeV: 2.16, massKg: 3.8505497472e-30, spin: 0.5, charge: "+2/3" },
-  'Down Quark': { n: new Decimal("1.264009938464596673844966914217987937065316705487175044408268624382571444972162533651758797313978983E+40"), massMeV: 4.67, massKg: 8.3250311664e-30, spin: 0.5, charge: "-1/3" },
-  'Strange Quark': { n: new Decimal("1.726633093608591886026315041941475948780201682689921345272257534636237409991027301458637758034128428E+44"), massMeV: 93.0, massKg: 1.65787558560e-28, spin: 0.5, charge: "-1/3" },
-  'Charm Quark': { n: new Decimal("7.270450020494929955740010279766893379502342245023524796826783304614667014773359912993262006503620785E+47"), massMeV: 1275.0, massKg: 2.272893948000e-27, spin: 0.5, charge: "+2/3" },
-  'Bottom Quark': { n: new Decimal("3.210961915716103318507570036497131300461286095864011666436835591618704812796308377279745152580586885E+49"), massMeV: 4180.0, massKg: 7.451526825600e-27, spin: 0.5, charge: "-1/3" },
-  'Top Quark': { n: new Decimal("4.651419918945756274111528049292917059116238893390426300227887923322275464970993060385669332631062020E+54"), massMeV: 172760.0, massKg: 3.07972673299200e-25, spin: 0.5, charge: "+2/3" },
-  'Electron Neutrino': { n: new Decimal("4.785985134579887317477263205775043550151598196481330037114055446129654035793133898715562622692070030E+15"), massMeV: 8.3e-8, massKg: 1.4796093936e-37, spin: 0.5, charge: "0" },
-  'Muon Neutrino': { n: new Decimal("1.096272292418038578417998567555555293953541797788583513878935656016903791909266599896029373114823482E+26"), massMeV: 0.00017, massKg: 3.030525264e-34, spin: 0.5, charge: "0" },
-  'Tau Neutrino': { n: new Decimal("4.265362646684764673113288026757181623709717578980016381397855225624154285667626703797760605707288949E+31"), massMeV: 0.01, massKg: 1.78266192e-32, spin: 0.5, charge: "0" },
-  'Photon': { n: new Decimal("0"), massMeV: 0, massKg: 0, spin: 1, charge: "0" },
-  'Gluon': { n: new Decimal("0"), massMeV: 0, massKg: 0, spin: 1, charge: "0" },
-  'Graviton': { n: new Decimal("0"), massMeV: 0, massKg: 0, spin: 2, charge: "0" },
-  'W Boson': { n: new Decimal("4.036085307766214873433443189812547753999403904296589500223267049268569767308755430179131598933931338E+53"), massMeV: 80379.0, massKg: 1.43288582467680e-25, spin: 1, charge: "±1" },
-  'Z Boson': { n: new Decimal("6.039398982388116321671579194641872927161651630537805218977885250419202729193657965618377959764270366E+53"), massMeV: 91187.6, massKg: 1.62556662096192e-25, spin: 1, charge: "0" },
-  'Higgs Boson': { n: new Decimal("1.658406012128395459983844710359379460541422054894899713401688352608020961902278624762480085545597019E+54"), massMeV: 125100.0, massKg: 2.23011006192000e-25, spin: 0, charge: "0" }
+    'Electron': { n: new Decimal("1.116146374259776000504792200600740088568081211715959874293260467558912066286342598811550851149432149E+37"), massMeV: new Decimal("0.511"), massKg: new Decimal("9.1094024112e-31"), spin: 0.5, charge: "-1" },
+    'Muon': { n: new Decimal("2.592697864681657296450146244390652422592537772891046634886736363692579682058059087602050186683604189E+44"), massMeV: new Decimal("105.658"), massKg: new Decimal("1.8835249314336e-28"), spin: 0.5, charge: "-1" },
+    'Tau': { n: new Decimal("2.095680986337253170258875675748172910666647047613700720984627636052801619803503286417059292660495776E+48"), massMeV: new Decimal("1776.86"), massKg: new Decimal("3.1675406591712e-27"), spin: 0.5, charge: "-1" },
+    'Up Quark': { n: new Decimal("1.088836195890027612641435350014546608150713460429511408040403495603282986892407218405437160237667553E+39"), massMeV: new Decimal("2.16"), massKg: new Decimal("3.8505497472e-30"), spin: 0.5, charge: "+2/3" },
+    'Down Quark': { n: new Decimal("1.264009938464596673844966914217987937065316705487175044408268624382571444972162533651758797313978983E+40"), massMeV: new Decimal("4.67"), massKg: new Decimal("8.3250311664e-30"), spin: 0.5, charge: "-1/3" },
+    'Strange Quark': { n: new Decimal("1.726633093608591886026315041941475948780201682689921345272257534636237409991027301458637758034128428E+44"), massMeV: new Decimal("93.0"), massKg: new Decimal("1.65787558560e-28"), spin: 0.5, charge: "-1/3" },
+    'Charm Quark': { n: new Decimal("7.270450020494929955740010279766893379502342245023524796826783304614667014773359912993262006503620785E+47"), massMeV: new Decimal("1275.0"), massKg: new Decimal("2.272893948000e-27"), spin: 0.5, charge: "+2/3" },
+    'Bottom Quark': { n: new Decimal("3.21096191571610331850757003649713130046128609586401166643683559161870481286095864011666436835591618704812796308377279745152580586885E+49"), massMeV: new Decimal("4180.0"), massKg: new Decimal("7.451526825600e-27"), spin: 0.5, charge: "-1/3" },
+    'Top Quark': { n: new Decimal("4.651419918945756274111528049292917059116238893390426300227887923322275464970993060385669332631062020E+54"), massMeV: new Decimal("172760.0"), massKg: new Decimal("3.07972673299200e-25"), spin: 0.5, charge: "+2/3" },
+    'Electron Neutrino': { n: new Decimal("4.785985134579887317477263205775043550151598196481330037114055446129654035793133898715562622692070030E+15"), massMeV: new Decimal("8.3e-8"), massKg: new Decimal("1.4796093936e-37"), spin: 0.5, charge: "0" },
+    'Muon Neutrino': { n: new Decimal("1.096272292418038578417998567555555293953541797788583513878935656016903791909266599896029373114823482E+26"), massMeV: new Decimal("0.00017"), massKg: new Decimal("3.030525264e-34"), spin: 0.5, charge: "0" },
+    'Tau Neutrino': { n: new Decimal("4.265362646684764673113288026757181623709717578980016381397855225624154285667626703797760605707288949E+31"), massMeV: new Decimal("0.01"), massKg: new Decimal("1.78266192e-32"), spin: 0.5, charge: "0" },
+    'Photon': { n: new Decimal("0"), massMeV: new Decimal("0"), massKg: new Decimal("0"), spin: 1, charge: "0" },
+    'Gluon': { n: new Decimal("0"), massMeV: new Decimal("0"), massKg: new Decimal("0"), spin: 1, charge: "0" },
+    'Graviton': { n: new Decimal("0"), massMeV: new Decimal("0"), massKg: new Decimal("0"), spin: 2, charge: "0" },
+    'W Boson': { n: new Decimal("4.036085307766214873433443189812547753999403904296589500223267049268569767308755430179131598933931338E+53"), massMeV: new Decimal("80379.0"), massKg: new Decimal("1.43288582467680e-25"), spin: 1, charge: "±1" },
+    'Z Boson': { n: new Decimal("6.039398982388116321671579194641872927161651630537805218977885250419202729193657965618377959764270366E+53"), massMeV: new Decimal("91187.6"), massKg: new Decimal("1.62556662096192e-25"), spin: 1, charge: "0" },
+    'Higgs Boson': { n: new Decimal("1.658406012128395459983844710359379460541422054894899713401688352608020961902278624762480085545597019E+54"), massMeV: new Decimal("125100.0"), massKg: new Decimal("2.23011006192000e-25"), spin: 0, charge: "0" }
 };
 
-const mevToKg = new Decimal("1.78266192e-30");
+const mevToKg = new Decimal("1.78266192e-30"); // Conversion factor MeV/c^2 to kg
 
+// Calculate the alpha constant using Electron data
+const kappaElectron = new Decimal("6.7060821879436456799748104656833798181752300741342e+24");
+const alphaMeV = particleData['Electron'].massMeV.div(kappaElectron.sqrt());
+
+// Hardcoded mode indices for CNG predictions
+const cngPredictionN1 = new Decimal("1.3771423946537758804255e+52");
+const cngPredictionN2 = new Decimal("3.9284999846221127751102e+56");
+
+// Define practical limits for custom input to avoid computational issues
+const N_MAX_LIMIT = new Decimal("1e300"); // Example: Limit to avoid excessive computation/memory
+const N_MIN_LIMIT = new Decimal("1e-300"); // Example: Limit to avoid issues with log of very small numbers
+
+
+// Function to calculate the curvature kappa(n)
 function curvatureKappa(n) {
     const N = new Decimal(n);
-    return N.pow(0.618).times(N.plus(1).ln());
+     // Check if n is finite and non-negative before calculating log
+    if (!N.isFinite() || N.lt(0)) {
+        console.error("Invalid input for curvatureKappa: n must be a finite, non-negative number.");
+        return new Decimal(NaN); // Return NaN for invalid input
+    }
+    // Ensure n+1 is positive for log
+    if (N.plus(1).lte(0)) {
+        console.error("Logarithm input (n+1) must be positive.");
+        return new Decimal(NaN); // Return NaN for invalid input
+    }
+    const kappa = N.pow(0.618).times(N.plus(1).ln());
+    // Check if kappa is finite after calculation
+    if (!kappa.isFinite()) {
+         console.error("Curvature calculation resulted in non-finite value.");
+         return new Decimal(NaN);
+    }
+    return kappa;
 }
 
-const kappaElectron = new Decimal("6.7060821879436456799748104656833798181752300741342e+24");
-const alphaMeV = new Decimal(particleData['Electron'].massMeV).div(kappaElectron.sqrt());
-
+// Function to calculate predicted mass in MeV
 function massMeV(n) {
-    return alphaMeV.times(curvatureKappa(n).sqrt()).toNumber();
+    const kappa = curvatureKappa(n);
+    if (kappa.isNaN() || !kappa.isFinite() || kappa.lt(0)) { // Check for NaN, Infinity, or negative kappa
+        console.error("Invalid kappa for massMeV calculation.");
+        return new Decimal(NaN);
+    }
+    const mass = alphaMeV.times(kappa.sqrt());
+     // Check if mass is finite after calculation
+    if (!mass.isFinite()) {
+         console.error("Mass calculation resulted in non-finite value.");
+         return new Decimal(NaN);
+    }
+    return mass;
 }
 
+// Function to calculate predicted mass in Kg
 function massKg(n) {
-    return alphaMeV.times(curvatureKappa(n).sqrt()).times(mevToKg);
+    const kappa = curvatureKappa(n);
+     if (kappa.isNaN() || !kappa.isFinite() || kappa.lt(0)) { // Check for NaN, Infinity, or negative kappa
+        console.error("Invalid kappa for massKg calculation.");
+        return new Decimal(NaN);
+    }
+    const mass = alphaMeV.times(kappa.sqrt()).times(mevToKg);
+     // Check if mass is finite after calculation
+    if (!mass.isFinite()) {
+         console.error("Mass calculation resulted in non-finite value.");
+         return new Decimal(NaN);
+    }
+    return mass;
 }
 
+// Function to calculate percentage alignment between predicted and observed values
+// This function will still use standard numbers for calculation as percentages are approximations
 function calculateAlignment(predicted, observed) {
-    if (observed === 0) return 'N/A';
-    const avg = (Math.abs(predicted) + Math.abs(observed)) / 2;
-    const diff = Math.abs(predicted - observed);
-    return (avg === 0) ? 0 : (100 * (1 - diff / avg)).toFixed(6) + '%';
+    // Ensure inputs are standard numbers for calculation and are finite
+    const predNum = parseFloat(predicted.toString());
+    const obsNum = parseFloat(observed.toString());
+
+    if (!isFinite(predNum) || !isFinite(obsNum)) {
+        return 'N/A';
+    }
+
+    // Handle cases where observed is zero to avoid division by zero
+    if (obsNum === 0 && predNum === 0) {
+        return '100%';
+    }
+     if (obsNum === 0) { // Predicted is non-zero, observed is zero
+         return 'N/A';
+     }
+
+    const avg = (Math.abs(predNum) + Math.abs(obsNum)) / 2;
+    const diff = Math.abs(predNum - obsNum);
+    // Avoid division by zero if avg is zero
+    return (avg === 0) ? 'N/A' : (100 * (1 - diff / avg)).toFixed(6) + '%';
 }
 
+// Function to get mass data for a given mode index n
 function getMassData(n) {
     const predictedMeV = massMeV(n);
-    const predictedKg = massKg(n).toNumber();
-    const curvature = curvatureKappa(n).toExponential(6);
-    return { predictedMeV, predictedKg, curvature };
+    const predictedKg = massKg(n);
+    const curvature = curvatureKappa(n);
+
+    // Handle potential NaN or Infinity results from calculations and return appropriate strings
+    const predictedMeVDisplay = predictedMeV.isNaN() || !predictedMeV.isFinite() ? 'N/A' : predictedMeV.toString();
+    const predictedKgDisplay = predictedKg.isNaN() || !predictedKg.isFinite() ? 'N/A' : predictedKg.toString();
+    const curvatureDisplay = curvature.isNaN() || !curvature.isFinite() ? 'N/A' : curvature.toString();
+
+    return { predictedMeV: predictedMeVDisplay, predictedKg: predictedKgDisplay, curvature: curvatureDisplay };
 }
 
+// Function to display particle data in the screen (triggered by left buttons)
 function showParticle(name) {
-    const p = particleData[name];
-    const { predictedMeV, predictedKg, curvature } = getMassData(p.n);
-    const alignment = p.massMeV > 0 ? calculateAlignment(predictedMeV, p.massMeV) : 'N/A';
-    const trueAlignment = calculateAlignment(predictedKg, p.massKg);
+    try {
+        const p = particleData[name];
+        const { predictedMeV, predictedKg, curvature } = getMassData(p.n);
 
-    const spinLabel = (p.spin === 0.5) ? 'Fermion (spin ½)' :
-                      (p.spin === 1) ? 'Boson (spin 1)' :
-                      (p.spin === 0) ? 'Boson (spin 0)' :
-                      `Spin: ${p.spin}`;
-    const chargeLabel = `Charge: ${p.charge}`;
-    let measuredMeVDisplay = p.massMeV;
-    if (name === 'Electron Neutrino') measuredMeVDisplay = "< 0.00045";
+        // Calculate alignment using Decimal objects and then convert to number for calculation
+        const alignmentMeV = p.massMeV.gt(0) ? calculateAlignment(predictedMeV, p.massMeV) : 'N/A';
+        const alignmentKg = p.massKg.gt(0) ? calculateAlignment(predictedKg, p.massKg) : 'N/A';
 
-    document.getElementById("display").innerHTML = `
-        <strong>${name}</strong><br>
-        Mode Index: ${p.n.toExponential(6)}<br>
-        Measured MeV: ${measuredMeVDisplay} MeV<br>
-        Predicted MeV: ${predictedMeV.toExponential(6)} MeV<br>
-        Measured Mass (CODATA): ${p.massKg.toExponential(6)} kg<br>
-        Predicted Mass: ${predictedKg.toExponential(6)} kg<br>
-        Time-Curvature Mode κ<sub>n</sub> (unitless): ${curvature}<br>
-        ${spinLabel}<br>
-        ${chargeLabel}<br>
-        Alignment (MeV): ${alignment}<br>
-        Alignment (kg): ${trueAlignment}<br>        
-    `;
-	if (alignment > 99.999 && trueAlignment > 99.999) {
-		document.getElementById("display").innerHTML += `<br><strong style="color:#00ff88;">Perfect Match ✔</strong>`;
-	}
+        // Display a fixed placeholder for the mode index in the main display
+        const displayN = "[See list on right]";
 
-    if (isResonantValley(p.n)) {
-        document.getElementById("display").innerHTML += `<br><strong style="color:#66fcf1;">Resonant Stability Valley ✔</strong>`;
+
+        // Determine spin label
+        let spinLabel;
+        switch (p.spin) {
+            case 0: spinLabel = 'Scalar Boson (spin 0)'; break;
+            case 0.5: spinLabel = 'Fermion (spin ½)'; break;
+            case 1: spinLabel = 'Vector Boson (spin 1)'; break;
+            case 2: spinLabel = 'Tensor Boson (spin 2)'; break;
+            default: spinLabel = `Spin: ${p.spin}`;
+        }
+
+        // Custom display for Electron Neutrino measured mass
+        let measuredMeVDisplay = p.massMeV.toString(); // Display full precision for measured MeV
+        if (name === 'Electron Neutrino') measuredMeVDisplay = "< 0.00045"; // Keep the specific neutrino notation
+
+
+        document.getElementById("display").innerHTML = `
+            <strong>${name}</strong><br>
+            Mode Index: ${displayN}<br>
+            Measured MeV: ${measuredMeVDisplay} MeV<br>
+            Predicted MeV: ${predictedMeV} MeV<br>
+            Measured Mass (CODATA): ${p.massKg.toString()} kg<br>
+            Predicted Mass: ${predictedKg} kg<br>
+            Time-Curvature Mode κ<sub>n</sub> (unitless): ${curvature}<br>
+            ${spinLabel}<br>
+            Charge: ${p.charge}<br>
+            Alignment (MeV): ${alignmentMeV}<br>
+            Alignment (kg): ${alignmentKg}<br>
+        `;
+
+        // Display perfect match message if alignment is very high and values are finite
+        if (alignmentMeV.startsWith('100.') && alignmentKg.startsWith('100.') && isFinite(parseFloat(predictedMeV)) && isFinite(parseFloat(predictedKg))) {
+            document.getElementById("display").innerHTML += `<br><strong class="text-[#00ff88]">Perfect Match ✔</strong>`;
+        }
+
+        // Check and display if the mode is in a resonant stability valley
+        if (isResonantValley(p.n)) {
+            document.getElementById("display").innerHTML += `<br><strong class="text-[#66fcf1]">Resonant Stability Valley ✔</strong>`;
+        }
+    } catch (error) {
+        console.error("Error in showParticle:", error);
+        document.getElementById("display").innerHTML = `<strong class="text-red-500">Error displaying particle data.</strong>`;
     }
 }
 
+// Function to display CNG Prediction data in the screen
+function showCngPrediction(predictionNumber, n) {
+    try {
+        const { predictedMeV, predictedKg, curvature } = getMassData(n);
+
+        // Display a fixed placeholder for the mode index in the main display
+        const displayN = "[See list on right]";
+
+        // Estimate spin based on whether n's floor is even or odd
+        let spinEstimate = 'Unknown';
+        // Only estimate spin if n is a positive finite number
+        if (n.isFinite() && n.gt(0)) {
+            const nFloor = n.floor();
+             if (nFloor.mod(2).equals(0)) {
+                 spinEstimate = 'Boson (even mode)';
+             } else {
+                 spinEstimate = 'Fermion (odd mode)';
+             }
+        }
+
+        let spinDescription = '';
+        if (spinEstimate === 'Fermion (odd mode)') {
+            spinDescription = '— matter';
+        } else if (spinEstimate === 'Boson (even mode)') {
+            spinDescription = '— force carrier';
+        }
+
+
+        let valleyStatus = '';
+        // Only check for resonant valley if predicted values are finite
+        if (isResonantValley(n) && isFinite(parseFloat(predictedMeV)) && isFinite(parseFloat(predictedKg))) {
+            valleyStatus = `<br><strong class="text-[#66fcf1]">Resonant Stability Valley ✔</strong>`;
+        }
+
+
+        document.getElementById("display").innerHTML = `
+            <strong>CNG Prediction ${predictionNumber}</strong><br>
+            Mode Index: ${displayN}<br>
+            Predicted MeV: ${predictedMeV} MeV<br>
+            Predicted Mass: ${predictedKg} kg<br>
+            Time-Curvature Mode κ<sub>n</sub> (unitless): ${curvature}<br>
+            Spin Estimate: ${spinEstimate} ${spinDescription}<br>
+            (Electron-calibrated)
+            ${valleyStatus}
+        `;
+    } catch (error) {
+        console.error("Error in showCngPrediction:", error);
+        document.getElementById("display").innerHTML = `<strong class="text-red-500">Error displaying prediction data.</strong>`;
+    }
+}
+
+
+// Function to handle custom mode index input (triggered by left button)
 function customN() {
-    const n = parseFloat(prompt("Enter mode index n:"));
-    if (!isFinite(n) || n <= 0) return alert("Invalid input.");
-    const { predictedMeV, predictedKg, curvature } = getMassData(n);
-    const spin = Math.floor(n) % 2 === 0 ? 'Boson (even mode)' : 'Fermion (odd mode)';
+    try {
+        const nInput = prompt("Enter mode index n:");
+        if (nInput === null) return; // User cancelled prompt
 
-    document.getElementById("display").innerHTML = `
-		<strong>Custom Mode</strong><br>
-		n = ${n.toExponential(6)}<br>
-		Predicted Mass: ${predictedMeV.toExponential(6)} MeV<br>
-		Mass: ${predictedKg.toExponential(6)} kg<br>
-		Time-Curvature Mode κ<sub>n</sub>: ${curvature}<br>
-		Spin Estimate: ${spin} — ${spin === 0.5 ? 'Fermion (matter)' :
-								  spin === 1 ? 'Boson (force carrier)' :
-								  spin === 0 ? 'Scalar (e.g. Higgs)' :
-								  spin === 2 ? 'Graviton (hypothetical)' :
-								  'Unknown'}<br>
-		(Electron-calibrated)
-`;
+        let n;
+        try {
+            n = new Decimal(nInput);
+        } catch (e) {
+            // Handle Decimal.js parsing errors
+            alert("Invalid input. Please enter a valid number.");
+            console.error("Decimal.js parsing error:", e);
+            return;
+        }
+
+        // Add more robust validation for custom input
+        if (!n.isFinite() || n.lt(0)) { // Check for non-finite or negative
+            alert("Invalid input. Please enter a non-negative finite number.");
+            console.error("Invalid custom input: not finite or negative.", n);
+            return;
+        }
+
+        // Add checks for extremely large/small values that might cause issues
+        if (n.abs().gt(N_MAX_LIMIT)) {
+             alert(`Input too large. Please enter a value less than or equal to ${N_MAX_LIMIT.toExponential()}.`);
+             console.error("Invalid custom input: exceeds max limit.", n);
+             return;
+        }
+         if (n.abs().lt(N_MIN_LIMIT) && !n.equals(0)) {
+             alert(`Input too small. Please enter a value greater than or equal to ${N_MIN_LIMIT.toExponential()} or exactly 0.`);
+             console.error("Invalid custom input: below min limit (and not zero).", n);
+             return;
+         }
+
+
+        const { predictedMeV, predictedKg, curvature } = getMassData(n);
+
+        // Display a fixed placeholder for the mode index in the main display
+        const displayN = "[See list on right]";
+
+        // Estimate spin based on whether n is close to an integer
+        let spinEstimate = 'Unknown';
+         // Only estimate spin if n is a positive finite number and close to an integer
+        if (n.isFinite() && n.gt(0)) {
+            const nFloor = n.floor();
+            const nCeil = n.ceil();
+            const diffFloor = n.minus(nFloor).abs();
+            const diffCeil = n.minus(nCeil).abs();
+            const tolerance = new Decimal("1e-9"); // Tolerance for checking if n is close to an integer
+
+            if (diffFloor.lt(tolerance) || diffCeil.lt(tolerance)) {
+                const closestInt = diffFloor.lt(tolerance) ? nFloor : nCeil;
+                if (closestInt.mod(2).equals(0)) {
+                     spinEstimate = 'Boson (even mode)';
+                } else {
+                     spinEstimate = 'Fermion (odd mode)';
+                }
+            }
+        }
+
+
+        let spinDescription = '';
+        if (spinEstimate === 'Fermion (odd mode)') {
+            spinDescription = '— matter';
+        } else if (spinEstimate === 'Boson (even mode)') {
+            spinDescription = '— force carrier';
+        }
+
+        let valleyStatus = '';
+         // Only check for resonant valley if predicted values are finite
+        if (isResonantValley(n) && isFinite(parseFloat(predictedMeV)) && isFinite(parseFloat(predictedKg))) {
+            valleyStatus = `<br><strong class="text-[#66fcf1]">Resonant Stability Valley ✔</strong>`;
+        }
+
+
+        document.getElementById("display").innerHTML = `
+            <strong>Custom Mode</strong><br>
+            n = ${displayN}<br>
+            Predicted Mass: ${predictedMeV} MeV<br>
+            Mass: ${predictedKg} kg<br>
+            Time-Curvature Mode κ<sub>n</sub> (unitless): ${curvature}<br>
+            Spin Estimate: ${spinEstimate} ${spinDescription}<br>
+            (Electron-calibrated)
+            ${valleyStatus}
+        `;
+    } catch (error) {
+        console.error("Error in customN:", error);
+        document.getElementById("display").innerHTML = `<strong class="text-red-500">Error calculating custom mode data.</strong>`;
+    }
 }
 
+// Function to clear the display screen (triggered by left button)
 function clearDisplay() {
-    document.getElementById("display").innerText = "Select a particle to view full CNG data.";
+    document.getElementById("display").innerText = "Select a particle or prediction to view data.";
 }
 
+// Function to toggle the visibility of the formula display
 function showFormula() {
     const formulaDisplay = document.getElementById("formulaDisplay");
     if (formulaDisplay) {
-        formulaDisplay.style.display = formulaDisplay.style.display === "none" ? "block" : "none";
+        formulaDisplay.classList.toggle('hidden'); // Use Tailwind's hidden class
     }
 }
 
+// Function to render the particle buttons and CNG prediction buttons in the left section
 function renderButtons() {
-    const grid = document.getElementById("buttonGrid");
-    if (!grid) return;
-    grid.innerHTML = '';
-    Object.keys(particleData).forEach(p => {
-        const btn = document.createElement("button");
-        btn.textContent = p;
-        btn.onclick = () => showParticle(p);
-        grid.appendChild(btn);
+    try {
+        const grid = document.getElementById("buttonGrid");
+        if (!grid) return;
+        grid.innerHTML = ''; // Clear existing buttons
+
+        // Render standard particle buttons
+        Object.keys(particleData).forEach(p => {
+            const btn = document.createElement("button");
+            btn.textContent = p;
+            // Add Tailwind classes for styling
+            btn.classList.add('p-3', 'rounded-lg', 'font-bold', 'bg-[#c5c6c7]', 'text-[#1f2833]', 'hover:bg-[#66fcf1]', 'transition', 'duration-200');
+            btn.onclick = () => showParticle(p);
+            grid.appendChild(btn);
+        });
+
+        // Render CNG Prediction buttons
+        const cng1Btn = document.createElement("button");
+        cng1Btn.textContent = "CNG Prediction 1";
+        cng1Btn.classList.add('p-3', 'rounded-lg', 'font-bold', 'bg-[#c5c6c7]', 'text-[#1f2833]', 'hover:bg-[#66fcf1]', 'transition', 'duration-200');
+        cng1Btn.onclick = () => showCngPrediction(1, cngPredictionN1);
+        grid.appendChild(cng1Btn);
+
+        const cng2Btn = document.createElement("button");
+        cng2Btn.textContent = "CNG Prediction 2";
+        cng2Btn.classList.add('p-3', 'rounded-lg', 'font-bold', 'bg-[#c5c6c7]', 'text-[#1f2833]', 'hover:bg-[#66fcf1]', 'transition', 'duration-200');
+        cng2Btn.onclick = () => showCngPrediction(2, cngPredictionN2);
+        grid.appendChild(cng2Btn);
+    } catch (error) {
+        console.error("Error rendering buttons:", error);
+    }
+}
+
+// Function to render the clickable mode indices list in the right section
+function renderModeIndicesList() {
+    try {
+        const modeIndicesListContainer = document.getElementById("modeIndicesListContainer");
+        if (!modeIndicesListContainer) return;
+
+        // Clear existing content except the strong tag title
+        const titleTag = modeIndicesListContainer.querySelector('strong');
+        modeIndicesListContainer.innerHTML = '';
+        if (titleTag) {
+            modeIndicesListContainer.appendChild(titleTag);
+        } else {
+             // If title wasn't found, add it back
+             const strongTag = document.createElement('strong');
+             strongTag.classList.add('text-[#66fcf1]', 'text-base', 'block', 'mb-2');
+             strongTag.textContent = 'Refined Mode Indices (n):';
+             modeIndicesListContainer.appendChild(strongTag);
+        }
+
+        Object.keys(particleData).forEach(pName => {
+            const p = particleData[pName];
+
+            // Create a container for each particle item
+            const itemContainer = document.createElement("div");
+            itemContainer.classList.add('mode-index-item-container');
+
+            // Create the clickable particle name element
+            const nameDiv = document.createElement("div");
+            nameDiv.classList.add('mode-index-item'); // Add class for styling and targeting
+            nameDiv.textContent = pName; // Display particle name
+            nameDiv.dataset.particleName = pName; // Store particle name for click handling
+
+            // Create the hidden div for displaying the full index
+            const fullIndexDiv = document.createElement("div");
+            fullIndexDiv.classList.add('full-index-display'); // Add class for styling and targeting
+
+            // Append name and full index div to the item container
+            itemContainer.appendChild(nameDiv);
+            itemContainer.appendChild(fullIndexDiv);
+
+            // Append the item container to the main list container
+            modeIndicesListContainer.appendChild(itemContainer);
+        });
+
+        // Add click event listener to the main mode indices list container
+        modeIndicesListContainer.addEventListener('click', function(event) {
+            try {
+                const target = event.target;
+                // Check if the clicked element is a particle name item
+                if (target && target.classList.contains('mode-index-item')) {
+                    const particleName = target.dataset.particleName;
+                    if (particleName && particleData[particleName]) {
+                        displayFullModeIndex(target.closest('.mode-index-item-container'), particleName); // Pass the container and name
+                    }
+                } else {
+                    // If click is not on an item, hide all full displays
+                    hideAllFullModeIndices();
+                }
+            } catch (error) {
+                console.error("Error in modeIndicesListContainer click handler:", error);
+            }
+        });
+    } catch (error) {
+        console.error("Error rendering mode indices list:", error);
+    }
+}
+
+// Function to display the full mode index for a selected particle, under its name
+function displayFullModeIndex(itemContainer, particleName) {
+    const fullDisplayElement = itemContainer.querySelector('.full-index-display');
+    const particle = particleData[particleName];
+
+    if (fullDisplayElement && particle) {
+        // Hide any currently displayed full indices first
+        hideAllFullModeIndices();
+
+        // Display the full, unrounded mode index
+        fullDisplayElement.innerHTML = `<strong>Mode Index (n):</strong> ${particle.n.toString()}`;
+        fullDisplayElement.style.display = 'block'; // Show the element
+    }
+}
+
+// Function to hide all currently displayed full mode indices
+function hideAllFullModeIndices() {
+    const allFullDisplays = document.querySelectorAll('.full-index-display');
+    allFullDisplays.forEach(el => {
+        el.style.display = 'none';
+        el.innerHTML = ''; // Clear content when hidden
     });
 }
 
+
+// Function to check if a mode index is in a resonant stability valley (based on second derivative of mass)
 function isResonantValley(n) {
-    const delta = new Decimal("1e-6");
-    const m1 = massMeV(Decimal(n).minus(delta));
+    // Use a relative delta based on n for better accuracy with large numbers
+    // Ensure n is a positive finite number before calculating delta
+     if (!n.isFinite() || n.lt(0)) {
+        return false; // Cannot calculate derivative for non-finite or negative n
+    }
+    const delta = n.times("1e-6");
+
+
+    // Ensure n +/- delta are positive for curvatureKappa
+    if (n.minus(delta).lte(0) || n.plus(delta).lte(0)) {
+        return false; // Cannot calculate derivative if n is too small
+    }
+
+    const m1 = massMeV(n.minus(delta));
     const m2 = massMeV(n);
-    const m3 = massMeV(Decimal(n).plus(delta));
-    const d2 = m1 - 2 * m2 + m3;
-    return Math.abs(d2) < 1e-6;
+    const m3 = massMeV(n.plus(delta));
+
+    // Check for NaN or Infinity results from massMeV
+    if (m1.isNaN() || !m1.isFinite() || m2.isNaN() || !m2.isFinite() || m3.isNaN() || !m3.isFinite()) {
+        return false;
+    }
+
+    // Approximate the second derivative using Decimal objects
+    const d2 = (m1.minus(m2.times(2)).plus(m3)).div(delta.times(delta));
+
+    // Define a tolerance for considering it a "valley" (where the second derivative is close to zero)
+    // The specific tolerance might need tuning based on the function's behavior
+    const valleyTolerance = new Decimal("1e-3"); // Example tolerance - adjust as needed
+
+    // A valley corresponds to a local minimum or inflection point where the second derivative is close to zero.
+    // For a "stability valley", we might also expect the first derivative to be close to zero (local minimum).
+    // Let's focus on the second derivative being close to zero for now.
+     return d2.abs().lt(valleyTolerance);
 }
 
-renderButtons();
+
+// Initial rendering of buttons and mode indices list when the page loads
+try {
+    renderButtons();
+    renderModeIndicesList();
+} catch (error) {
+    console.error("Error during initial rendering:", error);
+}
 </script>
+</html>
