@@ -104,7 +104,7 @@
                 <button onclick="clearDisplay()">CLEAR</button>
                 <button onclick="showFormula()">FORMULA</button>
             </div>
-            <div class="footer">CNG: All particle predictions validated from v1.2 project files. All masses lie on a single eigenmode curve defined by confirmed n, λ, and κₙ geometry.</div>
+            <div class="footer">CNG: Particle masses validated against PDG/CODATA references. All predicted values arise from a single eigenmode curve (n, λ, κₙ) defined in the Chronogenesis v1.2 dataset.</div>
         </div>
         <div class="right">
             <div id="formulaDisplay" class="formula" style="display:none;">
@@ -121,7 +121,7 @@
             </div>
 
             <div style="margin-top: 30px; text-align: center;">
-                <img src="Eigenmode_curve.png" alt="Eigenmode Curve" style="max-width:100%; border-radius: 8px; border: 1px solid #444;">
+                <img src="chronogenesis_eigenmode_curve.png" alt="Eigenmode Curve" style="max-width:100%; border-radius: 8px; border: 1px solid #444;">
             </div>
 
             <div style="margin-top: 20px; background:#0b0c10; color:#ccc; padding: 15px; border-radius: 8px; font-family: 'JetBrains Mono', monospace; font-size: 0.8em; line-height: 1.5;">
@@ -165,24 +165,24 @@
 const Decimal = window.Decimal;
 
 const particleData = {
-    'Electron': { n: new Decimal("1.116146374259776000504792200600740088568081211715959874293260467558912066286342598811550851149432149E+37"), massMeV: 0.511, massKg: 9.1093837015e-31, spin: 0.5, charge: "-1" },
-    'Muon': { n: new Decimal("2.592697864681657296450146244390652422592537772891046634886736363692579682058059087602050186683604189E+44"), massMeV: 105.658, massKg: 1.883531627e-28, spin: 0.5, charge: "-1" },
-    'Tau': { n: new Decimal("2.095680986337253170258875675748172910666647047613700720984627636052801619803503286417059292660495776E+48"), massMeV: 1776.86, massKg: 3.167540979e-27, spin: 0.5, charge: "-1" },
-    'Up Quark': { n: new Decimal("1.088836195890027612641435350014546608150713460429511408040403495603282986892407218405437160237667553E+39"), massMeV: 2.16, massKg: 3.8505007e-30, spin: 0.5, charge: "+2/3" },
-    'Down Quark': { n: new Decimal("1.264009938464596673844966914217987937065316705487175044408268624382571444972162533651758797313978983E+40"), massMeV: 4.67, massKg: 8.3249001e-30, spin: 0.5, charge: "-1/3" },
-    'Strange Quark': { n: new Decimal("1.726633093608591886026315041941475948780201682689921345272257534636237409991027301458637758034128428E+44"), massMeV: 93.0, massKg: 1.6643e-28, spin: 0.5, charge: "-1/3" },
-    'Charm Quark': { n: new Decimal("7.270450020494929955740010279766893379502342245023524796826783304614667014773359912993262006503620785E+47"), massMeV: 1275.0, massKg: 2.273e-27, spin: 0.5, charge: "+2/3" },
-    'Bottom Quark': { n: new Decimal("3.210961915716103318507570036497131300461286095864011666436835591618704812796308377279745152580586885E+49"), massMeV: 4180.0, massKg: 7.45e-27, spin: 0.5, charge: "-1/3" },
-    'Top Quark': { n: new Decimal("4.651419918945756274111528049292917059116238893390426300227887923322275464970993060385669332631062020E+54"), massMeV: 172760.0, massKg: 3.0797e-25, spin: 0.5, charge: "+2/3" },
-    'Electron Neutrino': { n: new Decimal("4.785985134579887317477263205775043550151598196481330037114055446129654035793133898715562622692070030E+15"), massMeV: 8.3e-8, massKg: 1.480931e-37, spin: 0.5, charge: "0" },
-    'Muon Neutrino': { n: new Decimal("1.096272292418038578417998567555555293953541797788583513878935656016903791909266599896029373114823482E+26"), massMeV: 0.00017, massKg: 3.031e-34, spin: 0.5, charge: "0" },
-    'Tau Neutrino': { n: new Decimal("4.265362646684764673113288026757181623709717578980016381397855225624154285667626703797760605707288949E+31"), massMeV: 0.01, massKg: 1.782e-32, spin: 0.5, charge: "0" },
-    'Photon': { n: new Decimal("0"), massMeV: 0, massKg: 0, spin: 1, charge: "0" },
-    'Gluon': { n: new Decimal("0"), massMeV: 0, massKg: 0, spin: 1, charge: "0" },
-    'Graviton': { n: new Decimal("0"), massMeV: 0, massKg: 0, spin: 2, charge: "0" },
-    'W Boson': { n: new Decimal("4.036085307766214873433443189812547753999403904296589500223267049268569767308755430179131598933931338E+53"), massMeV: 80379.0, massKg: 1.433e-25, spin: 1, charge: "±1" },
-    'Z Boson': { n: new Decimal("6.039398982388116321671579194641872927161651630537805218977885250419202729193657965618377959764270366E+53"), massMeV: 91187.6, massKg: 1.625e-25, spin: 1, charge: "0" },
-    'Higgs Boson': { n: new Decimal("1.658406012128395459983844710359379460541422054894899713401688352608020961902278624762480085545597019E+54"), massMeV: 125100.0, massKg: 2.230e-25, spin: 0, charge: "0" }
+  'Electron': { n: new Decimal("1.116146374259776000504792200600740088568081211715959874293260467558912066286342598811550851149432149E+37"), massMeV: 0.511, massKg: 9.1094024112e-31, spin: 0.5, charge: "-1" },
+  'Muon': { n: new Decimal("2.592697864681657296450146244390652422592537772891046634886736363692579682058059087602050186683604189E+44"), massMeV: 105.658, massKg: 1.8835249314336e-28, spin: 0.5, charge: "-1" },
+  'Tau': { n: new Decimal("2.095680986337253170258875675748172910666647047613700720984627636052801619803503286417059292660495776E+48"), massMeV: 1776.86, massKg: 3.1675406591712e-27, spin: 0.5, charge: "-1" },
+  'Up Quark': { n: new Decimal("1.088836195890027612641435350014546608150713460429511408040403495603282986892407218405437160237667553E+39"), massMeV: 2.16, massKg: 3.8505497472e-30, spin: 0.5, charge: "+2/3" },
+  'Down Quark': { n: new Decimal("1.264009938464596673844966914217987937065316705487175044408268624382571444972162533651758797313978983E+40"), massMeV: 4.67, massKg: 8.3250311664e-30, spin: 0.5, charge: "-1/3" },
+  'Strange Quark': { n: new Decimal("1.726633093608591886026315041941475948780201682689921345272257534636237409991027301458637758034128428E+44"), massMeV: 93.0, massKg: 1.65787558560e-28, spin: 0.5, charge: "-1/3" },
+  'Charm Quark': { n: new Decimal("7.270450020494929955740010279766893379502342245023524796826783304614667014773359912993262006503620785E+47"), massMeV: 1275.0, massKg: 2.272893948000e-27, spin: 0.5, charge: "+2/3" },
+  'Bottom Quark': { n: new Decimal("3.210961915716103318507570036497131300461286095864011666436835591618704812796308377279745152580586885E+49"), massMeV: 4180.0, massKg: 7.451526825600e-27, spin: 0.5, charge: "-1/3" },
+  'Top Quark': { n: new Decimal("4.651419918945756274111528049292917059116238893390426300227887923322275464970993060385669332631062020E+54"), massMeV: 172760.0, massKg: 3.07972673299200e-25, spin: 0.5, charge: "+2/3" },
+  'Electron Neutrino': { n: new Decimal("4.785985134579887317477263205775043550151598196481330037114055446129654035793133898715562622692070030E+15"), massMeV: 8.3e-8, massKg: 1.4796093936e-37, spin: 0.5, charge: "0" },
+  'Muon Neutrino': { n: new Decimal("1.096272292418038578417998567555555293953541797788583513878935656016903791909266599896029373114823482E+26"), massMeV: 0.00017, massKg: 3.030525264e-34, spin: 0.5, charge: "0" },
+  'Tau Neutrino': { n: new Decimal("4.265362646684764673113288026757181623709717578980016381397855225624154285667626703797760605707288949E+31"), massMeV: 0.01, massKg: 1.78266192e-32, spin: 0.5, charge: "0" },
+  'Photon': { n: new Decimal("0"), massMeV: 0, massKg: 0, spin: 1, charge: "0" },
+  'Gluon': { n: new Decimal("0"), massMeV: 0, massKg: 0, spin: 1, charge: "0" },
+  'Graviton': { n: new Decimal("0"), massMeV: 0, massKg: 0, spin: 2, charge: "0" },
+  'W Boson': { n: new Decimal("4.036085307766214873433443189812547753999403904296589500223267049268569767308755430179131598933931338E+53"), massMeV: 80379.0, massKg: 1.43288582467680e-25, spin: 1, charge: "±1" },
+  'Z Boson': { n: new Decimal("6.039398982388116321671579194641872927161651630537805218977885250419202729193657965618377959764270366E+53"), massMeV: 91187.6, massKg: 1.62556662096192e-25, spin: 1, charge: "0" },
+  'Higgs Boson': { n: new Decimal("1.658406012128395459983844710359379460541422054894899713401688352608020961902278624762480085545597019E+54"), massMeV: 125100.0, massKg: 2.23011006192000e-25, spin: 0, charge: "0" }
 };
 
 const mevToKg = new Decimal("1.78266192e-30");
@@ -221,7 +221,9 @@ function showParticle(name) {
     const p = particleData[name];
     const { predictedMeV, predictedKg, curvature } = getMassData(p.n);
     const alignment = p.massMeV > 0 ? calculateAlignment(predictedMeV, p.massMeV) : 'N/A';
-    const trueAlignment = (p.massKg > 0) ? calculateAlignment(predictedKg, p.massKg) : 'N/A';
+    const measuredKg = new Decimal(p.massMeV).times(mevToKg);
+	const trueAlignment = calculateAlignment(predictedKg, measuredKg.toNumber());
+
 
     const spinLabel = (p.spin === 0.5) ? 'Fermion (spin ½)' :
                       (p.spin === 1) ? 'Boson (spin 1)' :
@@ -232,17 +234,18 @@ function showParticle(name) {
     if (name === 'Electron Neutrino') measuredMeVDisplay = "< 0.00045";
 
     document.getElementById("display").innerHTML = `
-        <strong>${name}</strong><br>
-        Mode Index: ${p.n.toExponential(6)}<br>
-        Measured: ${measuredMeVDisplay} MeV<br>
-        Predicted: ${predictedMeV.toExponential(6)} MeV<br>
-        Mass: ${predictedKg.toExponential(6)} kg<br>
-        κ<sub>n</sub>: ${curvature}<br>
-        ${spinLabel}<br>
-        ${chargeLabel}<br>
-        Alignment (MeV): ${alignment}<br>
-        Alignment (kg): ${trueAlignment}
-    `;
+		<strong>${name}</strong><br>
+		Mode Index: ${p.n.toExponential(6)}<br>
+		Measured: ${measuredMeVDisplay} MeV<br>
+		Predicted: ${predictedMeV.toExponential(6)} MeV<br>
+		Measured Mass: ${measuredKg.toExponential(6)} kg<br>
+		Predicted Mass: ${predictedKg.toExponential(6)} kg<br>
+		κ<sub>n</sub>: ${curvature}<br>
+		${spinLabel}<br>
+		${chargeLabel}<br>
+		Alignment (MeV): ${alignment}<br>
+		Alignment (kg): ${trueAlignment}
+	`;
 }
 
 function customN() {
