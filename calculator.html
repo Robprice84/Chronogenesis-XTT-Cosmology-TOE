@@ -289,9 +289,12 @@ function getMassData(n) {
     const curvature = curvatureKappa(n);
 
     // Handle potential NaN or Infinity results from calculations and return appropriate strings
+    // predictedMeVDisplay remains as toString()
     const predictedMeVDisplay = predictedMeV.isNaN() || !predictedMeV.isFinite() ? 'N/A' : predictedMeV.toString();
-    const predictedKgDisplay = predictedKg.isNaN() || !predictedKg.isFinite() ? 'N/A' : predictedKg.toString();
-    const curvatureDisplay = curvature.isNaN() || !curvature.isFinite() ? 'N/A' : curvature.toString();
+    // Display predictedKg in scientific notation
+    const predictedKgDisplay = predictedKg.isNaN() || !predictedKg.isFinite() ? 'N/A' : predictedKg.toExponential();
+    // Display curvature in scientific notation
+    const curvatureDisplay = curvature.isNaN() || !curvature.isFinite() ? 'N/A' : curvature.toExponential();
 
     return { predictedMeV: predictedMeVDisplay, predictedKg: predictedKgDisplay, curvature: curvatureDisplay };
 }
@@ -330,8 +333,7 @@ function showParticle(name) {
             Mode Index: ${displayN}<br>
             Measured MeV: ${measuredMeVDisplay} MeV<br>
             Predicted MeV: ${predictedMeV} MeV<br>
-            Measured Mass (CODATA): ${p.massKg.toString()} kg<br>
-            Predicted Mass: ${predictedKg} kg<br>
+            Measured Mass (CODATA): ${p.massKg.toExponential()} kg<br> Predicted Mass: ${predictedKg} kg<br>
             Time-Curvature Mode κ<sub>n</sub> (unitless): ${curvature}<br>
             ${spinLabel}<br>
             Charge: ${p.charge}<br>
@@ -485,7 +487,7 @@ function customN() {
         document.getElementById("display").innerHTML = `
             <strong>Custom Mode</strong><br>
             n = ${displayN}<br>
-            Predicted Mass: ${predictedMeV} MeV<br>
+            Predicted MeV: ${predictedMeV} MeV<br>
             Mass: ${predictedKg} kg<br>
             Time-Curvature Mode κ<sub>n</sub> (unitless): ${curvature}<br>
             Spin Estimate: ${spinEstimate} ${spinDescription}<br>
