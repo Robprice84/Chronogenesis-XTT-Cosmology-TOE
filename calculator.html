@@ -104,7 +104,8 @@
                 <button onclick="clearDisplay()">CLEAR</button>
                 <button onclick="showFormula()">FORMULA</button>
             </div>
-            <div class="footer">CNG: Particle masses validated against PDG/CODATA references. All predicted values arise from a single eigenmode curve (n, λ, κₙ) defined in the Chronogenesis v1.2 dataset.</div>
+            <div class="footer"> CNG: Particle masses validated against PDG/CODATA references. All predicted values arise from a single eigenmode curve (n, λ, κₙ) defined in the Chronogenesis v1.2 dataset.<br>
+    Mass scaling constant is electron-calibrated: α = mₑ / √κₙ(electron)</div>
         </div>
         <div class="right">
             <div id="formulaDisplay" class="formula" style="display:none;">
@@ -243,7 +244,6 @@ function showParticle(name) {
         ${chargeLabel}<br>
         Alignment (MeV): ${alignment}<br>
         Alignment (kg): ${trueAlignment}<br>
-        (Electron-calibrated: α = mₑ / √κₙ₍ₑₗₑcₜᵣₒₙ₎)
     `;
 	if (alignment > 99.999 && trueAlignment > 99.999) {
 		document.getElementById("display").innerHTML += `<br><strong style="color:#00ff88;">Perfect Match ✔</strong>`;
