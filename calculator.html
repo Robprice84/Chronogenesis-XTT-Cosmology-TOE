@@ -2,12 +2,20 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=0.8, maximum-scale=0.8, user-scalable=yes">
+    <meta name="viewport" content="width=1024, initial-scale=1, maximum-scale=1.0">
     <title>Chronogenesis Mass Calculator</title>
     <script src="https://cdn.jsdelivr.net/npm/decimal.js@10.4.3/decimal.min.js"></script>
     <style>
+		@media (max-width: 768px) {
+		body {
+			transform: scale(0.85);
+			transform-origin: top center;
+			zoom: 0.85;
+		  }
+		}
         body {
             font-family: 'Inter', sans-serif;
+			font-size: 100%;
             background: #0b0c10;
             color: #ffffff;
             margin: 0;
@@ -17,6 +25,10 @@
             align-items: center;
             min-height: 100vh;
         }
+		body {
+			overflow-x: hidden;
+		}
+
         .calculator {
             background: #1f2833;
             border-radius: 16px;
@@ -104,8 +116,7 @@
                 <button onclick="clearDisplay()">CLEAR</button>
                 <button onclick="showFormula()">FORMULA</button>
             </div>
-            <div class="footer"> CNG: Particle masses validated against PDG/CODATA references. All predicted values arise from a single eigenmode curve (n, λ, κₙ) defined in the Chronogenesis v1.2 dataset.<br>
-    Mass scaling constant is electron-calibrated: α = mₑ / √κₙ(electron)</div>
+            <div class="footer">CNG: Particle masses validated against PDG/CODATA references. All predicted values arise from a single eigenmode curve (n, λ, κₙ) defined in the Chronogenesis v1.2 dataset.</div>
         </div>
         <div class="right">
             <div id="formulaDisplay" class="formula" style="display:none;">
@@ -243,7 +254,7 @@ function showParticle(name) {
         ${spinLabel}<br>
         ${chargeLabel}<br>
         Alignment (MeV): ${alignment}<br>
-        Alignment (kg): ${trueAlignment}<br>
+        Alignment (kg): ${trueAlignment}<br>        
     `;
 	if (alignment > 99.999 && trueAlignment > 99.999) {
 		document.getElementById("display").innerHTML += `<br><strong style="color:#00ff88;">Perfect Match ✔</strong>`;
