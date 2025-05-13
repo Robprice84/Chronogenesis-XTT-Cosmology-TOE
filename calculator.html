@@ -221,9 +221,7 @@ function showParticle(name) {
     const p = particleData[name];
     const { predictedMeV, predictedKg, curvature } = getMassData(p.n);
     const alignment = p.massMeV > 0 ? calculateAlignment(predictedMeV, p.massMeV) : 'N/A';
-    const measuredKg = new Decimal(p.massMeV).times(mevToKg);
-	const trueAlignment = calculateAlignment(predictedKg, measuredKg.toNumber());
-
+    const trueAlignment = calculateAlignment(predictedKg, p.massKg);
 
     const spinLabel = (p.spin === 0.5) ? 'Fermion (spin ½)' :
                       (p.spin === 1) ? 'Boson (spin 1)' :
@@ -234,18 +232,26 @@ function showParticle(name) {
     if (name === 'Electron Neutrino') measuredMeVDisplay = "< 0.00045";
 
     document.getElementById("display").innerHTML = `
-		<strong>${name}</strong><br>
-		Mode Index: ${p.n.toExponential(6)}<br>
-		Measured: ${measuredMeVDisplay} MeV<br>
-		Predicted: ${predictedMeV.toExponential(6)} MeV<br>
-		Measured Mass: ${measuredKg.toExponential(6)} kg<br>
-		Predicted Mass: ${predictedKg.toExponential(6)} kg<br>
-		κ<sub>n</sub>: ${curvature}<br>
-		${spinLabel}<br>
-		${chargeLabel}<br>
-		Alignment (MeV): ${alignment}<br>
-		Alignment (kg): ${trueAlignment}
-	`;
+        <strong>${name}</strong><br>
+        Mode Index: ${p.n.toExponential(6)}<br>
+        Measured MeV: ${measuredMeVDisplay} MeV<br>
+        Predicted MeV: ${predictedMeV.toExponential(6)} MeV<br>
+        Measured Mass (CODATA): ${p.massKg.toExponential(6)} kg<br>
+        Predicted Mass: ${predictedKg.toExponential(6)} kg<br>
+        Time-Curvature Mode κ<sub>n</sub> (unitless): ${curvature}<br>
+        ${spinLabel}<br>
+        ${chargeLabel}<br>
+        Alignment (MeV): ${alignment}<br>
+        Alignment (kg): ${trueAlignment}<br>
+        (Electron-calibrated: α = mₑ / √κₙ₍ₑₗₑcₜᵣₒₙ₎)
+    `;
+	if (alignment > 99.999 && trueAlignment > 99.999) {
+		document.getElementById("display").innerHTML += `<br><strong style="color:#00ff88;">Perfect Match ✔</strong>`;
+	}
+
+    if (isResonantValley(p.n)) {
+        document.getElementById("display").innerHTML += `<br><strong style="color:#66fcf1;">Resonant Stability Valley ✔</strong>`;
+    }
 }
 
 function customN() {
@@ -255,14 +261,18 @@ function customN() {
     const spin = Math.floor(n) % 2 === 0 ? 'Boson (even mode)' : 'Fermion (odd mode)';
 
     document.getElementById("display").innerHTML = `
-        <strong>Custom Mode</strong><br>
-        n = ${n.toExponential(6)}<br>
-        Predicted Mass: ${predictedMeV.toExponential(6)} MeV<br>
-        Mass: ${predictedKg.toExponential(6)} kg<br>
-        κ<sub>n</sub>: ${curvature}<br>
-        Spin (heuristic): ${spin}<br>
-        (Electron-calibrated)
-    `;
+		<strong>Custom Mode</strong><br>
+		n = ${n.toExponential(6)}<br>
+		Predicted Mass: ${predictedMeV.toExponential(6)} MeV<br>
+		Mass: ${predictedKg.toExponential(6)} kg<br>
+		Time-Curvature Mode κ<sub>n</sub>: ${curvature}<br>
+		Spin Estimate: ${spin} — ${spin === 0.5 ? 'Fermion (matter)' :
+								  spin === 1 ? 'Boson (force carrier)' :
+								  spin === 0 ? 'Scalar (e.g. Higgs)' :
+								  spin === 2 ? 'Graviton (hypothetical)' :
+								  'Unknown'}<br>
+		(Electron-calibrated)
+`;
 }
 
 function clearDisplay() {
@@ -286,6 +296,15 @@ function renderButtons() {
         btn.onclick = () => showParticle(p);
         grid.appendChild(btn);
     });
+}
+
+function isResonantValley(n) {
+    const delta = new Decimal("1e-6");
+    const m1 = massMeV(Decimal(n).minus(delta));
+    const m2 = massMeV(n);
+    const m3 = massMeV(Decimal(n).plus(delta));
+    const d2 = m1 - 2 * m2 + m3;
+    return Math.abs(d2) < 1e-6;
 }
 
 renderButtons();
