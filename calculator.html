@@ -113,7 +113,7 @@
 
             <div id="display" class="screen bg-[#45a29e] text-[#1f2833] p-6 rounded-xl text-lg mb-6 min-h-[200px] overflow-wrap break-word leading-relaxed">
                 Select a particle or prediction to view data.<br>
-                <span class="text-sm text-[#1f2833]">This calculator uses the Chronogenesis model to predict particle masses based on their mode index (n) and a time-curvature relationship (κ).</span>
+                <span class="text-sm text-[#1f2833]">This calculator uses the Chronogenesis model to predict fundamental particle masses based on their mode index (n) and a time-curvature relationship (κ).</span>
             </div>
 
             <div id="confirm-bar" class="confirm-bar text-center mb-6"></div>
@@ -142,7 +142,22 @@
 
             <div class="info-section">
                 <strong>About the Chronogenesis Model:</strong>
-                <p class="mt-2">This calculator is based on the Chronogenesis model, which proposes that fundamental particle masses are quantized energy states (modes) of a universal time-curvature field. The mass of a particle is related to its mode index (n) through the formula shown above. The model suggests a deep connection between particle physics and the geometry of spacetime.</p>
+                <p class="mt-2">This calculator is based on the Chronogenesis model, which proposes that fundamental particle masses are quantized energy states (modes) of a universal time-curvature field (Θ). The mass spectrum is derived from the eigenmodes of this field. This tool allows for the calculation of fundamental particle masses and other properties based on their mode index (n) and the time-curvature relationship (κ).</p>
+                 <p class="mt-2 text-sm italic">
+                    Properties calculated by this tool:
+                    <ul>
+                        <li><strong>Mass (m<sub>n</sub>):</strong> Predicted from the mode index (n) and time-curvature (κ).</li>
+                         <li><strong>Time-Curvature Mode (κ<sub>n</sub>):</strong> A unitless value representing the particle's mode in the time-curvature field.</li>
+                         <li><strong>Predicted Spin:</strong> Inferred heuristically from the parity of the time-curvature mode ($\kappa_n$), linking spin to the topological nature of Θ's standing waves. (Note: This is a model prediction and may not always match the Standard Model spin).</li>
+                        <li><strong>Predicted Charge (CNG):</strong> The electric charge assigned to the particle mode within the Chronogenesis framework.</li>
+                        <li><strong>Stability/Lifetime:</strong> Resonant stability valleys in the mass spectrum (where the second derivative of mass is near zero) predict longer-lived particles and stable decays. Off-valley modes correspond to unstable resonances.</li>
+                         <li><strong>Redshift Origin (z):</strong> Each mode index (n) is linked to a predicted cosmological redshift (z), potentially connecting particles to cosmic structures.</li>
+                         <li><strong>Quantum Decoherence Time (τ<sub>D</sub>):</strong> The model provides a formula for the collapse time of superpositions involving a mode based on the difference in the Θ field. (Note: Calculation here uses a simplified $\Delta\kappa = \kappa_n$ and $\Theta=1$).</li>
+                         <li><strong>Entropy Contribution (S<sub>n</sub>):</strong> Each particle mode has an associated entropy value ($S_n$).</li>
+                         <li><strong>Resonance Shell Layer (k):</strong> Each mode index corresponds to a predicted cosmic shell layer index (k), indicating a particle's position within large-scale cosmic structure.</li>
+                    </ul>
+                     Other aspects of the broader theory, such as calculating charge directly from topology, visualizing field geometry, and calculating interaction strengths for composite particles, are addressed in theoretical papers or separate tools and are beyond the scope of this calculator.
+                </p>
             </div>
 
 
@@ -174,7 +189,7 @@ const particleData = {
     'Up Quark': { n: new Decimal("1.088836195890027612641435350014546608150713460429511408040403495603282986892407218405437160237667553E+39"), massMeV: new Decimal("2.16"), massKg: new Decimal("3.8505497472e-30"), spin: 0.5, charge: "+2/3" },
     'Down Quark': { n: new Decimal("1.264009938464596673844966914217987937065316705487175044408268624382571444972162533651758797313978983E+40"), massMeV: new Decimal("4.67"), massKg: new Decimal("8.3250311664e-30"), spin: 0.5, charge: "-1/3" },
     'Strange Quark': { n: new Decimal("1.726633093608591886026315041941475948780201682689921345272257534636237409991027301458637758034128428E+44"), massMeV: new Decimal("93.0"), massKg: new Decimal("1.65787558560e-28"), spin: 0.5, charge: "-1/3" },
-    'Charm Quark': { n: new Decimal("7.270450020494929955740010279766893379502342245023524796826783304614667014773359912993262006503620785E+47"), massMeV: new Decimal("1275.0"), massKg: new Decimal("2.272893948000e-27"), spin: 0.5, charge: "+2/3" },
+    'Charm Quark': { n: new Decimal("7.270450020494929955740010279766893379502342245023524796826783304614666647047613700720984627636052801619803503286417059292660495776E+47"), massMeV: new Decimal("1275.0"), massKg: new Decimal("2.272893948000e-27"), spin: 0.5, charge: "+2/3" },
     'Bottom Quark': { n: new Decimal("3.21096191571610331850757003649713130046128609586401166643683559161870481286095864011666436835591618704812796308377279745152580586885E+49"), massMeV: new Decimal("4180.0"), massKg: new Decimal("7.451526825600e-27"), spin: 0.5, charge: "-1/3" },
     'Top Quark': { n: new Decimal("4.651419918945756274111528049292917059116238893390426300227887923322275464970993060385669332631062020E+54"), massMeV: new Decimal("172760.0"), massKg: new Decimal("3.07972673299200e-25"), spin: 0.5, charge: "+2/3" },
     'Electron Neutrino': { n: new Decimal("4.785985134579887317477263205775043550151598196481330037114055446129654035793133898715562622692070030E+15"), massMeV: new Decimal("8.3e-8"), massKg: new Decimal("1.4796093936e-37"), spin: 0.5, charge: "0" },
@@ -184,11 +199,24 @@ const particleData = {
     'Gluon': { n: new Decimal("0"), massMeV: new Decimal("0"), massKg: new Decimal("0"), spin: 1, charge: "0" },
     'Graviton': { n: new Decimal("0"), massMeV: new Decimal("0"), massKg: new Decimal("0"), spin: 2, charge: "0" },
     'W Boson': { n: new Decimal("4.036085307766214873433443189812547753999403904296589500223267049268569767308755430179131598933931338E+53"), massMeV: new Decimal("80379.0"), massKg: new Decimal("1.43288582467680e-25"), spin: 1, charge: "±1" },
-    'Z Boson': { n: new Decimal("6.039398982388116321671579194641872927161651630537805218977885250419202729193657965618377959764270366E+53"), massMeV: new Decimal("91187.6"), massKg: new Decimal("1.62556662096192e-25"), spin: 1, charge: "0" },
+    'Z Boson': { n: new Decimal("6.039398982388116321671579194641872927161651630537805218977885250419202729193657964270366E+53"), massMeV: new Decimal("91187.6"), massKg: new Decimal("1.62556662096192e-25"), spin: 1, charge: "0" },
     'Higgs Boson': { n: new Decimal("1.658406012128395459983844710359379460541422054894899713401688352608020961902278624762480085545597019E+54"), massMeV: new Decimal("125100.0"), massKg: new Decimal("2.23011006192000e-25"), spin: 0, charge: "0" }
 };
 
 const mevToKg = new Decimal("1.78266192e-30"); // Conversion factor MeV/c^2 to kg
+
+// Fundamental constants (using Decimal.js)
+const PLANCK_REDUCED = new Decimal("1.054571817e-34"); // Reduced Planck constant in J*s
+const BOLTZMANN_CONSTANT = new Decimal("1.380649e-23"); // Boltzmann constant in J/K (for entropy interpretation)
+
+// Chronogenesis constants (using Decimal.js)
+const BETA_REDSHIFT = new Decimal("1.97e-4"); // Beta constant for redshift calculation
+const THETA_FIELD = new Decimal("1"); // Theta field value (naturalized units)
+const BETA_ENTROPY = new Decimal("1.44e-24"); // Beta constant for entropy calculation (Planck-normalized J/K)
+const SHELL_A = new Decimal("1.43"); // Constant 'a' for shell layer calculation
+const SHELL_B = new Decimal("3.11"); // Constant 'b' for shell layer calculation
+const LN10 = new Decimal('2.302585092994045684017991'); // ln(10) for base-10 logarithm conversion
+
 
 // Calculate the alpha constant using Electron data
 const kappaElectron = new Decimal("6.7060821879436456799748104656833798181752300741342e+24");
@@ -257,6 +285,64 @@ function massKg(n) {
     return mass;
 }
 
+// Function to calculate Redshift Origin (z)
+function calculateRedshift(kappa) {
+     if (kappa.isNaN() || !kappa.isFinite() || kappa.lt(0)) {
+         return new Decimal(NaN); // Invalid kappa
+     }
+     // z_n = beta * (kappa_n)^(1/3)
+     const redshift = BETA_REDSHIFT.times(kappa.pow(1/3));
+     return redshift.isFinite() ? redshift : new Decimal(NaN);
+}
+
+// Function to calculate Quantum Decoherence Time (tau_D) in femtoseconds
+function calculateDecoherenceTime(n) {
+     const kappa = curvatureKappa(n);
+     if (kappa.isNaN() || !kappa.isFinite() || kappa.lte(0)) { // kappa must be positive for division
+         return new Decimal(NaN); // Invalid or non-positive kappa
+     }
+     // tau_D = hbar / (Delta_kappa * Theta)
+     // Using simplified Delta_kappa = kappa_n and Theta = 1
+     const tau_D_seconds = PLANCK_REDUCED.div(kappa.times(THETA_FIELD));
+     const tau_D_fs = tau_D_seconds.times("1e15"); // Convert seconds to femtoseconds
+     return tau_D_fs.isFinite() ? tau_D_fs : new Decimal(NaN);
+}
+
+// Function to calculate Entropy Contribution (S) in J/K
+function calculateEntropy(kappa) {
+     // Add safety check for kappa
+     if (kappa.isNaN() || !kappa.isFinite() || kappa.lt(0)) {
+         return new Decimal(NaN); // Invalid kappa
+     }
+     // S_n = beta * kappa_n
+     const entropy = BETA_ENTROPY.times(kappa);
+     return entropy.isFinite() ? entropy : new Decimal(NaN);
+}
+
+// Function to calculate Shell Layer Position (k)
+function calculateShellLayer(n) {
+     if (!n.isFinite() || !n.gt(0)) { // n must be finite and positive for log10
+         return new Decimal(NaN); // Invalid or non-positive n
+     }
+     // k = log10(n) / a - b
+     // FIX: Use base-10 logarithm by dividing natural log by ln(10)
+     const log10_n = n.log().div(LN10);
+     const shellLayer = log10_n.div(SHELL_A).minus(SHELL_B);
+     return shellLayer.isFinite() ? shellLayer : new Decimal(NaN);
+}
+
+// Function to predict spin based on curvature parity
+function predictSpin(kappa) {
+    if (kappa.isNaN() || !kappa.isFinite()) {
+        return 'Unknown';
+    }
+    // Spin prediction logic based on kappa.floor() parity as requested
+    const twistParity = kappa.floor().mod(2).equals(1); // True if kappa.floor is odd
+    const predictedSpin = twistParity ? 0.5 : 1; // 0.5 for odd kappa.floor, 1 for even kappa.floor
+    return predictedSpin;
+}
+
+
 // Function to calculate percentage alignment between predicted and observed values
 // This function will still use standard numbers for calculation as percentages are approximations
 function calculateAlignment(predicted, observed) {
@@ -282,28 +368,63 @@ function calculateAlignment(predicted, observed) {
     return (avg === 0) ? 'N/A' : (100 * (1 - diff / avg)).toFixed(6) + '%';
 }
 
-// Function to get mass data for a given mode index n
-function getMassData(n) {
+// Function to get mass and other data for a given mode index n
+function getParticleData(n) {
     const predictedMeV = massMeV(n);
     const predictedKg = massKg(n);
     const curvature = curvatureKappa(n);
+    const redshift = calculateRedshift(curvature);
+    const decoherenceTime = calculateDecoherenceTime(n); // Decoherence time depends on n
+    const entropy = calculateEntropy(curvature);
+    const shellLayer = calculateShellLayer(n);
+    const predictedSpin = predictSpin(curvature); // Predict spin based on curvature
 
     // Handle potential NaN or Infinity results from calculations and return appropriate strings
-    // predictedMeVDisplay remains as toString()
     const predictedMeVDisplay = predictedMeV.isNaN() || !predictedMeV.isFinite() ? 'N/A' : predictedMeV.toString();
-    // Display predictedKg in scientific notation
-    const predictedKgDisplay = predictedKg.isNaN() || !predictedKg.isFinite() ? 'N/A' : predictedKg.toExponential();
-    // Display curvature in scientific notation
-    const curvatureDisplay = curvature.isNaN() || !curvature.isFinite() ? 'N/A' : curvature.toExponential();
+    const predictedKgDisplay = predictedKg.isNaN() || !predictedKg.isFinite() ? 'N/A' : predictedKg.toExponential(6); // 6 significant digits
+    const curvatureDisplay = curvature.isNaN() || !curvature.isFinite() ? 'N/A' : curvature.toExponential(6); // 6 significant digits
+    const redshiftDisplay = redshift.isNaN() || !redshift.isFinite() ? 'N/A' : redshift.toExponential(6); // 6 significant digits
+    const decoherenceTimeDisplay = decoherenceTime.isNaN() || !decoherenceTime.isFinite() ? 'N/A' : decoherenceTime.toExponential(6); // 6 significant digits
+    const entropyDisplay = entropy.isNaN() || !entropy.isFinite() ? 'N/A' : entropy.toExponential(6); // 6 significant digits
+    const predictedSpinDisplay = predictedSpin === 'Unknown' ? 'N/A' : predictedSpin.toString();
 
-    return { predictedMeV: predictedMeVDisplay, predictedKg: predictedKgDisplay, curvature: curvatureDisplay };
+
+     // Determine Shell Layer display
+     let shellLayerDisplay = 'N/A';
+     let shellMatchNote = '';
+     if (!shellLayer.isNaN() && shellLayer.isFinite()) {
+         const integerPart = shellLayer.floor();
+         const fractionalPart = shellLayer.minus(integerPart).abs();
+         const tolerance = new Decimal("1e-6"); // Tolerance for integer check
+
+         if (fractionalPart.lt(tolerance) || fractionalPart.gt(new Decimal(1).minus(tolerance))) {
+             // It's close to an integer
+             shellLayerDisplay = shellLayer.toFixed(0); // Display as integer
+             shellMatchNote = ' <strong class="text-[#00ff88]">Strong Cosmic Shell Match ✔</strong>';
+         } else {
+             shellLayerDisplay = shellLayer.toFixed(6); // Display with decimals
+         }
+     }
+
+
+    return {
+        predictedMeV: predictedMeVDisplay,
+        predictedKg: predictedKgDisplay,
+        curvature: curvatureDisplay,
+        redshift: redshiftDisplay,
+        decoherenceTime: decoherenceTimeDisplay,
+        entropy: entropyDisplay,
+        shellLayer: shellLayerDisplay,
+        shellMatchNote: shellMatchNote,
+        predictedSpin: predictedSpinDisplay
+    };
 }
 
 // Function to display particle data in the screen (triggered by left buttons)
 function showParticle(name) {
-    try {
+    try { // Added try-catch for error isolation
         const p = particleData[name];
-        const { predictedMeV, predictedKg, curvature } = getMassData(p.n);
+        const { predictedMeV, predictedKg, curvature, redshift, decoherenceTime, entropy, shellLayer, shellMatchNote, predictedSpin } = getParticleData(p.n);
 
         // Calculate alignment using Decimal objects and then convert to number for calculation
         const alignmentMeV = p.massMeV.gt(0) ? calculateAlignment(predictedMeV, p.massMeV) : 'N/A';
@@ -312,16 +433,6 @@ function showParticle(name) {
         // Display a fixed placeholder for the mode index in the main display
         const displayN = "[See list on right]";
 
-
-        // Determine spin label
-        let spinLabel;
-        switch (p.spin) {
-            case 0: spinLabel = 'Scalar Boson (spin 0)'; break;
-            case 0.5: spinLabel = 'Fermion (spin ½)'; break;
-            case 1: spinLabel = 'Vector Boson (spin 1)'; break;
-            case 2: spinLabel = 'Tensor Boson (spin 2)'; break;
-            default: spinLabel = `Spin: ${p.spin}`;
-        }
 
         // Custom display for Electron Neutrino measured mass
         let measuredMeVDisplay = p.massMeV.toString(); // Display full precision for measured MeV
@@ -332,12 +443,15 @@ function showParticle(name) {
             <strong>${name}</strong><br>
             Mode Index: ${displayN}<br>
             Measured MeV: ${measuredMeVDisplay} MeV<br>
-            Predicted MeV: ${predictedMeV} MeV<br>
-            Measured Mass (CODATA): ${p.massKg.toExponential()} kg<br> Predicted Mass: ${predictedKg} kg<br>
+            Predicted Mass (MeV): ${predictedMeV} MeV<br>
+            Measured Mass (CODATA): ${p.massKg.toExponential(6)} kg<br> Predicted Mass (kg): ${predictedKg} kg<br>
             Time-Curvature Mode κ<sub>n</sub> (unitless): ${curvature}<br>
-            ${spinLabel}<br>
-            Charge: ${p.charge}<br>
-            Alignment (MeV): ${alignmentMeV}<br>
+            Redshift Origin (z): ${redshift}<br>
+            Quantum Decoherence Time (τ<sub>D</sub>) (fs): ${decoherenceTime}<br>
+            Entropy Contribution (S<sub>n</sub>) (J/K): ${entropy}<br>
+            Resonance Shell Layer k: ${shellLayer}${shellMatchNote}<br>
+            Predicted Spin (based on curvature parity): ${predictedSpin}<br>
+            Predicted Charge (CNG): ${p.charge}<br> Alignment (MeV): ${alignmentMeV}<br>
             Alignment (kg): ${alignmentKg}<br>
         `;
 
@@ -348,69 +462,61 @@ function showParticle(name) {
 
         // Check and display if the mode is in a resonant stability valley
         if (isResonantValley(p.n)) {
-            document.getElementById("display").innerHTML += `<br><strong class="text-[#66fcf1]">Resonant Stability Valley ✔</strong>`;
+            document.getElementById("display").innerHTML += `<br><strong class="text-[#66fcf1]">Resonant Stability Valley ✔ (Expected longer lifetime/stable decay)</strong>`;
         }
     } catch (error) {
-        console.error("Error in showParticle:", error);
-        document.getElementById("display").innerHTML = `<strong class="text-red-500">Error displaying particle data.</strong>`;
+        console.error("Error displaying particle data for", name, ":", error);
+        document.getElementById("display").innerHTML = `<strong class="text-red-500">Error displaying data for ${name}. Please check console for details.</strong>`;
     }
 }
 
 // Function to display CNG Prediction data in the screen
 function showCngPrediction(predictionNumber, n) {
-    try {
-        const { predictedMeV, predictedKg, curvature } = getMassData(n);
+    try { // Added try-catch for error isolation
+        const { predictedMeV, predictedKg, curvature, redshift, decoherenceTime, entropy, shellLayer, shellMatchNote, predictedSpin } = getParticleData(n);
 
         // Display a fixed placeholder for the mode index in the main display
         const displayN = "[See list on right]";
 
-        // Estimate spin based on whether n's floor is even or odd
-        let spinEstimate = 'Unknown';
-        // Only estimate spin if n is a positive finite number
-        if (n.isFinite() && n.gt(0)) {
-            const nFloor = n.floor();
-             if (nFloor.mod(2).equals(0)) {
-                 spinEstimate = 'Boson (even mode)';
-             } else {
-                 spinEstimate = 'Fermion (odd mode)';
-             }
-        }
-
         let spinDescription = '';
-        if (spinEstimate === 'Fermion (odd mode)') {
+        if (predictedSpin === 0.5) {
             spinDescription = '— matter';
-        } else if (spinEstimate === 'Boson (even mode)') {
+        } else if (predictedSpin === 1) {
             spinDescription = '— force carrier';
         }
 
 
         let valleyStatus = '';
         // Only check for resonant valley if predicted values are finite
-        if (isResonantValley(n) && isFinite(parseFloat(predictedMeV)) && isFinite(parseFloat(predictedKg))) {
-            valleyStatus = `<br><strong class="text-[#66fcf1]">Resonant Stability Valley ✔</strong>`;
+        if (isResonantValley(n) && isFinite(parseFloat(predictedMeV)) && isFinite(parseFloat(parseFloat(predictedKg)))) {
+            valleyStatus = `<br><strong class="text-[#66fcf1]">Resonant Stability Valley ✔ (Expected longer lifetime/stable decay)</strong>`;
         }
 
 
         document.getElementById("display").innerHTML = `
             <strong>CNG Prediction ${predictionNumber}</strong><br>
             Mode Index: ${displayN}<br>
-            Predicted MeV: ${predictedMeV} MeV<br>
-            Predicted Mass: ${predictedKg} kg<br>
+            Predicted Mass (MeV): ${predictedMeV} MeV<br>
+            Predicted Mass (kg): ${predictedKg} kg<br>
             Time-Curvature Mode κ<sub>n</sub> (unitless): ${curvature}<br>
-            Spin Estimate: ${spinEstimate} ${spinDescription}<br>
-            (Electron-calibrated)
+            Redshift Origin (z): ${redshift}<br>
+            Quantum Decoherence Time (τ<sub>D</sub>) (fs): ${decoherenceTime}<br>
+            Entropy Contribution (S<sub>n</sub>) (J/K): ${entropy}<br>
+            Resonance Shell Layer k: ${shellLayer}${shellMatchNote}<br>
+            Predicted Spin (based on curvature parity): ${predictedSpin} ${spinDescription}<br>
+            Predicted Charge (CNG): N/A (Electron-calibrated)
             ${valleyStatus}
         `;
     } catch (error) {
-        console.error("Error in showCngPrediction:", error);
-        document.getElementById("display").innerHTML = `<strong class="text-red-500">Error displaying prediction data.</strong>`;
+        console.error("Error displaying CNG Prediction", predictionNumber, "data:", error);
+        document.getElementById("display").innerHTML = `<strong class="text-red-500">Error displaying data for CNG Prediction ${predictionNumber}. Please check console for details.</strong>`;
     }
 }
 
 
 // Function to handle custom mode index input (triggered by left button)
 function customN() {
-    try {
+    try { // Added try-catch for error isolation
         const nInput = prompt("Enter mode index n:");
         if (nInput === null) return; // User cancelled prompt
 
@@ -420,7 +526,7 @@ function customN() {
         } catch (e) {
             // Handle Decimal.js parsing errors
             alert("Invalid input. Please enter a valid number.");
-            console.error("Decimal.js parsing error:", e);
+            console.error("Decimal.js parsing error for custom input:", e);
             return;
         }
 
@@ -444,59 +550,43 @@ function customN() {
          }
 
 
-        const { predictedMeV, predictedKg, curvature } = getMassData(n);
+        const { predictedMeV, predictedKg, curvature, redshift, decoherenceTime, entropy, shellLayer, shellMatchNote, predictedSpin } = getParticleData(n);
 
         // Display a fixed placeholder for the mode index in the main display
         const displayN = "[See list on right]";
 
-        // Estimate spin based on whether n is close to an integer
-        let spinEstimate = 'Unknown';
-         // Only estimate spin if n is a positive finite number and close to an integer
-        if (n.isFinite() && n.gt(0)) {
-            const nFloor = n.floor();
-            const nCeil = n.ceil();
-            const diffFloor = n.minus(nFloor).abs();
-            const diffCeil = n.minus(nCeil).abs();
-            const tolerance = new Decimal("1e-9"); // Tolerance for checking if n is close to an integer
-
-            if (diffFloor.lt(tolerance) || diffCeil.lt(tolerance)) {
-                const closestInt = diffFloor.lt(tolerance) ? nFloor : nCeil;
-                if (closestInt.mod(2).equals(0)) {
-                     spinEstimate = 'Boson (even mode)';
-                } else {
-                     spinEstimate = 'Fermion (odd mode)';
-                }
-            }
-        }
-
-
         let spinDescription = '';
-        if (spinEstimate === 'Fermion (odd mode)') {
+        if (predictedSpin === 0.5) {
             spinDescription = '— matter';
-        } else if (spinEstimate === 'Boson (even mode)') {
+        } else if (predictedSpin === 1) {
             spinDescription = '— force carrier';
         }
+
 
         let valleyStatus = '';
          // Only check for resonant valley if predicted values are finite
         if (isResonantValley(n) && isFinite(parseFloat(predictedMeV)) && isFinite(parseFloat(predictedKg))) {
-            valleyStatus = `<br><strong class="text-[#66fcf1]">Resonant Stability Valley ✔</strong>`;
+            valleyStatus = `<br><strong class="text-[#66fcf1]">Resonant Stability Valley ✔ (Expected longer lifetime/stable decay)</strong>`;
         }
 
 
         document.getElementById("display").innerHTML = `
             <strong>Custom Mode</strong><br>
             n = ${displayN}<br>
-            Predicted MeV: ${predictedMeV} MeV<br>
-            Mass: ${predictedKg} kg<br>
+            Predicted Mass (MeV): ${predictedMeV} MeV<br>
+            Predicted Mass (kg): ${predictedKg} kg<br>
             Time-Curvature Mode κ<sub>n</sub> (unitless): ${curvature}<br>
-            Spin Estimate: ${spinEstimate} ${spinDescription}<br>
-            (Electron-calibrated)
+            Redshift Origin (z): ${redshift}<br>
+            Quantum Decoherence Time (τ<sub>D</sub>) (fs): ${decoherenceTime}<br>
+            Entropy Contribution (S<sub>n</sub>) (J/K): ${entropy}<br>
+            Resonance Shell Layer k: ${shellLayer}${shellMatchNote}<br>
+            Predicted Spin (based on curvature parity): ${predictedSpin} ${spinDescription}<br>
+            Predicted Charge (CNG): N/A (Electron-calibrated)
             ${valleyStatus}
         `;
     } catch (error) {
-        console.error("Error in customN:", error);
-        document.getElementById("display").innerHTML = `<strong class="text-red-500">Error calculating custom mode data.</strong>`;
+        console.error("Error calculating custom mode data:", error);
+        document.getElementById("display").innerHTML = `<strong class="text-red-500">Error calculating custom mode data. Please check console for details.</strong>`;
     }
 }
 
@@ -526,7 +616,15 @@ function renderButtons() {
             btn.textContent = p;
             // Add Tailwind classes for styling
             btn.classList.add('p-3', 'rounded-lg', 'font-bold', 'bg-[#c5c6c7]', 'text-[#1f2833]', 'hover:bg-[#66fcf1]', 'transition', 'duration-200');
-            btn.onclick = () => showParticle(p);
+            // Wrap the onclick handler in a try-catch
+            btn.onclick = () => {
+                try {
+                    showParticle(p);
+                } catch (error) {
+                    console.error("Error handling click for particle", p, ":", error);
+                    document.getElementById("display").innerHTML = `<strong class="text-red-500">Error displaying data for ${p}. Please check console for details.</strong>`;
+                }
+            };
             grid.appendChild(btn);
         });
 
@@ -534,16 +632,34 @@ function renderButtons() {
         const cng1Btn = document.createElement("button");
         cng1Btn.textContent = "CNG Prediction 1";
         cng1Btn.classList.add('p-3', 'rounded-lg', 'font-bold', 'bg-[#c5c6c7]', 'text-[#1f2833]', 'hover:bg-[#66fcf1]', 'transition', 'duration-200');
-        cng1Btn.onclick = () => showCngPrediction(1, cngPredictionN1);
+         // Wrap the onclick handler in a try-catch
+        cng1Btn.onclick = () => {
+             try {
+                 showCngPrediction(1, cngPredictionN1);
+             } catch (error) {
+                 console.error("Error handling click for CNG Prediction 1:", error);
+                 document.getElementById("display").innerHTML = `<strong class="text-red-500">Error displaying data for CNG Prediction 1. Please check console for details.</strong>`;
+             }
+        };
         grid.appendChild(cng1Btn);
 
         const cng2Btn = document.createElement("button");
         cng2Btn.textContent = "CNG Prediction 2";
         cng2Btn.classList.add('p-3', 'rounded-lg', 'font-bold', 'bg-[#c5c6c7]', 'text-[#1f2833]', 'hover:bg-[#66fcf1]', 'transition', 'duration-200');
-        cng2Btn.onclick = () => showCngPrediction(2, cngPredictionN2);
+         // Wrap the onclick handler in a try-catch
+        cng2Btn.onclick = () => {
+             try {
+                 showCngPrediction(2, cngPredictionN2);
+             } catch (error) {
+                 console.error("Error handling click for CNG Prediction 2:", error);
+                 document.getElementById("display").innerHTML = `<strong class="text-red-500">Error displaying data for CNG Prediction 2. Please check console for details.</strong>`;
+             }
+        };
         grid.appendChild(cng2Btn);
     } catch (error) {
         console.error("Error rendering buttons:", error);
+        // If button rendering itself fails, display a general error
+         document.getElementById("buttonGrid").innerHTML = `<strong class="text-red-500">Error loading calculator buttons. Please check console for details.</strong>`;
     }
 }
 
@@ -593,7 +709,7 @@ function renderModeIndicesList() {
 
         // Add click event listener to the main mode indices list container
         modeIndicesListContainer.addEventListener('click', function(event) {
-            try {
+            try { // Added try-catch for error isolation
                 const target = event.target;
                 // Check if the clicked element is a particle name item
                 if (target && target.classList.contains('mode-index-item')) {
@@ -607,25 +723,36 @@ function renderModeIndicesList() {
                 }
             } catch (error) {
                 console.error("Error in modeIndicesListContainer click handler:", error);
+                // No specific display update for this error, as it's in the list interaction
             }
         });
     } catch (error) {
         console.error("Error rendering mode indices list:", error);
+         // If list rendering itself fails, display a general error
+         const modeIndicesListContainer = document.getElementById("modeIndicesListContainer");
+         if (modeIndicesListContainer) {
+              modeIndicesListContainer.innerHTML = `<strong class="text-red-500">Error loading mode indices list. Please check console for details.</strong>`;
+         }
     }
 }
 
 // Function to display the full mode index for a selected particle, under its name
 function displayFullModeIndex(itemContainer, particleName) {
-    const fullDisplayElement = itemContainer.querySelector('.full-index-display');
-    const particle = particleData[particleName];
+    try { // Added try-catch for error isolation
+        const fullDisplayElement = itemContainer.querySelector('.full-index-display');
+        const particle = particleData[particleName];
 
-    if (fullDisplayElement && particle) {
-        // Hide any currently displayed full indices first
-        hideAllFullModeIndices();
+        if (fullDisplayElement && particle) {
+            // Hide any currently displayed full indices first
+            hideAllFullModeIndices();
 
-        // Display the full, unrounded mode index
-        fullDisplayElement.innerHTML = `<strong>Mode Index (n):</strong> ${particle.n.toString()}`;
-        fullDisplayElement.style.display = 'block'; // Show the element
+            // Display the full, unrounded mode index
+            fullDisplayElement.innerHTML = `<strong>Mode Index (n):</strong> ${particle.n.toString()}`;
+            fullDisplayElement.style.display = 'block'; // Show the element
+        }
+    } catch (error) {
+         console.error("Error displaying full mode index for", particleName, ":", error);
+         // No specific display update for this error, as it's in the list interaction
     }
 }
 
@@ -670,7 +797,7 @@ function isResonantValley(n) {
     // The specific tolerance might need tuning based on the function's behavior
     const valleyTolerance = new Decimal("1e-3"); // Example tolerance - adjust as needed
 
-    // A valley corresponds to a local minimum or inflection point where the second derivative is close to zero.
+    // A valley corresponds to a local local minimum or inflection point where the second derivative is close to zero.
     // For a "stability valley", we might also expect the first derivative to be close to zero (local minimum).
     // Let's focus on the second derivative being close to zero for now.
      return d2.abs().lt(valleyTolerance);
