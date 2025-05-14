@@ -115,7 +115,45 @@
          .highlight-green {
             color: #00ff88; /* Green color for highlights */
          }
+         .spin-formulation {
+             margin-top: 20px;
+             padding: 15px;
+             background-color: #2f3b4a;
+             border-radius: 8px;
+             color: #c5c6c7;
+             font-size: 0.9em;
+         }
+         .spin-formulation strong {
+             color: #66fcf1;
+         }
+         .spin-formulation code {
+             display: block;
+             margin: 10px 0;
+             padding: 10px;
+             background-color: #1f2833;
+             border-radius: 4px;
+             overflow-x: auto; /* Add horizontal scroll for long formulas */
+         }
+          /* LaTeX rendering for math */
+          .latex-math {
+              display: inline-block;
+              white-space: nowrap; /* Prevent line breaks within math */
+              overflow-x: auto; /* Allow horizontal scroll for long equations */
+              vertical-align: middle; /* Align with surrounding text */
+          }
     </style>
+     <script>
+        MathJax = {
+            tex: {
+                inlineMath: [['$', '$'], ['\\(', '\\)']],
+                displayMath: [['$$', '$$'], ['\\[', '\\]']]
+            },
+            svg: {
+                fontCache: 'global'
+            }
+        };
+    </script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
 </head>
 <body class="bg-[#0b0c10] text-[#ffffff] flex justify-center items-center min-h-screen p-4 overflow-x-hidden">
     <div class="calculator bg-[#1f2833] rounded-2xl p-8 shadow-2xl w-full max-w-6xl flex flex-col md:flex-row">
@@ -175,20 +213,78 @@
             <div id="formulaDisplay" class="formula bg-[#1f2833] text-[#66fcf1] p-6 rounded-xl text-lg overflow-wrap break-word hidden mt-6">
                 <strong class="text-xl block mb-2">Chronogenesis Mass Formula:</strong>
                 <code class="block mb-4">
-                    m<sub>n</sub> = α ⋅ &radic;<span style="text-decoration:overline;">κ<sub>n</sub></span>
+                    $$m_n = \alpha \cdot \sqrt{\kappa_n}$$
                 </code>
                 <p class="mb-2">Where:</p>
                 <code class="block">
-                    κ<sub>n</sub> = n<sup>0.618</sup> ⋅ log(n + 1)  <span class="text-sm text-[#c5c6c7]">(Time-Curvature Mode, unitless)</span><br>
-                    m<sub>n</sub> = Mass of the particle mode (in kg or MeV/c<sup>2</sup>)<br>
-                    n = Mode index (a large integer)<br>
-                    α = Mass scaling constant (calibrated from the electron mass)<br>
-                    log() = Natural logarithm
+                    $$\kappa_n = n^{0.618} \cdot \log(n + 1)$$
+                    <span class="text-sm text-[#c5c6c7]">(Time-Curvature Mode, unitless)</span><br>
+                    $m_n$ = Mass of the particle mode (in kg or MeV/c<sup>2</sup>)<br>
+                    $n$ = Mode index (a large integer)<br>
+                    $\alpha$ = Mass scaling constant (calibrated from the electron mass)<br>
+                    $\log()$ = Natural logarithm
                 </code>
                 <p class="mt-4 text-sm text-[#c5c6c7]">
                     This formula relates the quantized mass ($m_n$) of a fundamental particle to its mode index ($n$) through the time-curvature mode ($\kappa_n$). The constant $\alpha$ is determined empirically using a known particle mass (currently the electron).
                 </p>
-            </div>
+
+                <div class="spin-formulation mt-8">
+                    <strong class="text-xl block mb-2">Topological Spin from Temporal Winding:</strong>
+                    <p class="mb-2">
+                        Spin ($s_n$) emerges from the winding number ($W_n$) of the $\Theta$-field eigenmode ($\Theta_n$) over compactified time ($x^0 \in [0, 2\pi L]$).
+                    </p>
+                    <p class="mb-2">
+                        Winding number ($W_n$) is the path integral of the field's gradient:
+                    </p>
+                    <code class="block mb-4">
+                        $$W_n = \oint_{S^1} \partial_\mu \Theta_n(x) \, dx^\mu$$
+                    </code>
+                    <p class="mb-2">
+                        For a time-like loop:
+                    </p>
+                     <code class="block mb-4">
+                        $$W_n = \oint \partial_0 \Theta_n(x^0) \, dx^0$$
+                    </code>
+                     <p class="mb-2">
+                        Spin ($s_n$) is the normalized winding number:
+                    </p>
+                    <code class="block mb-4">
+                        $$s_n = \frac{W_n}{2\pi}$$
+                    </code>
+                    <p class="mb-2">
+                        This predicts a discrete spin spectrum based on integer $W_n$:
+                    </p>
+                    <table class="min-w-full bg-[#1f2833] text-[#c5c6c7] rounded-md overflow-hidden">
+                        <thead>
+                            <tr>
+                                <th class="py-2 px-4 border-b border-[#2f3b4a] text-left text-[#66fcf1]">Winding Number ($W_n$)</th>
+                                <th class="py-2 px-4 border-b border-[#2f3b4a] text-left text-[#66fcf1]">Predicted Spin ($s_n$)</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td class="py-2 px-4 border-b border-[#2f3b4a]">0</td>
+                                <td class="py-2 px-4 border-b border-[#2f3b4a]">0</td>
+                            </tr>
+                             <tr>
+                                <td class="py-2 px-4 border-b border-[#2f3b4a]">$\pm 1$</td>
+                                <td class="py-2 px-4 border-b border-[#2f3b4a]">0.5</td>
+                            </tr>
+                             <tr>
+                                <td class="py-2 px-4 border-b border-[#2f3b4a]">$\pm 2$</td>
+                                <td class="py-2 px-4 border-b border-[#2f3b4a]">1</td>
+                            </tr>
+                             <tr>
+                                <td class="py-2 px-4">$\pm 4$</td>
+                                <td class="py-2 px-4">2</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                     <p class="mt-4 text-sm text-[#c5c6c7]">
+                         Parameter-free spin from field geometry.
+                     </p>
+                </div>
+                </div>
         </div>
     </div>
 </body>
@@ -216,7 +312,11 @@ const particleData = {
     'Graviton': { n: new Decimal("0"), massMeV: new Decimal("0"), massKg: new Decimal("0"), spin: 2, charge: "0" },
     'W Boson': { n: new Decimal("4.036085307766214873433443189812547753999403904296589500223267049268569767308755430179131598933931338E+53"), massMeV: new Decimal("80379.0"), massKg: new Decimal("1.43288582467680e-25"), spin: 1, charge: "±1" },
     'Z Boson': { n: new Decimal("6.039398982388116321671579194641872927161651630537805218977885250419202729193657964270366E+53"), massMeV: new Decimal("91187.6"), massKg: new Decimal("1.62556662096192e-25"), spin: 1, charge: "0" },
-    'Higgs Boson': { n: new Decimal("1.658406012128395459983844710359379460541422054894899713401688352608020961902278624762480085545597019E+54"), massMeV: new Decimal("125100.0"), massKg: new Decimal("2.23011006192000e-25"), spin: 0, charge: "0" }
+    'Higgs Boson': { n: new Decimal("1.658406012128395459983844710359379460541422054894899713401688352608020961902278624762480085545597019E+54"), massMeV: new Decimal("125100.0"), massKg: new Decimal("2.23011006192000e-25"), spin: 0, charge: "0" },
+    // Added CNG Prediction 1 data
+    'CNG Prediction 1': { n: new Decimal("1"), massMeV: new Decimal("27913.8699999999989813659340143203735351562500000000000000000000"), massKg: new Decimal("0.0000000000000000000000000497609900000000021102310454340774472"), spin: 'See SM Spin / CNG Interpretation', charge: "N/A (Electron-calibrated)" },
+    // Added CNG Prediction 2 data
+    'CNG Prediction 2': { n: new Decimal("2"), massMeV: new Decimal("692303.4000000000232830643653869628906250000000000000000000000000"), massKg: new Decimal("0.0000000000000000000000012341429999999999761507075425760540424"), spin: 'See SM Spin / CNG Interpretation', charge: "N/A (Electron-calibrated)" }
 };
 
 // NOTE: Proton and Neutron are composite particles, their 'n' values and properties here
@@ -228,6 +328,7 @@ const compositeParticleData = {
 };
 
 // Combine fundamental and composite particle data for rendering buttons and list
+// Ensure that the new CNG predictions are included here
 const allParticleData = { ...particleData, ...compositeParticleData };
 
 
@@ -250,9 +351,9 @@ const LN10 = new Decimal('2.302585092994045684017991'); // ln(10) for base-10 lo
 const kappaElectron = new Decimal("6.7060821879436456799748104656833798181752300741342e+24");
 const alphaMeV = allParticleData['Electron'].massMeV.div(kappaElectron.sqrt());
 
-// Hardcoded mode indices for CNG predictions
-const cngPredictionN1 = new Decimal("1.3771423946537758804255e+52");
-const cngPredictionN2 = new Decimal("3.9284999846221127751102e+56");
+// Hardcoded mode indices for CNG predictions (These are now included in particleData)
+// const cngPredictionN1 = new Decimal("1.3771423946537758804255e+52");
+// const cngPredictionN2 = new Decimal("3.9284999846221127751102e+56");
 
 // Define practical limits for custom input to avoid computational issues
 const N_MAX_LIMIT = new Decimal("1e300"); // Example: Limit to avoid excessive computation/memory
@@ -607,31 +708,33 @@ function showParticle(name) {
 }
 
 // Function to display CNG Prediction data in the screen
-function showCngPrediction(predictionNumber, n) {
+function showCngPrediction(name) { // Modified to accept name directly
     try { // Added try-catch for error isolation
-        const { predictedMeV, predictedKg, curvature, redshift, decoherenceTime, entropy, shellLayer, shellMatchNote, predictedSpin } = getParticleData(n);
+        const p = allParticleData[name]; // Get data using the name
+        const { predictedMeV, predictedKg, curvature, redshift, decoherenceTime, entropy, shellLayer, shellMatchNote, predictedSpin } = getParticleData(p.n, name); // Pass name
 
          // Display a fixed placeholder for the mode index in the main display
         const displayN = "[See list on right]"; // Reverted to placeholder
 
         let spinDescription = '';
-        if (predictedSpin === 0.5) {
+         // Use the predictedSpin string directly
+         if (predictedSpin.includes('0.5')) {
             spinDescription = '— matter';
-        } else if (predictedSpin === 1) {
+        } else if (predictedSpin.includes('1')) {
             spinDescription = '— force carrier';
-        } else if (predictedSpin === 'Boson (n=0)') {
+        } else if (predictedSpin.includes('Boson (n=0)')) {
              spinDescription = '— boson (n=0)';
         }
 
 
         let valleyStatus = '';
         // Only check for resonant valley if predicted values are finite
-        if (isResonantValley(n) && isFinite(parseFloat(predictedMeV)) && isFinite(parseFloat(parseFloat(predictedKg)))) {
+        if (isResonantValley(p.n) && isFinite(parseFloat(predictedMeV)) && isFinite(parseFloat(predictedKg))) {
             valleyStatus = `<br><strong class="text-[#66fcf1]">Resonant Stability Valley ✔ (Expected longer lifetime/stable decay)</strong>`;
         }
 
         // Determine highlighting and error messages for calculated properties
-        const isNZero = n.equals(0); // Should not happen for CNG predictions with hardcoded large N, but for safety
+        const isNZero = p.n.equals(0); // Should not happen for CNG predictions with hardcoded large N, but for safety
 
         const predictedMeVHTML = predictedMeV; // No green highlight for predictions unless they match something known, which isn't implemented
         const predictedKgHTML = predictedKg;
@@ -655,7 +758,7 @@ function showCngPrediction(predictionNumber, n) {
 
          // Build the display HTML
         let displayHTML = `
-            <strong>CNG Prediction ${predictionNumber}</strong><br>
+            <strong>${name}</strong><br>
             Mode Index (n): ${displayN}<br> Predicted Mass (MeV): ${predictedMeVHTML} MeV${predictedMeVError}<br>
             Predicted Mass (kg): ${predictedKgHTML} kg${predictedKgError}<br>
             Time-Curvature Mode κ<sub>n</sub> (unitless): ${curvatureHTML}${curvatureError}<br>
@@ -663,7 +766,7 @@ function showCngPrediction(predictionNumber, n) {
             Quantum Decoherence Time (τ<sub>D</sub>) (fs): ${decoherenceTimeHTML}${decoherenceTimeError}<br>
             Entropy Contribution (S<sub>n</sub>) (J/K): ${entropyHTML}${entropyError}<br>
             Resonance Shell Layer k: ${shellLayerHTML}${shellLayerError}${shellMatchNote}<br>
-            Predicted Spin (CNG Winding): ${predictedSpinHTML} ${spinDescription}${predictedSpinError}<br> Charge (Placeholder/Manual Entry): N/A (Electron-calibrated) ${valleyStatus}
+            Predicted Spin (CNG Winding): ${predictedSpinHTML} ${spinDescription}${predictedSpinError}<br> Charge (Placeholder/Manual Entry): ${p.charge} ${valleyStatus}
         `;
 
         document.getElementById("display").innerHTML = displayHTML;
@@ -671,12 +774,12 @@ function showCngPrediction(predictionNumber, n) {
 
          // Log any NaN or Infinity values for this prediction
         if (predictedMeV === 'N/A' || predictedKg === 'N/A' || curvature === 'N/A' || redshift === 'N/A' || decoherenceTime === 'N/A' || entropy === 'N/A' || shellLayer === 'N/A' || predictedSpin === 'N/A') {
-             console.error(`Calculation error for CNG Prediction ${predictionNumber}. Check individual property values.`);
+             console.error(`Calculation error for ${name}. Check individual property values.`);
         }
 
     } catch (error) {
-        console.error("Error displaying CNG Prediction", predictionNumber, "data:", error);
-        document.getElementById("display").innerHTML = `<strong class="text-red-500">Error displaying data for CNG Prediction ${predictionNumber}. Please check console for details.</strong>`;
+        console.error("Error displaying CNG Prediction", name, "data:", error);
+        document.getElementById("display").innerHTML = `<strong class="text-red-500">Error displaying data for ${name}. Please check console for details.</strong>`;
     }
 }
 
@@ -723,11 +826,12 @@ function customN() {
         const displayN = "[See list on right]"; // Reverted to placeholder
 
         let spinDescription = '';
-         if (predictedSpin === 0.5) {
+         // Use the predictedSpin string directly
+         if (predictedSpin.includes('0.5')) {
             spinDescription = '— matter-like'; // Use "matter-like" for custom 0.5
-        } else if (predictedSpin === 1) {
+        } else if (predictedSpin.includes('1')) {
             spinDescription = '— force carrier-like'; // Use "force carrier-like" for custom 1
-        } else if (predictedSpin === 'Boson (n=0)') {
+        } else if (predictedSpin.includes('Boson (n=0)')) {
              spinDescription = '— boson (n=0)';
         }
 
@@ -749,7 +853,7 @@ function customN() {
         const entropyHTML = isNZero && (entropy === '0.000000e+0' || entropy === 'N/A') ? `<span class="highlight-green">${entropy}</span>` : entropy;
         const shellLayerHTML = isNZero && (shellLayer === '0' || shellLayer === 'N/A') ? `<span class="highlight-green">${shellLayer}</span>` : shellLayer;
         // Highlight predicted spin for custom input if it's 0.5 or 1 (based on the new mapping)
-        const predictedSpinHTMLDisplay = (predictedSpin === 0.5 || predictedSpin === 1) ? `<span class="highlight-green">${predictedSpin}</span>` : predictedSpin;
+        const predictedSpinHTMLDisplay = (predictedSpin.includes('0.5') || predictedSpin.includes('1')) ? `<span class="highlight-green">${predictedSpin}</span>` : predictedSpin;
 
 
         // Add on-screen error messages for N/A values only if n > 0 or if n=0 but the value wasn't 0/N/A
@@ -799,6 +903,10 @@ function showFormula() {
     const formulaDisplay = document.getElementById("formulaDisplay");
     if (formulaDisplay) {
         formulaDisplay.classList.toggle('hidden'); // Use Tailwind's hidden class
+        // Trigger MathJax typesetting when the formula display becomes visible
+        if (!formulaDisplay.classList.contains('hidden')) {
+            MathJax.typesetPromise([formulaDisplay]).catch((err) => console.error('MathJax typesetting failed', err));
+        }
     }
 }
 
@@ -825,9 +933,14 @@ function renderButtons() {
                 // Wrap the onclick handler in a try-catch
                 btn.onclick = () => {
                     try {
-                        showParticle(p);
+                        // Determine if it's a standard particle or a CNG prediction
+                        if (p.startsWith('CNG Prediction')) {
+                             showCngPrediction(p); // Call showCngPrediction for predictions
+                        } else {
+                             showParticle(p); // Call showParticle for standard particles
+                        }
                     } catch (error) {
-                        console.error("Error handling click for particle", p, ":", error);
+                        console.error("Error handling click for button", p, ":", error);
                         document.getElementById("display").innerHTML = `<strong class="text-red-500">Error displaying data for ${p}. Please check console for details.</strong>`;
                     }
                 };
@@ -842,57 +955,6 @@ function renderButtons() {
                  grid.appendChild(errorDiv);
             }
         });
-
-        console.log("Starting to render CNG prediction buttons..."); // Added log
-
-        // Render CNG Prediction buttons
-        try { // Inner try-catch for CNG button 1
-            console.log("Rendering button for: CNG Prediction 1");
-            const cng1Btn = document.createElement("button");
-            cng1Btn.textContent = "CNG Prediction 1";
-            cng1Btn.classList.add('p-3', 'rounded-lg', 'font-bold', 'bg-[#c5c6c7]', 'text-[#1f2833]', 'hover:bg-[#66fcf1]', 'transition', 'duration-200');
-             // Wrap the onclick handler in a try-catch
-            cng1Btn.onclick = () => {
-                 try {
-                     showCngPrediction(1, cngPredictionN1);
-                 } catch (error) {
-                     console.error("Error handling click for CNG Prediction 1:", error);
-                     document.getElementById("display").innerHTML = `<strong class="text-red-500">Error displaying data for CNG Prediction 1. Please check console for details.</strong>`;
-                 }
-            };
-            grid.appendChild(cng1Btn);
-            console.log("Successfully rendered button for: CNG Prediction 1");
-        } catch (innerError) {
-             console.error(`Error rendering button for CNG Prediction 1:`, innerError);
-             const errorDiv = document.createElement("div");
-             errorDiv.textContent = `Error loading CNG Prediction 1`;
-             errorDiv.style.color = 'red';
-             grid.appendChild(errorDiv);
-        }
-
-        try { // Inner try-catch for CNG button 2
-            console.log("Rendering button for: CNG Prediction 2");
-            const cng2Btn = document.createElement("button");
-            cng2Btn.textContent = "CNG Prediction 2";
-            cng2Btn.classList.add('p-3', 'rounded-lg', 'font-bold', 'bg-[#c5c6c7]', 'text-[#1f2833]', 'hover:bg-[#66fcf1]', 'transition', 'duration-200');
-             // Wrap the onclick handler in a try-catch
-            cng2Btn.onclick = () => {
-                 try {
-                     showCngPrediction(2, cngPredictionN2);
-                 } catch (error) {
-                     console.error("Error handling click for CNG Prediction 2:", error);
-                     document.getElementById("display").innerHTML = `<strong class="text-red-500">Error displaying data for CNG Prediction 2. Please check console for details.</strong>`;
-                 }
-            };
-            grid.appendChild(cng2Btn);
-             console.log("Successfully rendered button for: CNG Prediction 2");
-        } catch (innerError) {
-             console.error(`Error rendering button for CNG Prediction 2:`, innerError);
-             const errorDiv = document.createElement("div");
-             errorDiv.textContent = `Error loading CNG Prediction 2`;
-             errorDiv.style.color = 'red';
-             grid.appendChild(errorDiv);
-        }
 
         console.log("Finished rendering buttons."); // Added log
 
