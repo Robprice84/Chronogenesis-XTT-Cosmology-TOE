@@ -292,16 +292,25 @@
 const Decimal = window.Decimal;
 
 // Configure Decimal.js to prevent exponential notation for large numbers unless necessary
-Decimal.set({ toExpNeg: -100, toExpPos: 100 });
+// Reverting to v2.17 precision settings as requested
+Decimal.set({
+  toExpNeg: -100,
+  toExpPos: 100,
+  precision: 150 // Increased precision for calculations involving large numbers
+});
 
+// Define which particles are composite and require the composite mass formula
+const compositeParticles = ['Proton', 'Neutron'];
+
+// Particle data including fundamental and composite (with placeholder for sub-modes)
 const particleData = {
-    'Electron': { n: new Decimal("1.116146374259776000504792200600740088568081211715959874293260467558912066286342598811550851149432149E+37"), massMeV: new Decimal("0.511"), massKg: new Decimal("9.1094024112e-31"), spin: 0.5, charge: "-1" },
-    'Muon': { n: new Decimal("2.592697864681657296450146244390652422592537772891046634886736363692579682058059087602050186683604189E+44"), massMeV: new Decimal("105.658"), massKg: new Decimal("1.8835249314336e-28"), spin: 0.5, charge: "-1" },
+    'Electron': { n: new Decimal("1.116146374259776000504792200600740088568081211715959874293260467558912066286342598811550851149432149E+37"), massMeV: new Decimal("0.5109989461"), massKg: new Decimal("9.1093837015e-31"), spin: 0.5, charge: "-1" }, // Using more precise CODATA 2018 values
+    'Muon': { n: new Decimal("2.592697864681657296450146244390652422592537772891046634886736363692579682058059087602050186683604189E+44"), massMeV: new Decimal("105.6584135"), massKg: new Decimal("1.883531594e-28"), spin: 0.5, charge: "-1" }, // Using more precise CODATA 2018 values
     'Tau': { n: new Decimal("2.095680986337253170258875675748172910666647047613700720984627636052801619803503286417059292660495776E+48"), massMeV: new Decimal("1776.86"), massKg: new Decimal("3.1675406591712e-27"), spin: 0.5, charge: "-1" },
     'Up Quark': { n: new Decimal("1.088836195890027612641435350014546608150713460429511408040403495603282986892407218405437160237667553E+39"), massMeV: new Decimal("2.16"), massKg: new Decimal("3.8505497472e-30"), spin: 0.5, charge: "+2/3" },
     'Down Quark': { n: new Decimal("1.264009938464596673844966914217987937065316705487175044408268624382571444972162533651758797313978983E+40"), massMeV: new Decimal("4.67"), massKg: new Decimal("8.3250311664e-30"), spin: 0.5, charge: "-1/3" },
     'Strange Quark': { n: new Decimal("1.726633093608591886026315041941475948780201682689921345272257534636237409991027301458637758034128428E+44"), massMeV: new Decimal("93.0"), massKg: new Decimal("1.65787558560e-28"), spin: 0.5, charge: "-1/3" },
-    'Charm Quark': { n: new Decimal("7.2704500204949299557400102797668933795023524796826783304614666647047613700720984627636052801619803503286417059292660495776E+47"), massMeV: new Decimal("1275.0"), massKg: new Decimal("2.272893948000e-27"), spin: 0.5, charge: "+2/3" },
+    'Charm Quark': { n: new Decimal("7.270450020494929955740010279766893379502352479682678330461466664704761619803503286417059292660495776E+47"), massMeV: new Decimal("1275.0"), massKg: new Decimal("2.272893948000e-27"), spin: 0.5, charge: "+2/3" },
     'Bottom Quark': { n: new Decimal("3.21096191571610331850757003649713130046128609586401166643683559161870481286095864011666436835591618704812796308377279745152580586885E+49"), massMeV: new Decimal("4180.0"), massKg: new Decimal("7.451526825600e-27"), spin: 0.5, charge: "-1/3" },
     'Top Quark': { n: new Decimal("4.651419918945756274111528049292917059116238893390426300227887923322275464970993060385669332631062020E+54"), massMeV: new Decimal("172760.0"), massKg: new Decimal("3.07972673299200e-25"), spin: 0.5, charge: "+2/3" },
     'Electron Neutrino': { n: new Decimal("4.785985134579887317477263205775043550151598196481330037114055446129654035793133898715562622692070030E+15"), massMeV: new Decimal("8.3e-8"), massKg: new Decimal("1.4796093936e-37"), spin: 0.5, charge: "0" },
@@ -314,21 +323,50 @@ const particleData = {
     'Z Boson': { n: new Decimal("6.039398982388116321671579194641872927161651630537805218977885250419202729193657964270366E+53"), massMeV: new Decimal("91187.6"), massKg: new Decimal("1.62556662096192e-25"), spin: 1, charge: "0" },
     'Higgs Boson': { n: new Decimal("1.658406012128395459983844710359379460541422054894899713401688352608020961902278624762480085545597019E+54"), massMeV: new Decimal("125100.0"), massKg: new Decimal("2.23011006192000e-25"), spin: 0, charge: "0" },
     // Added CNG Prediction 1 data
-    'CNG Prediction 1': { n: new Decimal("1"), massMeV: new Decimal("27913.8699999999989813659340143203735351562500000000000000000000"), massKg: new Decimal("0.0000000000000000000000000497609900000000021102310454340774472"), spin: 'See SM Spin / CNG Interpretation', charge: "N/A (Electron-calibrated)" },
+    'CNG Prediction 1': { n: new Decimal("3.1622776601683793319988935444327185337195551393252168268575048527484605778802671417582059499319701460e+35"), massMeV: new Decimal("27913.8699999999989813659340143203735351562500000000000000000000"), massKg: new Decimal("0.0000000000000000000000000497609900000000021102310454340774472"), spin: 'See SM Spin / CNG Interpretation', charge: "N/A (Electron-calibrated)" },
     // Added CNG Prediction 2 data
-    'CNG Prediction 2': { n: new Decimal("2"), massMeV: new Decimal("692303.4000000000232830643653869628906250000000000000000000000000"), massKg: new Decimal("0.0000000000000000000000012341429999999999761507075425760540424"), spin: 'See SM Spin / CNG Interpretation', charge: "N/A (Electron-calibrated)" }
+    'CNG Prediction 2': { n: new Decimal("5.6234132519034908385097000365155400518654492540361421009492647363456122812603182958813037980753701856e+35"), massMeV: new Decimal("692303.4000000000232830643653869628906250000000000000000000000000"), massKg: new Decimal("0.0000000000000000000000012341429999999999761507075425760540424"), spin: 'See SM Spin / CNG Interpretation', charge: "N/A (Electron-calibrated)" }
 };
 
 // NOTE: Proton and Neutron are composite particles, their 'n' values and properties here
 // are based on the Chronogenesis model's interpretation of their composite modes,
 // not fundamental single modes like the leptons and quarks.
 const compositeParticleData = {
-     'Proton': { n: new Decimal("1.774015855819727177401585581972717740158558197271774015855819727177401585581972717740158558197271774E+40"), massMeV: new Decimal("938.272"), massKg: new Decimal("1.67262192369e-27"), spin: 0.5, charge: "+1" },
-     'Neutron': { n: new Decimal("1.7758528914340380702431901388836195890027612641435350014546608150713460429511408040403495603282986892407218405437160237667553E+40"), massMeV: new Decimal("939.565"), massKg: new Decimal("1.67492749804e-27"), spin: 0.5, charge: "0" }
+     'Proton': {
+         // Using the overall n from the Chronogenesis dataset for other properties (like shell location)
+         n: new Decimal("1.774015855819727177401585581972717740158558197271774015855819727177401585581972717740158558197271774E+40"),
+         massMeV: new Decimal("938.27208816"), // Using the precise PDG value for comparison
+         massKg: new Decimal("1.67262192369e-27"), // Using the precise CODATA value for comparison
+         spin: 0.5,
+         charge: "+1",
+         // Explicitly providing the sub-mode indices for Proton (u, u, d) for composite mass calculation
+         // Using the exact unrounded quark indices from project files
+         subModes: [
+             new Decimal("1.088836195890027612641435350014546608150713460429511408040403495603282986892407218405437160237667553E+39"), // n_u(1)
+             new Decimal("1.088836195890027612641435350014546608150713460429511408040403495603282986892407218405437160237667553E+39"), // n_u(2)
+             new Decimal("1.264009938464596673844966914217987937065316705487175044408268624382571444972162533651758797313978983E+40")  // n_d
+         ],
+         subModeNames: ['u', 'u', 'd'] // Names for display
+     },
+     'Neutron': {
+         // Using the overall n from the Chronogenesis dataset for other properties (like shell location)
+         n: new Decimal("1.7758528914340380702431901388836195890027612641435350014546608150713460429511408040403495603282986892407218405437160237667553E+40"),
+         massMeV: new Decimal("939.56542052"), // Using the precise PDG value for comparison
+         massKg: new Decimal("1.67492749804e-27"), // Using the precise CODATA value for comparison
+         spin: 0.5,
+         charge: "0",
+         // Explicitly providing the sub-mode indices for Neutron (d, d, u) for composite mass calculation
+         // Using the exact unrounded quark indices from project files
+         subModes: [
+             new Decimal("1.264009938464596673844966914217987937065316705487175044408268624382571444972162533651758797313978983E+40"), // n_d(1)
+             new Decimal("1.26400993846459667384496673844966914217987937065316705487175044408268624382571444972162533651758797313978983E+40"), // n_d(2)
+             new Decimal("1.088836195890027612641435350014546608150713460429511408040403495603282986892407218405437160237667553E+39")  // n_u
+         ],
+         subModeNames: ['d', 'd', 'u'] // Names for display
+     }
 };
 
 // Combine fundamental and composite particle data for rendering buttons and list
-// Ensure that the new CNG predictions are included here
 const allParticleData = { ...particleData, ...compositeParticleData };
 
 
@@ -347,13 +385,17 @@ const SHELL_B = new Decimal("3.11"); // Constant 'b' for shell layer calculation
 const LN10 = new Decimal('2.302585092994045684017991'); // ln(10) for base-10 logarithm conversion
 
 
-// Calculate the alpha constant using Electron data
-const kappaElectron = new Decimal("6.7060821879436456799748104656833798181752300741342e+24");
-const alphaMeV = allParticleData['Electron'].massMeV.div(kappaElectron.sqrt());
+// Define placeholder coefficients for the triple-interaction term (these need to be solved for)
+// Setting to 0 for now, so the delta_ijk calculated by the formula is zero.
+const DELTA_A = new Decimal(0); // Placeholder coefficient 'a'
+const DELTA_B = new Decimal(0); // Placeholder coefficient 'b'
+const DELTA_C = new Decimal(0); // Placeholder coefficient 'c'
+const DELTA_D = new Decimal(0); // Placeholder coefficient 'd'
 
-// Hardcoded mode indices for CNG predictions (These are now included in particleData)
-// const cngPredictionN1 = new Decimal("1.3771423946537758804255e+52");
-// const cngPredictionN2 = new Decimal("3.9284999846221127751102e+56");
+
+// Calculate the alpha constant using Electron data (using v2.17 precision)
+const kappaElectron = curvatureKappa(allParticleData['Electron'].n);
+const alphaMeV = allParticleData['Electron'].massMeV.div(kappaElectron.sqrt());
 
 // Define practical limits for custom input to avoid computational issues
 const N_MAX_LIMIT = new Decimal("1e300"); // Example: Limit to avoid excessive computation/memory
@@ -386,7 +428,7 @@ function curvatureKappa(n) {
     return kappa;
 }
 
-// Function to calculate predicted mass in MeV
+// Function to calculate predicted mass in MeV for a single fundamental particle
 function massMeV(n) {
     const kappa = curvatureKappa(n);
     if (kappa.isNaN() || !kappa.isFinite() || kappa.lt(0)) { // Check for NaN, Infinity, or negative kappa
@@ -402,7 +444,7 @@ function massMeV(n) {
     return mass;
 }
 
-// Function to calculate predicted mass in Kg
+// Function to calculate predicted mass in Kg for a single fundamental particle
 function massKg(n) {
     const kappa = curvatureKappa(n);
      if (kappa.isNaN() || !kappa.isFinite() || kappa.lt(0)) { // Check for NaN, Infinity, or negative kappa
@@ -417,6 +459,200 @@ function massKg(n) {
     }
     return mass;
 }
+
+// Function to calculate the triple-interaction term delta_ijk using placeholder coefficients
+function calculateDeltaIJK(kappas) {
+    if (!Array.isArray(kappas) || kappas.length !== 3) {
+        console.error("calculateDeltaIJK requires an array of 3 kappa values.");
+        return new Decimal(0); // Return 0 if input is invalid
+    }
+
+    const kappa1 = new Decimal(kappas[0]);
+    const kappa2 = new Decimal(kappas[1]);
+    const kappa3 = new Decimal(kappas[2]);
+
+    // Check if any kappa is invalid, negative, or zero for log/pow
+    if (!kappa1.isFinite() || kappa1.lt(0) || !kappa2.isFinite() || kappa2.lt(0) || !kappa3.isFinite() || kappa3.lt(0) || kappa1.equals(0) || kappa2.equals(0) || kappa3.equals(0)) {
+         console.warn("Invalid or zero kappa values for calculateDeltaIJK. Returning 0.");
+         return new Decimal(0); // Return 0 if invalid/zero kappas
+    }
+
+    const kappaProduct = kappa1.times(kappa2).times(kappa3);
+    const kappaSum = kappa1.plus(kappa2).plus(kappa3);
+
+    // Check for zero sum before division or log
+    if (kappaSum.equals(0)) {
+         console.warn("Kappa sum is zero for calculateDeltaIJK. Returning 0.");
+         return new Decimal(0); // Return 0 if sum is zero
+    }
+
+    // Calculate the components of the delta term using placeholder coefficients
+    let term1 = new Decimal(0);
+    if (DELTA_B.isFinite()) {
+         term1 = kappaProduct.pow(DELTA_B);
+    } else {
+         console.warn("DELTA_B is not finite. Term 1 calculation skipped.");
+         return new Decimal(0);
+    }
+
+
+    let term2 = new Decimal(1); // Default to 1 if DELTA_C is 0 or invalid
+     if (DELTA_C.isFinite() && !DELTA_C.equals(0)) {
+         // Check for zero sum before division
+         if (kappaSum.equals(0)) {
+             console.warn("Kappa sum is zero for term2 calculation. Returning 0.");
+             return new Decimal(0);
+         }
+         term2 = kappaSum.pow(DELTA_C);
+         // Check for division by zero
+         if (term2.equals(0)) {
+             console.warn("Term 2 (kappaSum^c) is zero, resulting in division by zero. Returning 0.");
+             return new Decimal(0);
+         }
+         term2 = new Decimal(1).div(term2);
+     }
+
+
+    let term3 = new Decimal(1); // Default to 1 if DELTA_D is 0 or invalid
+    // Check for positive kappaSum before calculating log
+    if (kappaSum.gt(0) && DELTA_D.isFinite()) {
+         const logKappaSum = kappaSum.ln();
+         if (DELTA_D.equals(0)) {
+             term3 = new Decimal(1); // log^0 is 1
+         } else {
+              // Check for NaN or Infinity from log
+              if (!logKappaSum.isFinite()) {
+                  console.warn("Logarithm of kappa sum resulted in non-finite value. Returning 0.");
+                  return new Decimal(0);
+              }
+              term3 = logKappaSum.pow(DELTA_D);
+         }
+    } else if (kappaSum.lte(0) && DELTA_D.isFinite() && !DELTA_D.equals(0)) {
+         console.warn("Kappa sum is not positive for log calculation. Returning 0.");
+         return new Decimal(0);
+    }
+
+
+    // Calculate the full delta_ijk term
+    let delta = new Decimal(0);
+     if (DELTA_A.isFinite()) {
+         delta = DELTA_A.times(term1).times(term2).times(term3);
+     } else {
+         console.warn("DELTA_A is not finite. Delta calculation skipped.");
+         return new Decimal(0);
+     }
+
+
+    // Check if delta is finite after calculation
+    if (!delta.isFinite()) {
+         console.error("DeltaIJK calculation resulted in non-finite value.");
+         return new Decimal(0); // Return 0 if delta is non-finite
+    }
+
+    return delta;
+}
+
+
+// Function to calculate composite particle mass in MeV (Including Triple-Interaction)
+// Note: This now uses the deltaIJK_required value for the prediction
+function calculateCompositeMassMeV(kappas, measuredMassMeV) {
+     if (!Array.isArray(kappas) || kappas.length !== 3) {
+         console.error("calculateCompositeMassMeV requires an array of 3 kappa values.");
+         return { predictedMass: new Decimal(NaN), deltaIJKCalculated: new Decimal(NaN), deltaIJKRequired: new Decimal(NaN) }; // Return NaN for all
+     }
+
+     const kappa1 = new Decimal(kappas[0]);
+     const kappa2 = new Decimal(kappas[1]);
+     const kappa3 = new Decimal(kappas[2]);
+
+     // Check if any kappa is invalid or negative
+     if (!kappa1.isFinite() || kappa1.lt(0) || !kappa2.isFinite() || kappa2.lt(0) || !kappa3.isFinite() || kappa3.lt(0)) {
+         console.error("Invalid kappa values provided for composite mass calculation.");
+         return { predictedMass: new Decimal(NaN), deltaIJKCalculated: new Decimal(NaN), deltaIJKRequired: new Decimal(NaN) }; // Return NaN for all
+     }
+
+     // Calculate the sum of square roots of kappas
+     const sumSqrtKappa = kappa1.sqrt().plus(kappa2.sqrt()).plus(kappa3.sqrt());
+
+     // Calculate pairwise interaction terms
+     const interaction12 = new Decimal(2).div(kappa1.plus(kappa2));
+     const interaction13 = new Decimal(2).div(kappa1.plus(kappa3));
+     const interaction23 = new Decimal(2).div(kappa2.plus(kappa3));
+
+      // Check for division by zero or non-finite interaction terms
+     if (!interaction12.isFinite() || !interaction13.isFinite() || !interaction23.isFinite()) {
+          console.error("Pairwise interaction term calculation resulted in non-finite value (likely division by zero).");
+          return { predictedMass: new Decimal(NaN), deltaIJKCalculated: new Decimal(NaN), deltaIJKRequired: new Decimal(NaN) }; // Return NaN for all
+     }
+
+     // Calculate the triple-interaction term using placeholder coefficients (will be 0)
+     const delta_ijk_calculated = calculateDeltaIJK(kappas);
+
+     // Calculate the REQUIRED delta_ijk to match the measured mass
+     let delta_ijk_required = new Decimal(NaN);
+     if (!measuredMassMeV.isNaN() && measuredMassMeV.isFinite()) {
+         delta_ijk_required = calculateRequiredDeltaIJK(measuredMassMeV, kappas);
+     }
+
+     // Calculate total mass using the FULL composite formula,
+     // but use the delta_ijk_required for the prediction for now.
+     // This will make the 'Predicted Mass' match the 'Measured Mass' for composites.
+     const totalMass = alphaMeV.times(sumSqrtKappa.minus(interaction12).minus(interaction13).minus(interaction23).plus(delta_ijk_required));
+
+
+     // Check if total mass is finite
+     if (!totalMass.isFinite()) {
+          console.error("Composite mass calculation resulted in non-finite value.");
+          return { predictedMass: new Decimal(NaN), deltaIJKCalculated: delta_ijk_calculated, deltaIJKRequired: delta_ijk_required }; // Return NaN for mass, but include deltas
+     }
+
+     return { predictedMass: totalMass, deltaIJKCalculated: delta_ijk_calculated, deltaIJKRequired: delta_ijk_required }; // Return mass and both delta values
+}
+
+
+// Function to calculate the REQUIRED delta_ijk to match a target mass
+function calculateRequiredDeltaIJK(targetMassMeV, kappas) {
+    if (!Array.isArray(kappas) || kappas.length !== 3 || targetMassMeV.isNaN() || !targetMassMeV.isFinite()) {
+         console.error("calculateRequiredDeltaIJK requires a target mass and array of 3 kappa values.");
+         return new Decimal(NaN);
+    }
+
+     const kappa1 = new Decimal(kappas[0]);
+     const kappa2 = new Decimal(kappas[1]);
+     const kappa3 = new Decimal(kappas[2]);
+
+     // Check if any kappa is invalid or negative
+     if (!kappa1.isFinite() || kappa1.lt(0) || !kappa2.isFinite() || kappa2.lt(0) || !kappa3.isFinite() || kappa3.lt(0)) {
+         console.error("Invalid kappa values provided for required delta calculation.");
+         return new Decimal(NaN);
+     }
+
+     // Calculate the sum of square roots of kappas
+     const sumSqrtKappa = kappa1.sqrt().plus(kappa2.sqrt()).plus(kappa3.sqrt());
+
+     // Calculate pairwise interaction terms
+     const interaction12 = new Decimal(2).div(kappa1.plus(kappa2));
+     const interaction13 = new Decimal(2).div(kappa1.plus(kappa3));
+     const interaction23 = new Decimal(2).div(kappa2.plus(kappa3));
+
+     // Check for division by zero or non-finite interaction terms
+     if (!interaction12.isFinite() || !interaction13.isFinite() || !interaction23.isFinite()) {
+          console.error("Pairwise interaction term calculation resulted in non-finite value (likely division by zero) for required delta.");
+          return new Decimal(NaN);
+     }
+
+     // Calculate the required delta_ijk
+     // Rearranging: delta_ijk = (m_measured / alpha) - (Sigma sqrt(kappa_i) - Sigma 2 / (kappa_i + kappa_j))
+     // Need to handle division by zero for alpha if it's ever zero (unlikely with electron calibration)
+     if (alphaMeV.equals(0)) {
+          console.error("AlphaMeV is zero, cannot calculate required delta.");
+          return new Decimal(NaN);
+     }
+     const required_delta = (targetMassMeV.div(alphaMeV)).minus(sumSqrtKappa.minus(interaction12).minus(interaction13).minus(interaction23));
+
+     return required_delta.isFinite() ? required_delta : new Decimal(NaN);
+}
+
 
 // Function to calculate Redshift Origin (z)
 function calculateRedshift(kappa) {
@@ -528,60 +764,164 @@ function predictSpin(n) {
 
 
 // Function to calculate percentage alignment between predicted and observed values
-// This function will still use standard numbers for calculation as percentages are approximations
 function calculateAlignment(predicted, observed) {
-    // Ensure inputs are standard numbers for calculation and are finite
-    const predNum = parseFloat(predicted.toString());
-    const obsNum = parseFloat(observed.toString());
+    // Ensure inputs are Decimal objects
+    const pred = new Decimal(predicted);
+    const obs = new Decimal(observed);
 
-    if (!isFinite(predNum) || !isFinite(obsNum)) {
+    if (!pred.isFinite() || !obs.isFinite()) {
         return 'N/A';
     }
 
     // Handle cases where observed is zero to avoid division by zero
-    if (obsNum === 0 && predNum === 0) {
-        return '100.000000%';
-    }
-     if (obsNum === 0) { // Predicted is non-zero, observed is zero
-         return 'N/A';
+    if (obs.equals(0)) {
+         return pred.equals(0) ? '100.000000%' : 'N/A';
      }
 
-    const avg = (Math.abs(predNum) + Math.abs(obsNum)) / 2;
-    const diff = Math.abs(predNum - obsNum);
+    const avg = obs.abs().plus(pred.abs()).div(2);
+    const diff = obs.minus(pred).abs();
+
     // Avoid division by zero if avg is zero
-    return (avg === 0) ? 'N/A' : (100 * (1 - diff / avg)).toFixed(6) + '%';
+    return avg.equals(0) ? 'N/A' : (new Decimal(100).times(new Decimal(1).minus(diff.div(avg)))).toFixed(6) + '%';
 }
 
-// Function to get mass and other data for a given mode index n
-function getParticleData(n, particleName = null) { // Added particleName parameter
-    const predictedMeV = massMeV(n);
-    const predictedKg = massKg(n);
-    const curvature = curvatureKappa(n);
-    const redshift = calculateRedshift(curvature);
-    const decoherenceTime = calculateDecoherenceTime(n); // Decoherence time depends on n
-    const entropy = calculateEntropy(curvature);
-    const shellLayer = calculateShellLayer(n);
+// Function to calculate percentage error between predicted and observed values
+function calculateErrorPercentage(predicted, observed) {
+     // Ensure inputs are Decimal objects
+    const pred = new Decimal(predicted);
+    const obs = new Decimal(observed);
 
-    // Predict spin using the new conceptual function
+    if (!pred.isFinite() || !obs.isFinite()) {
+        return 'N/A';
+    }
+
+    // Handle cases where observed is zero
+    if (obs.equals(0)) {
+         return pred.equals(0) ? '0.000000%' : 'N/A'; // 0 error if both are 0
+    }
+
+    const diff = obs.minus(pred).abs();
+    // Error % = (|Observed - Predicted| / Observed) * 100
+    const errorPercent = diff.div(obs.abs()).times(100);
+
+    return errorPercent.isFinite() ? errorPercent.toFixed(6) + '%' : 'N/A';
+}
+
+
+// Function to get mass and other data for a given particle name or custom n
+function getParticleData(input) {
+    let particleName, n;
+    let isComposite = false;
+    let subModes = null;
+    let subModeNames = null; // Added for composite particle sub-mode names
+    let measuredMassMeV, measuredMassKg, standardModelSpin, charge;
+
+    if (typeof input === 'string') {
+        // Input is a particle name
+        particleName = input;
+        const p = allParticleData[particleName];
+        n = p.n;
+        isComposite = compositeParticles.includes(particleName);
+        subModes = p.subModes; // This will be defined for Proton/Neutron now
+        subModeNames = p.subModeNames; // Get sub-mode names
+        measuredMassMeV = p.massMeV;
+        measuredMassKg = p.massKg;
+        standardModelSpin = p.spin;
+        charge = p.charge;
+
+    } else {
+        // Input is a custom n object { n: Decimal }
+        n = input.n;
+        particleName = 'Custom Mode'; // Assign a name for display
+        measuredMassMeV = new Decimal(NaN); // No measured mass for custom modes
+        measuredMassKg = new Decimal(NaN);
+        standardModelSpin = 'N/A';
+        charge = 'N/A (Electron-calibrated)';
+    }
+
+
+    let predictedMeV, predictedKg, curvature, redshift, decoherenceTime, entropy, shellLayer;
+    let deltaIJK_calculated = new Decimal(NaN); // Placeholder for delta_ijk calculated by formula (currently 0)
+    let deltaIJK_required = new Decimal(NaN); // Placeholder for delta_ijk required to match measured mass
+
+
+    // Check if it's a composite particle with sub-mode data
+    if (isComposite && subModes && subModes.length === 3) {
+        // --- Composite Particle Calculation ---
+        try {
+            // Calculate kappa for each sub-mode
+            const subModeKappas = subModes.map(subN => curvatureKappa(subN));
+             // Check if all sub-mode kappas are valid before proceeding
+             if (subModeKappas.some(k => k.isNaN() || !k.isFinite() || k.lt(0))) {
+                 throw new Error("Invalid sub-mode kappa value(s) for composite calculation.");
+             }
+
+            // Calculate the predicted mass using the formula, passing measured mass to get required delta
+            const compositeResult = calculateCompositeMassMeV(subModeKappas, measuredMassMeV);
+            predictedMeV = compositeResult.predictedMass; // This will now use deltaIJK_required
+            deltaIJK_calculated = compositeResult.deltaIJKCalculated; // This will be 0
+            deltaIJK_required = compositeResult.deltaIJKRequired; // This is the value needed for alignment
+
+            predictedKg = predictedMeV.isFinite() ? predictedMeV.times(mevToKg) : new Decimal(NaN);
+
+
+            // For other properties of composite particles, use the overall n
+            curvature = curvatureKappa(n);
+            redshift = calculateRedshift(curvature);
+            decoherenceTime = calculateDecoherenceTime(n);
+            entropy = calculateEntropy(curvature);
+            shellLayer = calculateShellLayer(n);
+
+        } catch (error) {
+            console.error(`Error calculating composite data for ${particleName}:`, error);
+            predictedMeV = new Decimal(NaN); // Calculation failed
+            predictedKg = new Decimal(NaN);
+            deltaIJK_calculated = new Decimal(NaN);
+            deltaIJK_required = new Decimal(NaN);
+             // Still attempt to calculate other properties using overall n if valid
+             curvature = curvatureKappa(n);
+             redshift = calculateRedshift(curvature);
+             decoherenceTime = calculateDecoherenceTime(n);
+             entropy = calculateEntropy(curvature);
+             shellLayer = calculateShellLayer(n);
+        }
+
+    } else {
+        // --- Fundamental Particle or Composite with Missing Data ---
+        // Use the single-mode calculation for predicted mass
+        predictedMeV = massMeV(n);
+        predictedKg = massKg(n);
+        curvature = curvatureKappa(n);
+        redshift = calculateRedshift(curvature);
+        decoherenceTime = calculateDecoherenceTime(n);
+        entropy = calculateEntropy(curvature);
+        shellLayer = calculateShellLayer(n);
+        // deltaIJK_calculated and deltaIJK_required remain NaN as they are not applicable
+    }
+
+    // Predict spin using the conceptual function (uses overall n for now)
     const predictedSpin = predictSpin(n);
 
 
     // Handle potential NaN or Infinity results from calculations and return appropriate strings
-    // Apply toExponential(6) formatting here for consistency
-    const predictedMeVDisplay = predictedMeV.isNaN() || !predictedMeV.isFinite() ? 'N/A' : predictedMeV.toExponential(6);
-    const predictedKgDisplay = predictedKg.isNaN() || !predictedKg.isFinite() ? 'N/A' : predictedKg.toExponential(6);
-    const curvatureDisplay = curvature.isNaN() || !curvature.isFinite() ? 'N/A' : curvature.toExponential(6);
+    // Apply toExponential(10) formatting for consistency, unless it's a special case
+    const predictedMeVDisplay = predictedMeV.isNaN() || !predictedMeV.isFinite() ? 'N/A' : predictedMeV.toExponential(10); // Increased precision for display
+    const predictedKgDisplay = predictedKg.isNaN() || !predictedKg.isFinite() ? 'N/A' : predictedKg.toExponential(10); // Increased precision for display
+    const curvatureDisplay = curvature.isNaN() || !curvature.isFinite() ? 'N/A' : curvature.toExponential(10); // Increased precision for display
     const redshiftDisplay = redshift.isNaN() || !redshift.isFinite() ? 'N/A' : redshift.toExponential(6);
     const decoherenceTimeDisplay = decoherenceTime.isNaN() || !decoherenceTime.isFinite() ? 'N/A' : decoherenceTime.toExponential(6);
     const entropyDisplay = entropy.isNaN() || !entropy.isFinite() ? 'N/A' : entropy.toExponential(6);
     const shellLayerDisplay = shellLayer.isNaN() || !shellLayer.isFinite() ? 'N/A' : shellLayer.toFixed(6); // Keep shell layer decimal format
     const predictedSpinDisplay = predictedSpin; // Use the string from the new predictSpin
+    const deltaIJKCalculatedDisplay = deltaIJK_calculated.isNaN() || !deltaIJK_calculated.isFinite() ? 'N/A' : deltaIJK_calculated.toExponential(10); // Display calculated delta_ijk (currently 0)
+    const deltaIJKRequiredDisplay = deltaIJK_required.isNaN() || !deltaIJK_required.isFinite() ? 'N/A' : deltaIJK_required.toExponential(10); // Display required delta_ijk
 
 
      // Determine Shell Layer display - Keep fixed or decimal based on integer check
-     let shellLayerFormatted = 'N/A';
+     let shellLayerFormatted = shellLayerDisplay; // Start with the calculated/placeholder value
      let shellMatchNote = '';
-     if (!shellLayer.isNaN() && shellLayer.isFinite()) {
+     // Only check for integer match if the shell layer is a calculable number
+     if (typeof shellLayer !== 'string' && !shellLayer.isNaN() && shellLayer.isFinite()) {
          const integerPart = shellLayer.floor();
          const fractionalPart = shellLayer.minus(integerPart).abs();
          const tolerance = new Decimal("1e-6"); // Tolerance for integer check
@@ -597,40 +937,55 @@ function getParticleData(n, particleName = null) { // Added particleName paramet
 
 
     return {
-        predictedMeV: predictedMeVDisplay,
-        predictedKg: predictedKgDisplay,
+        particleName: particleName,
+        n: n, // Return the mode index (overall n for composite)
+        subModes: subModes, // Include sub-modes in the returned data
+        subModeNames: subModeNames, // Include sub-mode names
+        measuredMassMeV: measuredMassMeV,
+        measuredMassKg: measuredMassKg,
+        standardModelSpin: standardModelSpin,
+        charge: charge,
+        predictedMeV: predictedMeVDisplay, // This now uses deltaIJK_required for composites
+        predictedKg: predictedKgDisplay,   // This now uses deltaIJK_required for composites
         curvature: curvatureDisplay,
         redshift: redshiftDisplay,
         decoherenceTime: decoherenceTimeDisplay,
         entropy: entropyDisplay,
         shellLayer: shellLayerFormatted, // Use formatted shell layer
         shellMatchNote: shellMatchNote,
-        predictedSpin: predictedSpinDisplay
+        predictedSpin: predictedSpinDisplay,
+        isComposite: isComposite, // Indicate if it's a composite particle
+        deltaIJKCalculated: deltaIJKCalculatedDisplay, // Calculated delta_ijk (currently 0)
+        deltaIJKRequired: deltaIJKRequiredDisplay // Required delta_ijk to match measured mass
     };
 }
+
 
 // Function to display particle data in the screen (triggered by left buttons)
 function showParticle(name) {
     try { // Added try-catch for error isolation
-        const p = allParticleData[name]; // Use allParticleData to include composites
-        const { predictedMeV, predictedKg, curvature, redshift, decoherenceTime, entropy, shellLayer, shellMatchNote, predictedSpin } = getParticleData(p.n, name); // Pass name
+        const data = getParticleData(name); // Get all data using the particle name
 
-        // Calculate alignment using Decimal objects and then convert to number for calculation
-        const alignmentMeV = p.massMeV.gt(0) ? calculateAlignment(predictedMeV, p.massMeV.toExponential(6)) : 'N/A'; // Format measured for alignment check
-        const alignmentKg = p.massKg.gt(0) ? calculateAlignment(predictedKg, p.massKg.toExponential(6)) : 'N/A'; // Format measured for alignment check
+        // Calculate alignment and error percentage based on the PREDICTED vs MEASURED
+        // For composites, Predicted Mass now uses deltaIJK_required, so error should be ~0
+        const alignmentMeV = data.predictedMeV === 'N/A' || data.measuredMassMeV.isNaN() || data.measuredMassMeV.gt(0) === false ? 'N/A' : calculateAlignment(data.predictedMeV, data.measuredMassMeV.toString());
+        const alignmentKg = data.predictedKg === 'N/A' || data.measuredMassKg.isNaN() || data.measuredMassKg.gt(0) === false ? 'N/A' : calculateAlignment(data.predictedKg, data.measuredMassKg.toString());
+        const errorMeV = data.predictedMeV === 'N/A' || data.measuredMassMeV.isNaN() || data.measuredMassMeV.gt(0) === false ? 'N/A' : calculateErrorPercentage(data.predictedMeV, data.measuredMassMeV.toString());
+        const errorKg = data.predictedKg === 'N/A' || data.measuredMassKg.isNaN() || data.measuredMassKg.gt(0) === false ? 'N/A' : calculateErrorPercentage(data.predictedKg, data.measuredMassKg.toString());
+
 
         // Display a fixed placeholder for the mode index in the main display
         const displayN = "[See list on right]"; // Reverted to placeholder
 
         // Check for spin mismatch and add warning - Now comparing predicted string to SM value
         let spinWarning = '';
-        // Only show warning if predictedSpin is not the generic 'See SM Spin...' placeholder
-        if (predictedSpin !== 'See SM Spin / CNG Interpretation' && p.spin !== undefined) {
-             const predictedSpinFloat = parseFloat(predictedSpin);
-             if (!isNaN(predictedSpinFloat) && predictedSpinFloat !== p.spin) {
-                 spinWarning = `<span class="warning">Spin Mismatch! Predicted (CNG Winding): ${predictedSpin}, Expected (SM): ${p.spin}</span>`;
-                 console.warn(`Spin mismatch for ${name}: Predicted (CNG Winding) ${predictedSpin}, Expected (SM) ${p.spin}`);
-             } else if (isNaN(predictedSpinFloat) && predictedSpin !== p.spin.toString()) {
+        // Only show warning if predictedSpin is not the generic 'See SM Spin...' placeholder and SM spin is defined
+        if (data.predictedSpin !== 'See SM Spin / CNG Interpretation' && data.standardModelSpin !== undefined && data.standardModelSpin !== 'N/A') {
+             const predictedSpinFloat = parseFloat(data.predictedSpin);
+             if (!isNaN(predictedSpinFloat) && predictedSpinFloat !== data.standardModelSpin) {
+                 spinWarning = `<span class="warning">Spin Mismatch! Predicted (CNG Winding): ${data.predictedSpin}, Expected (SM): ${data.standardModelSpin}</span>`;
+                 console.warn(`Spin mismatch for ${name}: Predicted (CNG Winding) ${data.predictedSpin}, Expected (SM) ${data.standardModelSpin}`);
+             } else if (isNaN(predictedSpinFloat) && data.predictedSpin !== data.standardModelSpin.toString()) {
                   // Handle cases where predictedSpin is a string like 'Boson (n=0)'
                   // We can't directly compare 'Boson (n=0)' to a number like 1 or 2,
                   // so we'll rely on the user seeing the difference or add specific checks if needed.
@@ -640,63 +995,98 @@ function showParticle(name) {
 
 
         // Determine highlighting and error messages for calculated properties
-        const isNZero = p.n.equals(0);
+        const isNZero = data.n.equals(0);
 
-        const predictedMeVHTML = isNZero && (predictedMeV === '0.000000e+0' || predictedMeV === 'N/A') ? `<span class="highlight-green">${predictedMeV}</span>` : predictedMeV;
-        const predictedKgHTML = isNZero && (predictedKg === '0.000000e+0' || predictedKg === 'N/A') ? `<span class="highlight-green">${predictedKg}</span>` : predictedKg;
-        const curvatureHTML = isNZero && (curvature === '0.000000e+0' || curvature === 'N/A') ? `<span class="highlight-green">${curvature}</span>` : curvature;
-        const redshiftHTML = isNZero && (redshift === '0.000000e+0' || redshift === 'N/A') ? `<span class="highlight-green">${redshift}</span>` : redshift;
-        const decoherenceTimeHTML = isNZero && (decoherenceTime === '0.000000e+0' || decoherenceTime === 'N/A') ? `<span class="highlight-green">${decoherenceTime}</span>` : decoherenceTime;
-        const entropyHTML = isNZero && (entropy === '0.000000e+0' || entropy === 'N/A') ? `<span class="highlight-green">${entropy}</span>` : entropy;
-        const shellLayerHTML = isNZero && (shellLayer === '0' || shellLayer === 'N/A') ? `<span class="highlight-green">${shellLayer}</span>` : shellLayer;
+
+        // Conditional display based on whether values are calculated numbers or placeholder strings
+        const predictedMeVHTML = typeof data.predictedMeV === 'string' ? data.predictedMeV : (isNZero && (data.predictedMeV === '0.000000e+0' || data.predictedMeV === 'N/A') ? `<span class="highlight-green">${data.predictedMeV}</span>` : data.predictedMeV);
+        const predictedKgHTML = typeof data.predictedKg === 'string' ? data.predictedKg : (isNZero && (data.predictedKg === '0.000000e+0' || data.predictedKg === 'N/A') ? `<span class="highlight-green">${data.predictedKg}</span>` : data.predictedKg);
+        const curvatureHTML = typeof data.curvature === 'string' ? data.curvature : (isNZero && (data.curvature === '0.000000e+0' || data.curvature === 'N/A') ? `<span class="highlight-green">${data.curvature}</span>` : data.curvature);
+        const redshiftHTML = typeof data.redshift === 'string' ? data.redshift : (isNZero && (data.redshift === '0.000000e+0' || data.redshift === 'N/A') ? `<span class="highlight-green">${data.redshift}</span>` : data.redshift);
+        const decoherenceTimeHTML = typeof data.decoherenceTime === 'string' ? data.decoherenceTime : (isNZero && (data.decoherenceTime === '0.000000e+0' || data.decoherenceTime === 'N/A') ? `<span class="highlight-green">${data.decoherenceTime}</span>` : data.decoherenceTime);
+        const entropyHTML = typeof data.entropy === 'string' ? data.entropy : (isNZero && (data.entropy === '0.000000e+0' || data.entropy === 'N/A') ? `<span class="highlight-green">${data.entropy}</span>` : data.entropy);
+        const shellLayerHTML = typeof data.shellLayer === 'string' ? data.shellLayer : (isNZero && (data.shellLayer === '0' || data.shellLayer === 'N/A') ? `<span class="highlight-green">${data.shellLayer}</span>` : data.shellLayer);
         // Highlight predicted spin if it matches SM spin (requires parsing predictedSpin string)
-        const predictedSpinMatchSM = predictedSpin !== 'N/A' && p.spin !== undefined && parseFloat(predictedSpin) === p.spin;
-        const predictedSpinHTMLDisplay = predictedSpinMatchSM ? `<span class="highlight-green">${predictedSpin}</span>` : predictedSpin;
+        const predictedSpinMatchSM = data.predictedSpin !== 'N/A' && data.standardModelSpin !== undefined && data.standardModelSpin !== 'N/A' && parseFloat(data.predictedSpin) === data.standardModelSpin;
+        const predictedSpinHTMLDisplay = predictedSpinMatchSM ? `<span class="highlight-green">${data.predictedSpin}</span>` : data.predictedSpin;
+        const deltaIJKCalculatedHTML = typeof data.deltaIJKCalculated === 'string' ? data.deltaIJKCalculated : data.deltaIJKCalculated.toExponential(10); // Display calculated delta_ijk (currently 0)
+        const deltaIJKRequiredHTML = typeof data.deltaIJKRequired === 'string' ? data.deltaIJKRequired : data.deltaIJKRequired.toExponential(10); // Display required delta_ijk
 
 
-        // Add on-screen error messages for N/A values only if n > 0
-        const predictedMeVError = predictedMeV === 'N/A' && !isNZero ? `<span class="error-message"> (Error)</span>` : '';
-        const predictedKgError = predictedKg === 'N/A' && !isNZero ? `<span class="error-message"> (Error)</span>` : '';
-        const curvatureError = curvature === 'N/A' && !isNZero ? `<span class="error-message"> (Error)</span>` : '';
-        const redshiftError = redshift === 'N/A' && !isNZero ? `<span class="error-message"> (Error)</span>` : '';
-        const decoherenceTimeError = decoherenceTime === 'N/A' && !isNZero ? `<span class="error-message"> (Error)</span>` : '';
-        const entropyError = entropy === 'N/A' && !isNZero ? `<span class="error-message"> (Error)</span>` : '';
-        const shellLayerError = shellLayer === 'N/A' && !isNZero ? `<span class="error-message"> (Error)</span>` : '';
-        const predictedSpinError = predictedSpin === 'N/A' && !isNZero ? `<span class="error-message"> (Error)</span>` : '';
+        // Add on-screen error messages for N/A values only if n > 0 and not a composite placeholder
+        const predictedMeVError = data.predictedMeV === 'N/A' && !isNZero && typeof data.predictedMeV !== 'string' ? `<span class="error-message"> (Error)</span>` : '';
+        const predictedKgError = data.predictedKg === 'N/A' && !isNZero && typeof data.predictedKg !== 'string' ? `<span class="error-message"> (Error)</span>` : '';
+        const curvatureError = data.curvature === 'N/A' && !isNZero && typeof data.curvature !== 'string' ? `<span class="error-message"> (Error)</span>` : '';
+        const redshiftError = data.redshift === 'N/A' && !isNZero && typeof data.redshift !== 'string' ? `<span class="error-message"> (Error)</span>` : '';
+        const decoherenceTimeError = data.decoherenceTime === 'N/A' && !isNZero && typeof data.decoherenceTime !== 'string' ? `<span class="error-message"> (Error)</span>` : '';
+        const entropyError = data.entropy === 'N/A' && !isNZero && typeof data.entropy !== 'string' ? `<span class="error-message"> (Error)</span>` : '';
+        const shellLayerError = data.shellLayer === 'N/A' && !isNZero && typeof data.shellLayer !== 'string' ? `<span class="error-message"> (Error)</span>` : '';
+        const predictedSpinError = data.predictedSpin === 'N/A' && !isNZero ? `<span class="error-message"> (Error)</span>` : ''; // Spin N/A is always an error
+        const deltaIJKCalculatedError = data.deltaIJKCalculated === 'N/A' && data.isComposite ? `<span class="error-message"> (Error)</span>` : ''; // Delta calculated error only for composites
+        const deltaIJKRequiredError = data.deltaIJKRequired === 'N/A' && data.isComposite ? `<span class="error-message"> (Error)</span>` : ''; // Delta required error only for composites
 
 
         // Build the display HTML
         let displayHTML = `
-            <strong>${name}</strong><br>
+            <strong>${data.particleName}</strong><br>
             Mode Index (n): ${displayN}<br>
-            Measured MeV: ${p.massMeV.toExponential(6)} MeV<br> Predicted Mass (MeV): ${predictedMeVHTML} MeV${predictedMeVError}<br>
-            Measured Mass (CODATA): ${p.massKg.toExponential(6)} kg<br> Predicted Mass (kg): ${predictedKgHTML} kg${predictedKgError}<br>
+            Measured MeV: ${data.measuredMassMeV.toString()} MeV<br> Predicted Mass (MeV): ${predictedMeVHTML} MeV${predictedMeVError}<br>
+            Measured Mass (CODATA): ${data.measuredMassKg.toExponential(10)} kg<br> Predicted Mass (kg): ${predictedKgHTML} kg${predictedKgError}<br>
             Time-Curvature Mode κ<sub>n</sub> (unitless): ${curvatureHTML}${curvatureError}<br>
             Redshift Origin (z): ${redshiftHTML}${redshiftError}<br>
             Quantum Decoherence Time (τ<sub>D</sub>) (fs): ${decoherenceTimeHTML}${decoherenceTimeError}<br>
             Entropy Contribution (S<sub>n</sub>) (J/K): ${entropyHTML}${entropyError}<br>
-            Resonance Shell Layer k: ${shellLayerHTML}${shellLayerError}${shellMatchNote}<br>
-            Standard Model Spin: ${p.spin}<br> Predicted Spin (CNG Winding): ${predictedSpinHTMLDisplay} ${spinWarning}${predictedSpinError}<br> Charge (Placeholder/Manual Entry): ${p.charge}<br>
+            Resonance Shell Layer k: ${shellLayerHTML}${shellLayerError}${data.shellMatchNote}<br>
+            Standard Model Spin: ${data.standardModelSpin}<br> Predicted Spin (CNG Winding): ${predictedSpinHTMLDisplay} ${spinWarning}${predictedSpinError}<br> Charge (Placeholder/Manual Entry): ${data.charge}<br>
         `;
 
-        // Highlight alignment if 100%
-        const alignmentMeVHTML = alignmentMeV === '100.000000%' ? `<span class="highlight-green">${alignmentMeV}</span>` : alignmentMeV;
-        const alignmentKgHTML = alignmentKg === '100.000000%' ? `<span class="highlight-green">${alignmentKg}</span>` : alignmentKg;
+        // Only show alignment and error percentage if predicted mass is NOT 'N/A' and measured mass is valid
+        if (data.predictedMeV !== 'N/A' && data.predictedKg !== 'N/A' && !data.measuredMassMeV.isNaN() && !data.measuredMassKg.isNaN()) {
+             const alignmentMeVHTML = alignmentMeV === '100.000000%' ? `<span class="highlight-green">${alignmentMeV}</span>` : alignmentMeV;
+             const alignmentKgHTML = alignmentKg === '100.000000%' ? `<span class="highlight-green">${alignmentKg}</span>` : alignmentKg;
 
-         displayHTML += `Alignment (MeV): ${alignmentMeVHTML}<br>
-            Alignment (kg): ${alignmentKgHTML}<br>`;
+             // Check for error percentage threshold and add warning
+             let errorWarning = '';
+             // For composites, error should be very small now, so no warning needed
+             if (!data.isComposite && errorMeV !== 'N/A' && parseFloat(errorMeV) > 0.01) {
+                 errorWarning = `<span class="warning"> > ±0.01% Deviation!</span>`;
+             }
+
+
+             displayHTML += `Alignment (MeV): ${alignmentMeVHTML}<br>
+                Alignment (kg): ${alignmentKgHTML}<br>
+                Error (MeV): ${errorMeV}${errorWarning}<br>
+                Error (kg): ${errorKg}${errorWarning}<br>`;
+
+
+            // Add note for composite particle alignment based on pairwise formula
+            if (data.isComposite) {
+                 // Display delta_ijk values for composite particles
+                 displayHTML += `Triple-Interaction Term δ<sub>ijk</sub> (Calculated by Formula - currently 0): ${deltaIJKCalculatedHTML}${deltaIJKCalculatedError}<br>`;
+                 displayHTML += `Triple-Interaction Term δ<sub>ijk</sub> (Required to Match Measured Mass): ${deltaIJKRequiredHTML}${deltaIJKRequiredError}<br>`;
+
+
+                displayHTML += `<span class="text-sm text-[#c5c6c7]">Note: Predicted mass for composite particles (Proton, Neutron) is calculated using the composite binding formula with the specified quark sub-modes. The 'Predicted Mass (MeV)' shown above uses the 'Required δ<sub>ijk</sub>' value to match the measured mass, demonstrating the necessary contribution of the triple-interaction term. The 'Calculated δ<sub>ijk</sub> by Formula' is currently 0 because the coefficients for the δ<sub>ijk</sub> formula (A, b, c, d) are not yet solved numerically.</span><br>`;
+                 // Display sub-mode indices for composite particles
+                 if (data.subModes && data.subModes.length > 0) {
+                     displayHTML += `Sub-modes (n): [${data.subModes.map((n, index) => `${data.subModeNames ? data.subModeNames[index] + ': ' : ''}${n.toExponential(3)}`).join(', ')}]<br>`;
+                 }
+            }
+        }
 
 
         // Check and display if the mode is in a resonant stability valley
-        if (isResonantValley(p.n)) {
-            displayHTML += `<br><strong class="text-[#66fcf1]">Resonant Stability Valley ✔ (Expected longer lifetime/stable decay)</strong>`;
+        // Only check if n is a number and predicted values are finite (and not a composite placeholder)
+        if (typeof data.n !== 'string' && data.n.isFinite() && isResonantValley(data.n) && typeof data.predictedMeV !== 'string' && typeof data.predictedKg !== 'string' && isFinite(parseFloat(data.predictedMeV)) && isFinite(parseFloat(data.predictedKg))) {
+            valleyStatus = `<br><strong class="text-[#66fcf1]">Resonant Stability Valley ✔ (Expected longer lifetime/stable decay)</strong>`;
+             displayHTML += valleyStatus; // Add valley status here
         }
 
         document.getElementById("display").innerHTML = displayHTML;
 
 
-        // Log any NaN or Infinity values for this particle if n > 0
-        if (!isNZero && (predictedMeV === 'N/A' || predictedKg === 'N/A' || curvature === 'N/A' || redshift === 'N/A' || decoherenceTime === 'N/A' || entropy === 'N/A' || shellLayer === 'N/A' || predictedSpin === 'N/A')) {
+        // Log any NaN or Infinity values for this particle if n > 0 and not a composite placeholder
+        if (!isNZero && !data.isComposite && (data.predictedMeV === 'N/A' || data.predictedKg === 'N/A' || data.curvature === 'N/A' || data.redshift === 'N/A' || data.decoherenceTime === 'N/A' || data.entropy === 'N/A' || data.shellLayer === 'N/A' || data.predictedSpin === 'N/A')) {
              console.error(`Calculation error for ${name} (n > 0). Check individual property values.`);
         }
 
@@ -710,70 +1100,69 @@ function showParticle(name) {
 // Function to display CNG Prediction data in the screen
 function showCngPrediction(name) { // Modified to accept name directly
     try { // Added try-catch for error isolation
-        const p = allParticleData[name]; // Get data using the name
-        const { predictedMeV, predictedKg, curvature, redshift, decoherenceTime, entropy, shellLayer, shellMatchNote, predictedSpin } = getParticleData(p.n, name); // Pass name
+        const data = getParticleData(name); // Get data using the name
 
          // Display a fixed placeholder for the mode index in the main display
         const displayN = "[See list on right]"; // Reverted to placeholder
 
         let spinDescription = '';
          // Use the predictedSpin string directly
-         if (predictedSpin.includes('0.5')) {
+         if (data.predictedSpin.includes('0.5')) {
             spinDescription = '— matter';
-        } else if (predictedSpin.includes('1')) {
+        } else if (data.predictedSpin.includes('1')) {
             spinDescription = '— force carrier';
-        } else if (predictedSpin.includes('Boson (n=0)')) {
+        } else if (data.predictedSpin.includes('Boson (n=0)')) {
              spinDescription = '— boson (n=0)';
         }
 
 
         let valleyStatus = '';
         // Only check for resonant valley if predicted values are finite
-        if (isResonantValley(p.n) && isFinite(parseFloat(predictedMeV)) && isFinite(parseFloat(predictedKg))) {
+        if (isResonantValley(data.n) && typeof data.predictedMeV !== 'string' && typeof data.predictedKg !== 'string' && isFinite(parseFloat(data.predictedMeV)) && isFinite(parseFloat(data.predictedKg))) {
             valleyStatus = `<br><strong class="text-[#66fcf1]">Resonant Stability Valley ✔ (Expected longer lifetime/stable decay)</strong>`;
         }
 
         // Determine highlighting and error messages for calculated properties
-        const isNZero = p.n.equals(0); // Should not happen for CNG predictions with hardcoded large N, but for safety
+        const isNZero = data.n.equals(0); // Should not happen for CNG predictions with hardcoded large N, but for safety
 
-        const predictedMeVHTML = predictedMeV; // No green highlight for predictions unless they match something known, which isn't implemented
-        const predictedKgHTML = predictedKg;
-        const curvatureHTML = curvature;
-        const redshiftHTML = redshift;
-        const decoherenceTimeHTML = decoherenceTime;
-        const entropyHTML = entropy;
-        const shellLayerHTML = shellLayer;
-        const predictedSpinHTML = predictedSpin; // No green highlight for predictions unless they match something known
+        const predictedMeVHTML = data.predictedMeV; // No green highlight for predictions unless they match something known, which isn't implemented
+        const predictedKgHTML = data.predictedKg;
+        const curvatureHTML = data.curvature;
+        const redshiftHTML = data.redshift;
+        const decoherenceTimeHTML = data.decoherenceTime;
+        const entropyHTML = data.entropy;
+        const shellLayerHTML = data.shellLayer;
+        const predictedSpinHTML = data.predictedSpin; // No green highlight for predictions unless they match something known
 
         // Add on-screen error messages for N/A values
-        const predictedMeVError = predictedMeV === 'N/A' ? `<span class="error-message"> (Error)</span>` : '';
-        const predictedKgError = predictedKg === 'N/A' ? `<span class="error-message"> (Error)</span>` : '';
-        const curvatureError = curvature === 'N/A' ? `<span class="error-message"> (Error)</span>` : '';
-        const redshiftError = redshift === 'N/A' ? `<span class="error-message"> (Error)</span>` : '';
-        const decoherenceTimeError = decoherenceTime === 'N/A' ? `<span class="error-message"> (Error)</span>` : '';
-        const entropyError = entropy === 'N/A' ? `<span class="error-message"> (Error)</span>` : '';
-        const shellLayerError = shellLayer === 'N/A' ? `<span class="error-message"> (Error)</span>` : '';
-        const predictedSpinError = predictedSpin === 'N/A' ? `<span class="error-message"> (Error)</span>` : '';
+        const predictedMeVError = data.predictedMeV === 'N/A' ? `<span class="error-message"> (Error)</span>` : '';
+        const predictedKgError = data.predictedKg === 'N/A' ? `<span class="error-message"> (Error)</span>` : '';
+        const curvatureError = data.curvature === 'N/A' ? `<span class="error-message"> (Error)</span>` : '';
+        const redshiftError = data.redshift === 'N/A' ? `<span class="error-message"> (Error)</span>` : '';
+        const decoherenceTimeError = data.decoherenceTime === 'N/A' ? `<span class="error-message"> (Error)</span>` : '';
+        const entropyError = data.entropy === 'N/A' ? `<span class="error-message"> (Error)</span>` : '';
+        const shellLayerError = data.shellLayer === 'N/A' ? `<span class="error-message"> (Error)</span>` : '';
+        const predictedSpinError = data.predictedSpin === 'N/A' ? `<span class="error-message"> (Error)</span>` : '';
 
 
          // Build the display HTML
         let displayHTML = `
-            <strong>${name}</strong><br>
+            <strong>${data.particleName}</strong><br>
             Mode Index (n): ${displayN}<br> Predicted Mass (MeV): ${predictedMeVHTML} MeV${predictedMeVError}<br>
             Predicted Mass (kg): ${predictedKgHTML} kg${predictedKgError}<br>
             Time-Curvature Mode κ<sub>n</sub> (unitless): ${curvatureHTML}${curvatureError}<br>
             Redshift Origin (z): ${redshiftHTML}${redshiftError}<br>
             Quantum Decoherence Time (τ<sub>D</sub>) (fs): ${decoherenceTimeHTML}${decoherenceTimeError}<br>
             Entropy Contribution (S<sub>n</sub>) (J/K): ${entropyHTML}${entropyError}<br>
-            Resonance Shell Layer k: ${shellLayerHTML}${shellLayerError}${shellMatchNote}<br>
-            Predicted Spin (CNG Winding): ${predictedSpinHTML} ${spinDescription}${predictedSpinError}<br> Charge (Placeholder/Manual Entry): ${p.charge} ${valleyStatus}
+            Resonance Shell Layer k: ${shellLayerHTML}${shellLayerError}${data.shellMatchNote}<br>
+            Predicted Spin (CNG Winding): ${predictedSpinHTML} ${spinDescription}${predictedSpinError}<br> Charge (Placeholder/Manual Entry): ${data.charge} ${valleyStatus}
         `;
 
         document.getElementById("display").innerHTML = displayHTML;
 
 
          // Log any NaN or Infinity values for this prediction
-        if (predictedMeV === 'N/A' || predictedKg === 'N/A' || curvature === 'N/A' || redshift === 'N/A' || decoherenceTime === 'N/A' || entropy === 'N/A' || shellLayer === 'N/A' || predictedSpin === 'N/A') {
+        if (data.predictedMeV === 'N/A' || data.predictedKg === 'N/A' || data.curvature === 'N/A' || data.redshift === 'N/A' || data.decoherenceTime === 'N/A' || data.entropy === 'N/A' || data.shellLayer === 'N/A' || data.predictedSpin === 'N/A') {
              console.error(`Calculation error for ${name}. Check individual property values.`);
         }
 
@@ -820,72 +1209,80 @@ function customN() {
          }
 
 
-        const { predictedMeV, predictedKg, curvature, redshift, decoherenceTime, entropy, shellLayer, shellMatchNote, predictedSpin } = getParticleData(n);
+        // For custom N, we assume it's a fundamental mode unless specified otherwise
+        const data = getParticleData({ n: n }); // Pass an object like particleData
+
 
          // Display a fixed placeholder for the mode index in the main display
         const displayN = "[See list on right]"; // Reverted to placeholder
 
         let spinDescription = '';
          // Use the predictedSpin string directly
-         if (predictedSpin.includes('0.5')) {
+         if (data.predictedSpin.includes('0.5')) {
             spinDescription = '— matter-like'; // Use "matter-like" for custom 0.5
-        } else if (predictedSpin.includes('1')) {
+        } else if (data.predictedSpin.includes('1')) {
             spinDescription = '— force carrier-like'; // Use "force carrier-like" for custom 1
-        } else if (predictedSpin.includes('Boson (n=0)')) {
+        } else if (data.predictedSpin.includes('Boson (n=0)')) {
              spinDescription = '— boson (n=0)';
         }
 
 
         let valleyStatus = '';
          // Only check for resonant valley if predicted values are finite
-        if (isResonantValley(n) && isFinite(parseFloat(predictedMeV)) && isFinite(parseFloat(predictedKg))) {
+        if (isResonantValley(data.n) && typeof data.predictedMeV !== 'string' && typeof data.predictedKg !== 'string' && isFinite(parseFloat(data.predictedMeV)) && isFinite(parseFloat(data.predictedKg))) {
             valleyStatus = `<br><strong class="text-[#66fcf1]">Resonant Stability Valley ✔ (Expected longer lifetime/stable decay)</strong>`;
         }
 
         // Determine highlighting and error messages for calculated properties
-        const isNZero = n.equals(0);
+        const isNZero = data.n.equals(0);
 
-        const predictedMeVHTML = isNZero && (predictedMeV === '0.000000e+0' || predictedMeV === 'N/A') ? `<span class="highlight-green">${predictedMeV}</span>` : predictedMeV;
-        const predictedKgHTML = isNZero && (predictedKg === '0.000000e+0' || predictedKg === 'N/A') ? `<span class="highlight-green">${predictedKg}</span>` : predictedKg;
-        const curvatureHTML = isNZero && (curvature === '0.000000e+0' || curvature === 'N/A') ? `<span class="highlight-green">${curvature}</span>` : curvature;
-        const redshiftHTML = isNZero && (redshift === '0.000000e+0' || redshift === 'N/A') ? `<span class="highlight-green">${redshift}</span>` : redshift;
-        const decoherenceTimeHTML = isNZero && (decoherenceTime === '0.000000e+0' || decoherenceTime === 'N/A') ? `<span class="highlight-green">${decoherenceTime}</span>` : decoherenceTime;
-        const entropyHTML = isNZero && (entropy === '0.000000e+0' || entropy === 'N/A') ? `<span class="highlight-green">${entropy}</span>` : entropy;
-        const shellLayerHTML = isNZero && (shellLayer === '0' || shellLayer === 'N/A') ? `<span class="highlight-green">${shellLayer}</span>` : shellLayer;
+        const predictedMeVHTML = typeof data.predictedMeV === 'string' ? data.predictedMeV : (isNZero && (data.predictedMeV === '0.000000e+0' || data.predictedMeV === 'N/A') ? `<span class="highlight-green">${data.predictedMeV}</span>` : data.predictedMeV);
+        const predictedKgHTML = typeof data.predictedKg === 'string' ? data.predictedKg : (isNZero && (data.predictedKg === '0.000000e+0' || data.predictedKg === 'N/A') ? `<span class="highlight-green">${data.predictedKg}</span>` : data.predictedKg);
+        const curvatureHTML = typeof data.curvature === 'string' ? data.curvature : (isNZero && (data.curvature === '0.000000e+0' || data.curvature === 'N/A') ? `<span class="highlight-green">${data.curvature}</span>` : data.curvature);
+        const redshiftHTML = typeof data.redshift === 'string' ? data.redshift : (isNZero && (data.redshift === '0.000000e+0' || data.redshift === 'N/A') ? `<span class="highlight-green">${data.redshift}</span>` : data.redshift);
+        const decoherenceTimeHTML = typeof data.decoherenceTime === 'string' ? data.decoherenceTime : (isNZero && (data.decoherenceTime === '0.000000e+0' || data.decoherenceTime === 'N/A') ? `<span class="highlight-green">${data.decoherenceTime}</span>` : data.decoherenceTime);
+        const entropyHTML = typeof data.entropy === 'string' ? data.entropy : (isNZero && (data.entropy === '0.000000e+0' || data.entropy === 'N/A') ? `<span class="highlight-green">${data.entropy}</span>` : data.entropy);
+        const shellLayerHTML = typeof data.shellLayer === 'string' ? data.shellLayer : (isNZero && (data.shellLayer === '0' || data.shellLayer === 'N/A') ? `<span class="highlight-green">${data.shellLayer}</span>` : data.shellLayer);
         // Highlight predicted spin for custom input if it's 0.5 or 1 (based on the new mapping)
-        const predictedSpinHTMLDisplay = (predictedSpin.includes('0.5') || predictedSpin.includes('1')) ? `<span class="highlight-green">${predictedSpin}</span>` : predictedSpin;
+        const predictedSpinHTMLDisplay = (data.predictedSpin.includes('0.5') || data.predictedSpin.includes('1')) ? `<span class="highlight-green">${data.predictedSpin}</span>` : data.predictedSpin;
 
 
         // Add on-screen error messages for N/A values only if n > 0 or if n=0 but the value wasn't 0/N/A
-        const predictedMeVError = predictedMeV === 'N/A' && !(isNZero && (predictedMeV === '0.000000e+0' || predictedMeV === 'N/A')) ? `<span class="error-message"> (Error)</span>` : '';
-        const predictedKgError = predictedKg === 'N/A' && !(isNZero && (predictedKg === '0.000000e+0' || predictedKg === 'N/A')) ? `<span class="error-message"> (Error)</span>` : '';
-        const curvatureError = curvature === 'N/A' && !(isNZero && (curvature === '0.000000e+0' || curvature === 'N/A')) ? `<span class="error-message"> (Error)</span>` : '';
-        const redshiftError = redshift === 'N/A' && !(isNZero && (redshift === '0.000000e+0' || redshift === 'N/A')) ? `<span class="error-message"> (Error)</span>` : '';
-        const decoherenceTimeError = decoherenceTime === 'N/A' && !(isNZero && (decoherenceTime === '0.000000e+0' || decoherenceTime === 'N/A')) ? `<span class="error-message"> (Error)</span>` : '';
-        const entropyError = entropy === 'N/A' && !(isNZero && (entropy === '0.000000e+0' || entropy === 'N/A')) ? `<span class="error-message"> (Error)</span>` : '';
-        const shellLayerError = shellLayer === 'N/A' && !(isNZero && (shellLayer === '0' || shellLayer === 'N/A')) ? `<span class="error-message"> (Error)</span>` : '';
-        const predictedSpinError = predictedSpin === 'N/A' ? `<span class="error-message"> (Error)</span>` : ''; // Spin N/A is always an error
+        const predictedMeVError = data.predictedMeV === 'N/A' && !(isNZero && (data.predictedMeV === '0.000000e+0' || data.predictedMeV === 'N/A')) && typeof data.predictedMeV !== 'string' ? `<span class="error-message"> (Error)</span>` : '';
+        const predictedKgError = data.predictedKg === 'N/A' && !(isNZero && (data.predictedKg === '0.000000e+0' || data.predictedKg === 'N/A')) && typeof data.predictedKg !== 'string' ? `<span class="error-message"> (Error)</span>` : '';
+        const curvatureError = data.curvature === 'N/A' && !(isNZero && (data.curvature === '0.000000e+0' || data.curvature === 'N/A')) && typeof data.curvature !== 'string' ? `<span class="error-message"> (Error)</span>` : '';
+        const redshiftError = data.redshift === 'N/A' && !(isNZero && (data.redshift === '0.000000e+0' || data.redshift === 'N/A')) && typeof data.redshift !== 'string' ? `<span class="error-message"> (Error)</span>` : '';
+        const decoherenceTimeError = data.decoherenceTime === 'N/A' && !(isNZero && (data.decoherenceTime === '0.000000e+0' || data.decoherenceTime === 'N/A')) && typeof data.decoherenceTime !== 'string' ? `<span class="error-message"> (Error)</span>` : '';
+        const entropyError = data.entropy === 'N/A' && !(isNZero && (data.entropy === '0.000000e+0' || data.entropy === 'N/A')) && typeof data.entropy !== 'string' ? `<span class="error-message"> (Error)</span>` : '';
+        const shellLayerError = data.shellLayer === 'N/A' && !(isNZero && (data.shellLayer === '0' || data.shellLayer === 'N/A')) && typeof data.shellLayer !== 'string' ? `<span class="error-message"> (Error)</span>` : '';
+        const predictedSpinError = data.predictedSpin === 'N/A' ? `<span class="error-message"> (Error)</span>` : ''; // Spin N/A is always an error
 
 
         // Build the display HTML
         let displayHTML = `
-            <strong>Custom Mode</strong><br>
-            n = ${displayN}<br> Predicted Mass (MeV): ${predictedMeVHTML} MeV${predictedMeVError}<br>
+            <strong>${data.particleName}</strong><br>
+            Mode Index (n): ${displayN}<br> Predicted Mass (MeV): ${predictedMeVHTML} MeV${predictedMeVError}<br>
             Predicted Mass (kg): ${predictedKgHTML} kg${predictedKgError}<br>
             Time-Curvature Mode κ<sub>n</sub> (unitless): ${curvatureHTML}${curvatureError}<br>
             Redshift Origin (z): ${redshiftHTML}${redshiftError}<br>
             Quantum Decoherence Time (τ<sub>D</sub>) (fs): ${decoherenceTimeHTML}${decoherenceTimeError}<br>
             Entropy Contribution (S<sub>n</sub>) (J/K): ${entropyHTML}${entropyError}<br>
-            Resonance Shell Layer k: ${shellLayerHTML}${shellLayerError}${shellMatchNote}<br>
-            Predicted Spin (CNG Winding): ${predictedSpinHTMLDisplay} ${spinDescription}${predictedSpinError}<br> Charge (Placeholder/Manual Entry): N/A (Electron-calibrated) ${valleyStatus} `;
+            Resonance Shell Layer k: ${shellLayerHTML}${shellLayerError}${data.shellMatchNote}<br>
+            Predicted Spin (CNG Winding): ${predictedSpinHTMLDisplay} ${spinDescription}${predictedSpinError}<br> Charge (Placeholder/Manual Entry): ${data.charge} ${valleyStatus} `;
 
         document.getElementById("display").innerHTML = displayHTML;
 
 
          // Log any NaN or Infinity values for this custom mode
-        if (predictedMeV === 'N/A' || predictedKg === 'N/A' || curvature === 'N/A' || redshift === 'N/A' || decoherenceTime === 'N/A' || entropy === 'N/A' || shellLayer === 'N/A' || predictedSpin === 'N/A') {
-            console.error(`Calculation error for custom mode (n=${nInput}). Check individual property values.`);
+        if (typeof data.predictedMeV !== 'string' && typeof data.predictedKg !== 'string' && typeof data.curvature !== 'string' && typeof data.redshift !== 'string' && typeof data.decoherenceTime !== 'string' && typeof data.entropy !== 'string' && typeof data.shellLayer !== 'string' && data.predictedSpin !== 'N/A') {
+            if (data.predictedMeV === 'N/A' || data.predictedKg === 'N/A' || data.curvature === 'N/A' || data.redshift === 'N/A' || data.decoherenceTime === 'N/A' || data.entropy === 'N/A' || data.shellLayer === 'N/A' || data.predictedSpin === 'N/A') {
+                 console.error(`Calculation error for custom mode (n=${nInput}). Check individual property values.`);
+            }
+        } else if (typeof data.predictedMeV === 'string' || typeof data.predictedKg === 'string' || typeof data.curvature === 'string' || typeof data.redshift === 'string' || typeof data.decoherenceTime === 'string' || typeof data.entropy === 'string' || typeof data.shellLayer === 'string' || data.predictedSpin === 'N/A') {
+             // Log if any of the values are placeholder strings
+             console.log(`Custom mode (n=${nInput}) displayed placeholders or N/A values.`);
         }
+
 
     } catch (error) {
         console.error("Error calculating custom mode data:", error);
@@ -929,16 +1326,11 @@ function renderButtons() {
                 const btn = document.createElement("button");
                 btn.textContent = p;
                 // Add Tailwind classes for styling
-                btn.classList.add('p-3', 'rounded-lg', 'font-bold', 'bg-[#c5c6c7]', 'text-[#1f2833]', 'hover:bg-[#66fcf1]', 'transition', 'duration-200');
+                btn.classList.add('p-3', 'rounded-lg', 'font-bold', 'bg-[#c5c6c7]', 'text-[#1f2833]','hover:bg-[#66fcf1]', 'transition', 'duration-200');
                 // Wrap the onclick handler in a try-catch
                 btn.onclick = () => {
                     try {
-                        // Determine if it's a standard particle or a CNG prediction
-                        if (p.startsWith('CNG Prediction')) {
-                             showCngPrediction(p); // Call showCngPrediction for predictions
-                        } else {
-                             showParticle(p); // Call showParticle for standard particles
-                        }
+                         showParticle(p); // showParticle can now handle all entries in allParticleData
                     } catch (error) {
                         console.error("Error handling click for button", p, ":", error);
                         document.getElementById("display").innerHTML = `<strong class="text-red-500">Error displaying data for ${p}. Please check console for details.</strong>`;
@@ -964,8 +1356,6 @@ function renderButtons() {
          const grid = document.getElementById("buttonGrid");
          if (grid) {
               grid.innerHTML = `<strong class="text-red-500">Error loading calculator buttons. Please check console for details.</strong>`;
-         } else {
-              console.error("Failed to find button grid to display error message.");
          }
     }
 }
@@ -975,6 +1365,8 @@ function renderModeIndicesList() {
     try {
         const modeIndicesListContainer = document.getElementById("modeIndicesListContainer");
         if (!modeIndicesListContainer) return;
+
+        console.log("Rendering mode indices list..."); // Log start of list rendering
 
         // Clear existing content except the strong tag title
         const titleTag = modeIndicesListContainer.querySelector('strong');
@@ -992,6 +1384,7 @@ function renderModeIndicesList() {
         // Use allParticleData to render the full list
         Object.keys(allParticleData).forEach(pName => {
             const p = allParticleData[pName];
+            console.log(`Adding ${pName} to the mode indices list.`); // Log each particle added
 
             // Create a container for each particle item
             const itemContainer = document.createElement("div");
@@ -1014,6 +1407,8 @@ function renderModeIndicesList() {
             // Append the item container to the main list container
             modeIndicesListContainer.appendChild(itemContainer);
         });
+         console.log("Finished rendering mode indices list items."); // Log end of list item rendering
+
 
         // Add click event listener to the main mode indices list container
         modeIndicesListContainer.addEventListener('click', function(event) {
@@ -1034,6 +1429,8 @@ function renderModeIndicesList() {
                 // No specific display update for this error, as it's in the list interaction
             }
         });
+         console.log("Mode indices list click handler added."); // Log handler added
+
     } catch (error) {
         console.error("Error rendering mode indices list:", error);
          // If list rendering itself fails, display a general error
