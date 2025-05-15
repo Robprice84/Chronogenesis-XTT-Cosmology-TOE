@@ -431,6 +431,26 @@ const compositeParticleData = {
          ],
          subModeNames: ['u', 'u', 'd'] // Names for display
          // Removed hardcoded delta
+     },
+     'Neutron': {
+         // Using the overall n from the Chronogenesis dataset for other properties (like shell location)
+         n: new Decimal("1.775351882647007717753518826470077177535188264700771775351882647007717753518826470077177535188264700E+40"),
+         massMeV: new Decimal("939.56542052"), // Using the precise PDG value for comparison
+         massKg: new Decimal("1.67492749804e-27"), // Using the precise CODATA value for comparison
+         standardModelSpin: 0.5,
+         expectedWindingNumber: 1, // Expected total winding for Neutron (udd)
+         expectedCalculatedSpin: 0.5, // Expected spin from winding
+         expectedCalculatedCharge: 1, // Expected charge from winding (simplified)
+         chargeNote: "Composite - Winding/Charge from calculation.",
+         // Explicitly providing the sub-mode indices for Neutron (u, d, d) for composite mass calculation
+         // Using the exact unrounded quark indices from project files (~8.2e45 range)
+         subModes: [
+             new Decimal("8.198496710786315800000000000000000000000000000000000000000000000000000000000000000000000000000000000E+45"), // n_u
+             new Decimal("8.307172920037428000000000000000000000000000000000000000000000000000000000000000000000000000000000000E+45"), // n_d(1)
+             new Decimal("8.307172920037428000000000000000000000000000000000000000000000000000000000000000000000000000000000000E+45")  // n_d(2)
+         ],
+         subModeNames: ['u', 'd', 'd'] // Names for display
+         // Removed hardcoded delta
      }
 };
 
@@ -1502,7 +1522,25 @@ function renderButtons(particleDataSource) {
              return;
         }
 
-        Object.keys(particleDataSource).forEach(p => {
+        // Sort particle names alphabetically, but keep CNG Predictions at the end
+        const particleNames = Object.keys(particleDataSource);
+        particleNames.sort((a, b) => {
+            const isCngA = a.startsWith('CNG Prediction');
+            const isCngB = b.startsWith('CNG Prediction');
+
+            if (isCngA && !isCngB) return 1; // CNG Prediction comes after others
+            if (!isCngA && isCngB) return -1; // Others come before CNG Prediction
+            if (isCngA && isCngB) {
+                // Sort CNG Predictions by number
+                const numA = parseInt(a.replace('CNG Prediction ', ''), 10);
+                const numB = parseInt(b.replace('CNG Prediction ', ''), 10);
+                return numA - numB;
+            }
+            return a.localeCompare(b); // Alphabetical sort for others
+        });
+
+
+        particleNames.forEach(p => {
             try {
                 console.log(`renderButtons: Creating button for ${p}`);
                 const btn = document.createElement("button");
@@ -1577,8 +1615,25 @@ function renderModeIndicesList(particleDataSource) {
              return;
         }
 
+        // Sort particle names alphabetically, but keep CNG Predictions at the end
+        const particleNames = Object.keys(particleDataSource);
+        particleNames.sort((a, b) => {
+            const isCngA = a.startsWith('CNG Prediction');
+            const isCngB = b.startsWith('CNG Prediction');
 
-        Object.keys(particleDataSource).forEach(pName => {
+            if (isCngA && !isCngB) return 1; // CNG Prediction comes after others
+            if (!isCngA && isCngB) return -1; // Others come before CNG Prediction
+            if (isCngA && isCngB) {
+                // Sort CNG Predictions by number
+                const numA = parseInt(a.replace('CNG Prediction ', ''), 10);
+                const numB = parseInt(b.replace('CNG Prediction ', ''), 10);
+                return numA - numB;
+            }
+            return a.localeCompare(b); // Alphabetical sort for others
+        });
+
+
+        particleNames.forEach(pName => {
              try {
                 console.log(`renderModeIndicesList: Adding ${pName} to the list.`);
                 const p = particleDataSource[pName];
