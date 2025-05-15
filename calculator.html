@@ -347,24 +347,24 @@ const compositeParticles = ['Proton', 'Neutron'];
 // Particle data including fundamental particles
 // Added expectedWindingNumber, expectedCalculatedSpin, expectedCalculatedCharge
 const particleData = {
-    'Electron': { n: new Decimal("1.116146374259776000504792200600740088568081211715959874293260467558912066286342598811550851149432149E+37"), massMeV: new Decimal("0.5109989461"), massKg: new Decimal("9.1093837015e-31"), standardModelSpin: 0.5, expectedWindingNumber: 1, expectedCalculatedSpin: 0.5, expectedCalculatedCharge: 1, chargeNote: "Matches expected winding number magnitude." }, // Using more precise CODATA 2018 values
-    'Muon': { n: new Decimal("2.592697864681657296450146244390652422592537772891046634886736363692579682058059087602050186683604189E+44"), massMeV: new Decimal("105.6584135"), massKg: new Decimal("1.883531594e-28"), standardModelSpin: 0.5, expectedWindingNumber: 1, expectedCalculatedSpin: 0.5, expectedCalculatedCharge: 1, chargeNote: "Matches expected winding number magnitude." }, // Using more precise CODATA 2018 values
-    'Tau': { n: new Decimal("2.095680986337253170258875675748172910666647047613700720984627636052801619803503286417059292660495776E+48"), massMeV: new Decimal("1776.86"), massKg: new Decimal("3.1675406591712e-27"), standardModelSpin: 0.5, expectedWindingNumber: 1, expectedCalculatedSpin: 0.5, expectedCalculatedCharge: 1, chargeNote: "Matches expected winding number magnitude." },
-    'Up Quark': { n: new Decimal("1.088836195890027612641435350014546608150713460429511408040403495603282986892407218405437160237667553E+39"), massMeV: new Decimal("2.16"), massKg: new Decimal("3.8505497472e-30"), standardModelSpin: 0.5, expectedWindingNumber: 1, expectedCalculatedSpin: 0.5, expectedCalculatedCharge: 1, chargeNote: "Note: Fractional charge requires composite structure analysis." },
-    'Down Quark': { n: new Decimal("1.264009938464596673844966914217987937065316705487175044408268624382571444972162533651758797313978983E+40"), massMeV: new Decimal("4.67"), massKg: new Decimal("8.3250311664e-30"), standardModelSpin: 0.5, expectedWindingNumber: 1, expectedCalculatedSpin: 0.5, expectedCalculatedCharge: 1, chargeNote: "Note: Fractional charge requires composite structure analysis." },
-    'Strange Quark': { n: new Decimal("1.726633093608591886026315041941475948780201682689921345272257534636237409991027301458637758034128428E+44"), massMeV: new Decimal("93.0"), massKg: new Decimal("1.65787558560e-28"), standardModelSpin: 0.5, expectedWindingNumber: 1, expectedCalculatedSpin: 0.5, expectedCalculatedCharge: 1, chargeNote: "Note: Fractional charge requires composite structure analysis." },
-    'Charm Quark': { n: new Decimal("7.270450020494929955740010279766893379502352479682678330461466664704761619803503286417059292660495776E+47"), massMeV: new Decimal("1275.0"), massKg: new Decimal("2.272893948000e-27"), standardModelSpin: 0.5, expectedWindingNumber: 1, expectedCalculatedSpin: 0.5, expectedCalculatedCharge: 1, chargeNote: "Note: Fractional charge requires composite structure analysis." },
-    'Bottom Quark': { n: new Decimal("3.21096191571610331850757003649713130046128609586401166643683559161870481286095864011666436835591618704812796308377279745152580586885E+49"), massMeV: new Decimal("4180.0"), massKg: new Decimal("7.451526825600e-27"), standardModelSpin: 0.5, expectedWindingNumber: 1, expectedCalculatedSpin: 0.5, expectedCalculatedCharge: 1, chargeNote: "Note: Fractional charge requires composite structure analysis." },
-    'Top Quark': { n: new Decimal("4.651419918945756274111528049292917059116238893390426300227887923322275464970993060385669332631062020E+54"), massMeV: new Decimal("172760.0"), massKg: new Decimal("3.07972673299200e-25"), standardModelSpin: 0.5, expectedWindingNumber: 1, expectedCalculatedSpin: 0.5, expectedCalculatedCharge: 1, chargeNote: "Note: Fractional charge requires composite structure analysis." },
-    'Electron Neutrino': { n: new Decimal("4.785985134579887317477263205775043550151598196481330037114055446129654035793133898715562622692070030E+15"), massMeV: new Decimal("8.3e-8"), massKg: new Decimal("1.4796093936e-37"), standardModelSpin: 0.5, expectedWindingNumber: 1, expectedCalculatedSpin: 0.5, expectedCalculatedCharge: 1, chargeNote: "Matches expected winding number magnitude." },
-    'Muon Neutrino': { n: new Decimal("1.09627229241803857841799856755555293953541797788583513878935656016903791909266599896029373114823482E+26"), massMeV: new Decimal("0.00017"), massKg: new Decimal("3.030525264e-34"), standardModelSpin: 0.5, expectedWindingNumber: 1, expectedCalculatedSpin: 0.5, expectedCalculatedCharge: 1, chargeNote: "Matches expected winding number magnitude." },
-    'Tau Neutrino': { n: new Decimal("4.265362646684764673113288026757181623709717578980016381397855225624154285667626703797760605707288949E+31"), massMeV: new Decimal("0.01"), massKg: new Decimal("1.78266192e-32"), standardModelSpin: 0.5, expectedWindingNumber: 1, expectedCalculatedSpin: 0.5, expectedCalculatedCharge: 1, chargeNote: "Matches expected winding number magnitude." },
-    'Photon': { n: new Decimal("0"), massMeV: new Decimal("0"), massKg: new Decimal("0"), standardModelSpin: 1, expectedWindingNumber: 2, expectedCalculatedSpin: 1, expectedCalculatedCharge: 2, chargeNote: "Matches expected winding number magnitude." }, // Assuming winding 2 for spin 1
-    'Gluon': { n: new Decimal("0"), massMeV: new Decimal("0"), massKg: new Decimal("0"), standardModelSpin: 1, expectedWindingNumber: 2, expectedCalculatedSpin: 1, expectedCalculatedCharge: 2, chargeNote: "Matches expected winding number magnitude." }, // Assuming winding 2 for spin 1
-    'Graviton': { n: new Decimal("0"), massMeV: new Decimal("0"), massKg: new Decimal("0"), standardModelSpin: 2, expectedWindingNumber: 4, expectedCalculatedSpin: 2, expectedCalculatedCharge: 4, chargeNote: "Matches expected winding number magnitude." }, // Assuming winding 4 for spin 2
-    'W Boson': { n: new Decimal("4.036085307766214873433443189812547753999403904296589500223267049268569767308755430179131598933931338E+53"), massMeV: new Decimal("80379.0"), massKg: new Decimal("1.43288582467680e-25"), standardModelSpin: 1, expectedWindingNumber: 2, expectedCalculatedSpin: 1, expectedCalculatedCharge: 2, chargeNote: "Matches expected winding number magnitude." }, // Assuming winding 2 for spin 1
-    'Z Boson': { n: new Decimal("6.039398982388116321671579194641872927161651630537805218977885250419202729193657964270366E+53"), massMeV: new Decimal("91187.6"), massKg: new Decimal("1.62556662096192e-25"), standardModelSpin: 1, expectedWindingNumber: 2, expectedCalculatedSpin: 1, expectedCalculatedCharge: 2, chargeNote: "Matches expected winding number magnitude." }, // Assuming winding 2 for spin 1
-    'Higgs Boson': { n: new Decimal("1.658406012128395459983844710359379460541422054894899713401688352608020961902278624762480085545597019E+54"), massMeV: new Decimal("125100.0"), massKg: new Decimal("2.23011006192000e-25"), standardModelSpin: 0, expectedWindingNumber: 0, expectedCalculatedSpin: 0, expectedCalculatedCharge: 0, chargeNote: "Matches expected winding number magnitude." }, // Assuming winding 0 for spin 0
+    'Electron': { n: new Decimal("1.116146374259776000504792200600740088568081211715959874293260467558912066286342598811550851149432149E+37"), massMeV: new Decimal("0.5109989461"), massKg: new Decimal("9.1093837015e-31"), standardModelSpin: new Decimal(0.5), expectedWindingNumber: new Decimal(1), expectedCalculatedSpin: new Decimal(0.5), expectedCalculatedCharge: new Decimal(1), chargeNote: "Matches expected winding number magnitude." }, // Using more precise CODATA 2018 values
+    'Muon': { n: new Decimal("2.592697864681657296450146244390652422592537772891046634886736363692579682058059087602050186683604189E+44"), massMeV: new Decimal("105.6584135"), massKg: new Decimal("1.883531594e-28"), standardModelSpin: new Decimal(0.5), expectedWindingNumber: new Decimal(1), expectedCalculatedSpin: new Decimal(0.5), expectedCalculatedCharge: new Decimal(1), chargeNote: "Matches expected winding number magnitude." }, // Using more precise CODATA 2018 values
+    'Tau': { n: new Decimal("2.095680986337253170258875675748172910666647047613700720984627636052801619803503286417059292660495776E+48"), massMeV: new Decimal("1776.86"), massKg: new Decimal("3.1675406591712e-27"), standardModelSpin: new Decimal(0.5), expectedWindingNumber: new Decimal(1), expectedCalculatedSpin: new Decimal(0.5), expectedCalculatedCharge: new Decimal(1), chargeNote: "Matches expected winding number magnitude." },
+    'Up Quark': { n: new Decimal("1.088836195890027612641435350014546608150713460429511408040403495603282986892407218405437160237667553E+39"), massMeV: new Decimal("2.16"), massKg: new Decimal("3.8505497472e-30"), standardModelSpin: new Decimal(0.5), expectedWindingNumber: new Decimal(1), expectedCalculatedSpin: new Decimal(0.5), expectedCalculatedCharge: new Decimal(1), chargeNote: "Note: Predicted charge from winding is +1. Effective fractional charge in composites arises from sub-mode configuration." },
+    'Down Quark': { n: new Decimal("1.264009938464596673844966914217987937065316705487175044408268624382571444972162533651758797313978983E+40"), massMeV: new Decimal("4.67"), massKg: new Decimal("8.3250311664e-30"), standardModelSpin: new Decimal(0.5), expectedWindingNumber: new Decimal(1), expectedCalculatedSpin: new Decimal(0.5), expectedCalculatedCharge: new Decimal(1), chargeNote: "Note: Predicted charge from winding is +1. Effective fractional charge in composites arises from sub-mode configuration." },
+    'Strange Quark': { n: new Decimal("1.726633093608591886026315041941475948780201682689921345272257534636237409991027301458637758034128428E+44"), massMeV: new Decimal("93.0"), massKg: new Decimal("1.65787558560e-28"), standardModelSpin: new Decimal(0.5), expectedWindingNumber: new Decimal(1), expectedCalculatedSpin: new Decimal(0.5), expectedCalculatedCharge: new Decimal(1), chargeNote: "Note: Predicted charge from winding is +1. Effective fractional charge in composites arises from sub-mode configuration." },
+    'Charm Quark': { n: new Decimal("7.270450020494929955740010279766893379502352479682678330461466664704761619803503286417059292660495776E+47"), massMeV: new Decimal("1275.0"), massKg: new Decimal("2.272893948000e-27"), standardModelSpin: new Decimal(0.5), expectedWindingNumber: new Decimal(1), expectedCalculatedSpin: new Decimal(0.5), expectedCalculatedCharge: new Decimal(1), chargeNote: "Note: Predicted charge from winding is +1. Effective fractional charge in composites arises from sub-mode configuration." },
+    'Bottom Quark': { n: new Decimal("3.21096191571610331850757003649713130046128609586401166643683559161870481286095864011666436835591618704812796308377279745152580586885E+49"), massMeV: new Decimal("4180.0"), massKg: new Decimal("7.451526825600e-27"), standardModelSpin: new Decimal(0.5), expectedWindingNumber: new Decimal(1), expectedCalculatedSpin: new Decimal(0.5), expectedCalculatedCharge: new Decimal(1), chargeNote: "Note: Predicted charge from winding is +1. Effective fractional charge in composites arises from sub-mode configuration." },
+    'Top Quark': { n: new Decimal("4.651419918945756274111528049292917059116238893390426300227887923322275464970993060385669332631062020E+54"), massMeV: new Decimal("172760.0"), massKg: new Decimal("3.07972673299200e-25"), standardModelSpin: new Decimal(0.5), expectedWindingNumber: new Decimal(1), expectedCalculatedSpin: new Decimal(0.5), expectedCalculatedCharge: new Decimal(1), chargeNote: "Note: Predicted charge from winding is +1. Effective fractional charge in composites arises from sub-mode configuration." },
+    'Electron Neutrino': { n: new Decimal("4.785985134579887317477263205775043550151598196481330037114055446129654035793133898715562622692070030E+15"), massMeV: new Decimal("8.3e-8"), massKg: new Decimal("1.4796093936e-37"), standardModelSpin: new Decimal(0.5), expectedWindingNumber: new Decimal(1), expectedCalculatedSpin: new Decimal(0.5), expectedCalculatedCharge: new Decimal(1), chargeNote: "Matches expected winding number magnitude." },
+    'Muon Neutrino': { n: new Decimal("1.09627229241803857841799856755555293953541797788583513878935656016903791909266599896029373114823482E+26"), massMeV: new Decimal("0.00017"), massKg: new Decimal("3.030525264e-34"), standardModelSpin: new Decimal(0.5), expectedWindingNumber: new Decimal(1), expectedCalculatedSpin: new Decimal(0.5), expectedCalculatedCharge: new Decimal(1), chargeNote: "Matches expected winding number magnitude." },
+    'Tau Neutrino': { n: new Decimal("4.265362646684764673113288026757181623709717578980016381397855225624154285667626703797760605707288949E+31"), massMeV: new Decimal("0.01"), massKg: new Decimal("1.78266192e-32"), standardModelSpin: new Decimal(0.5), expectedWindingNumber: new Decimal(1), expectedCalculatedSpin: new Decimal(0.5), expectedCalculatedCharge: new Decimal(1), chargeNote: "Matches expected winding number magnitude." },
+    'Photon': { n: new Decimal("0"), massMeV: new Decimal("0"), massKg: new Decimal("0"), standardModelSpin: new Decimal(1), expectedWindingNumber: new Decimal(2), expectedCalculatedSpin: new Decimal(1), expectedCalculatedCharge: new Decimal(2), chargeNote: "Matches expected winding number magnitude." }, // Assuming winding 2 for spin 1
+    'Gluon': { n: new Decimal("0"), massMeV: new Decimal("0"), massKg: new Decimal("0"), standardModelSpin: new Decimal(1), expectedWindingNumber: new Decimal(2), expectedCalculatedSpin: new Decimal(1), expectedCalculatedCharge: new Decimal(2), chargeNote: "Matches expected winding number magnitude." }, // Assuming winding 2 for spin 1
+    'Graviton': { n: new Decimal("0"), massMeV: new Decimal("0"), massKg: new Decimal("0"), standardModelSpin: new Decimal(2), expectedWindingNumber: new Decimal(4), expectedCalculatedSpin: new Decimal(2), expectedCalculatedCharge: new Decimal(4), chargeNote: "Matches expected winding number magnitude." }, // Assuming winding 4 for spin 2
+    'W Boson': { n: new Decimal("4.036085307766214873433443189812547753999403904296589500223267049268569767308755430179131598933931338E+53"), massMeV: new Decimal("80379.0"), massKg: new Decimal("1.43288582467680e-25"), standardModelSpin: new Decimal(1), expectedWindingNumber: new Decimal(2), expectedCalculatedSpin: new Decimal(1), expectedCalculatedCharge: new Decimal(2), chargeNote: "Matches expected winding number magnitude." }, // Assuming winding 2 for spin 1
+    'Z Boson': { n: new Decimal("6.039398982388116321671579194641872927161651630537805218977885250419202729193657964270366E+53"), massMeV: new Decimal("91187.6"), massKg: new Decimal("1.62556662096192e-25"), standardModelSpin: new Decimal(1), expectedWindingNumber: new Decimal(2), expectedCalculatedSpin: new Decimal(1), expectedCalculatedCharge: new Decimal(2), chargeNote: "Matches expected winding number magnitude." }, // Assuming winding 2 for spin 1
+    'Higgs Boson': { n: new Decimal("1.658406012128395459983844710359379460541422054894899713401688352608020961902278624762480085545597019E+54"), massMeV: new Decimal("125100.0"), massKg: new Decimal("2.23011006192000e-25"), standardModelSpin: new Decimal(0), expectedWindingNumber: new Decimal(0), expectedCalculatedSpin: new Decimal(0), expectedCalculatedCharge: new Decimal(0), chargeNote: "Matches expected winding number magnitude." }, // Assuming winding 0 for spin 0
     // Added CNG Prediction 1 data with calculated properties
     'CNG Prediction 1': {
         n: new Decimal("3.1622776601683793319988935444327185337195551393252168268575048527484605778802671417582059499319701460e+35"),
@@ -378,8 +378,8 @@ const particleData = {
         shellLayer: new Decimal("7.697726786199940495583006989867241706347387847985499582207369732598587565700199645857315003687260114669810"),
         standardModelSpin: 'N/A', // No SM equivalent
         expectedWindingNumber: null, // Winding number from eigenmode solution pending
-        expectedCalculatedSpin: 'N/A',
-        expectedCalculatedCharge: 'N/A',
+        expectedCalculatedSpin: null, // Winding number from eigenmode solution pending
+        expectedCalculatedCharge: null, // Winding number from eigenmode solution pending
         // Spin/Charge will now be calculated by getParticleData using estimateWindingNumber
         calculatedSpin: 'Calculation Pending', // Default, overwritten in getParticleData
         calculatedCharge: 'Calculation Pending', // Default, overwritten in getParticleData
@@ -398,8 +398,8 @@ const particleData = {
         shellLayer: new Decimal("8.089878920156309282843525390337534370620205890860272435625158712912229773324944509218581718245563801002425"),
         standardModelSpin: 'N/A', // No SM equivalent
         expectedWindingNumber: null, // Winding number from eigenmode solution pending
-        expectedCalculatedSpin: 'N/A',
-        expectedCalculatedCharge: 'N/A',
+        expectedCalculatedSpin: null, // Winding number from eigenmode solution pending
+        expectedCalculatedCharge: null, // Winding number from eigenmode solution pending
         // Spin/Charge will now be calculated by getParticleData using estimateWindingNumber
         calculatedSpin: 'Calculation Pending', // Default, overwritten in getParticleData
         calculatedCharge: 'Calculation Pending', // Default, overwritten in getParticleData
@@ -417,10 +417,10 @@ const compositeParticleData = {
          n: new Decimal("1.774015855819727177401585581972717740158558197271774015855819727177401585581972717740158558197271774E+40"),
          massMeV: new Decimal("938.27208816"), // Using the precise PDG value for comparison
          massKg: new Decimal("1.67262192369e-27"), // Using the precise CODATA value for comparison
-         standardModelSpin: 0.5,
-         expectedWindingNumber: 1, // Expected total winding for Proton (uud)
-         expectedCalculatedSpin: 0.5, // Expected spin from winding
-         expectedCalculatedCharge: 1, // Expected charge from winding (simplified)
+         standardModelSpin: new Decimal(0.5),
+         expectedWindingNumber: new Decimal(1), // Expected total winding for Proton (uud)
+         expectedCalculatedSpin: new Decimal(0.5), // Expected spin from winding
+         expectedCalculatedCharge: new Decimal(1), // Expected charge from winding (simplified)
          chargeNote: "Composite - Winding/Charge from calculation.",
          // Explicitly providing the sub-mode indices for Proton (u, u, d) for composite mass calculation
          // Using the exact unrounded quark indices from project files (~8.2e45 range)
@@ -437,10 +437,10 @@ const compositeParticleData = {
          n: new Decimal("1.775351882647007717753518826470077177535188264700771775351882647007717753518826470077177535188264700E+40"),
          massMeV: new Decimal("939.56542052"), // Using the precise PDG value for comparison
          massKg: new Decimal("1.67492749804e-27"), // Using the precise CODATA value for comparison
-         standardModelSpin: 0.5,
-         expectedWindingNumber: 1, // Expected total winding for Neutron (udd)
-         expectedCalculatedSpin: 0.5, // Expected spin from winding
-         expectedCalculatedCharge: 1, // Expected charge from winding (simplified)
+         standardModelSpin: new Decimal(0.5),
+         expectedWindingNumber: new Decimal(1), // Expected total winding for Neutron (udd)
+         expectedCalculatedSpin: new Decimal(0.5), // Expected spin from winding
+         expectedCalculatedCharge: new Decimal(0), // Corrected expected charge for Neutron
          chargeNote: "Composite - Winding/Charge from calculation.",
          // Explicitly providing the sub-mode indices for Neutron (u, d, d) for composite mass calculation
          // Using the exact unrounded quark indices from project files (~8.2e45 range)
@@ -981,8 +981,8 @@ function getParticleData(input, particleDataSource) { // Accept data source
         measuredMassKg = p.massKg;
         standardModelSpin = p.standardModelSpin; // Use standardModelSpin from data
         expectedWindingNumber = p.expectedWindingNumber;
-        expectedCalculatedSpin = p.expectedCalculatedSpin;
-        expectedCalculatedCharge = p.expectedCalculatedCharge;
+        expectedCalculatedSpin = p.expectedCalculatedSpin; // Now Decimal
+        expectedCalculatedCharge = p.expectedCalculatedCharge; // Now Decimal
         chargeNote = p.chargeNote;
 
          // For CNG Predictions, use the pre-calculated values if available
@@ -1014,8 +1014,8 @@ function getParticleData(input, particleDataSource) { // Accept data source
         measuredMassKg = new Decimal(NaN);
         standardModelSpin = 'N/A';
         expectedWindingNumber = null; // Cannot determine for arbitrary N without eigenmode solution
-        expectedCalculatedSpin = 'N/A';
-        expectedCalculatedCharge = 'N/A';
+        expectedCalculatedSpin = null; // Cannot determine for arbitrary N without eigenmode solution
+        expectedCalculatedCharge = null; // Cannot determine for arbitrary N without eigenmode solution
         chargeNote = "Winding/Charge from eigenmode solution pending.";
 
         // Calculate properties dynamically for custom mode
@@ -1030,8 +1030,8 @@ function getParticleData(input, particleDataSource) { // Accept data source
 
 
     let deltaIJK_calculated = new Decimal(NaN);
-    let calculatedSpin = 'Calculation Pending'; // Default to pending
-    let calculatedCharge = 'Calculation Pending'; // Default to pending
+    let calculatedSpin = new Decimal(NaN); // Initialize as Decimal NaN
+    let calculatedCharge = new Decimal(NaN); // Initialize as Decimal NaN
 
 
     if (isComposite && subModes && subModes.length === 3) {
@@ -1048,14 +1048,14 @@ function getParticleData(input, particleDataSource) { // Accept data source
             predictedKg = predictedMeV.isFinite() ? predictedMeV.times(mevToKg) : new Decimal(NaN);
 
             // For composite particles, calculate total winding from expected winding number if provided
-            if (expectedWindingNumber !== null) {
+            if (expectedWindingNumber !== null && expectedWindingNumber instanceof Decimal) {
                  const simulatedPhase = simulateEigenmodePhase(expectedWindingNumber);
-                 calculatedSpin = computeSpinFromPhase(simulatedPhase);
-                 calculatedCharge = computeChargeFromPhase(simulatedPhase);
+                 calculatedSpin = computeSpinFromPhase(simulatedPhase); // calculatedSpin is Decimal
+                 calculatedCharge = computeChargeFromPhase(simulatedPhase); // calculatedCharge is Decimal
                  chargeNote = "Composite - Winding/Charge from calculation.";
             } else {
-                 calculatedSpin = 'Calculation Pending';
-                 calculatedCharge = 'Calculation Pending';
+                 calculatedSpin = new Decimal(NaN); // Set to NaN if winding not available/valid
+                 calculatedCharge = new Decimal(NaN); // Set to NaN if winding not available/valid
                  chargeNote = "Composite - Winding/Charge from eigenmode solution pending.";
             }
 
@@ -1072,8 +1072,8 @@ function getParticleData(input, particleDataSource) { // Accept data source
             predictedMeV = new Decimal(NaN);
             predictedKg = new Decimal(NaN);
             deltaIJK_calculated = new Decimal(NaN);
-            calculatedSpin = 'Error';
-            calculatedCharge = 'Error';
+            calculatedSpin = new Decimal(NaN); // Set to NaN on error
+            calculatedCharge = new Decimal(NaN); // Set to NaN on error
             chargeNote = "Error during composite calculation.";
              curvature = curvatureKappa(n);
              redshift = calculateRedshift(curvature);
@@ -1088,44 +1088,55 @@ function getParticleData(input, particleDataSource) { // Accept data source
 
          if (!W_n.isNaN() && W_n.isFinite()) { // Only proceed if winding estimation is valid
              const phaseList = simulateEigenmodePhase(W_n, 1000);
-             calculatedSpin = computeSpinFromPhase(phaseList);
-             calculatedCharge = computeChargeFromPhase(phaseList);
+             calculatedSpin = computeSpinFromPhase(phaseList); // calculatedSpin is Decimal
+             calculatedCharge = computeChargeFromPhase(phaseList); // calculatedCharge is Decimal
              chargeNote = "Winding/Charge estimated from eigenmode phase simulation (parity-based heuristic).";
 
               // Check if estimated spin matches expected fermion/boson rule based on n parity
               const nIntFloor = n.floor();
               const nParity = nIntFloor.mod(2).toNumber();
-              const estimatedSpinValue = calculatedSpin instanceof Decimal ? calculatedSpin.toNumber() : NaN;
+              const estimatedSpinValueNum = calculatedSpin.toNumber(); // Get number for comparison
 
-              if (!isNaN(estimatedSpinValue)) {
-                  if (nParity === 1 && estimatedSpinValue !== 0.5) {
-                      chargeNote += ' <span class="warning">Warning: Estimated spin (fermion) does not match expected 0.5!</span>';
-                  } else if (nParity === 0 && estimatedSpinValue !== 1 && estimatedSpinValue !== 0 && estimatedSpinValue !== 2) { // Allow 0, 1, 2 for bosons
-                       chargeNote += ' <span class="warning">Warning: Estimated spin (boson) does not match expected integer spin (0, 1, or 2)!</span>';
+              const TOLERANCE = 1e-9; // Numeric tolerance for comparison
+
+              if (!isNaN(estimatedSpinValueNum)) {
+                  if (nParity === 1) { // Expected fermion (spin 0.5)
+                      if (Math.abs(estimatedSpinValueNum - 0.5) > TOLERANCE) {
+                          chargeNote += ' <span class="warning">Warning: Estimated spin (fermion) does not match expected 0.5!</span>';
+                      }
+                  } else if (nParity === 0) { // Expected boson (spin 0, 1, or 2)
+                       const allowedBosonSpins = [0, 1, 2];
+                       if (!allowedBosonSpins.some(s => Math.abs(s - estimatedSpinValueNum) < TOLERANCE)) {
+                            chargeNote += ' <span class="warning">Warning: Estimated spin (boson) does not match expected integer spin (0, 1, or 2)!</span>';
+                       }
                   }
               }
 
          } else {
-             calculatedSpin = 'Estimation Error';
-             calculatedCharge = 'Estimation Error';
+             calculatedSpin = new Decimal(NaN); // Set to NaN on estimation error
+             calculatedCharge = new Decimal(NaN); // Set to NaN on estimation error
              chargeNote = "Winding/Charge estimation failed.";
          }
 
     } else {
         // For Fundamental particles (non-composite, non-CNG Prediction), calculate winding from expected winding number
         // Note: Winding numbers for n=0 particles (Photon, Gluon, Graviton) are hardcoded in particleData.
-        if (expectedWindingNumber !== null) {
+        if (expectedWindingNumber !== null && expectedWindingNumber instanceof Decimal) {
              const simulatedPhase = simulateEigenmodePhase(expectedWindingNumber);
-             calculatedSpin = computeSpinFromPhase(simulatedPhase);
-             calculatedCharge = computeChargeFromPhase(simulatedPhase);
+             calculatedSpin = computeSpinFromPhase(simulatedPhase); // calculatedSpin is Decimal
+             calculatedCharge = computeChargeFromPhase(simulatedPhase); // calculatedCharge is Decimal
              chargeNote = "Winding/Charge from calculation.";
         } else {
             // Should not happen for fundamental particles with defined SM spin
-             calculatedSpin = 'Error (Missing Winding)';
-             calculatedCharge = 'Error (Missing Winding)';
+             calculatedSpin = new Decimal(NaN); // Set to NaN on error
+             calculatedCharge = new Decimal(NaN); // Set to NaN on error
              chargeNote = "Error: Missing expected winding number.";
         }
     }
+
+    // Ensure calculatedSpin and calculatedCharge are Decimal instances before returning
+    const finalCalculatedSpin = calculatedSpin instanceof Decimal ? calculatedSpin : new Decimal(NaN);
+    const finalCalculatedCharge = calculatedCharge instanceof Decimal ? calculatedCharge : new Decimal(NaN);
 
 
     const predictedMeVDisplay = predictedMeV.isNaN() || !predictedMeV.isFinite() ? 'N/A' : predictedMeV.toExponential(10);
@@ -1137,9 +1148,9 @@ function getParticleData(input, particleDataSource) { // Accept data source
     const shellLayerDisplay = shellLayer.isNaN() || !shellLayer.isFinite() ? 'N/A' : shellLayer.toFixed(6);
     const deltaIJKCalculatedDisplay = deltaIJK_calculated.isNaN() || !deltaIJK_calculated.isFinite() ? 'N/A' : deltaIJK_calculated.toFixed(10);
 
-    // Format calculated spin and charge if they are Decimal objects
-    const formattedCalculatedSpin = calculatedSpin instanceof Decimal && (calculatedSpin.isNaN() || !calculatedSpin.isFinite()) ? 'N/A' : (calculatedSpin instanceof Decimal ? calculatedSpin.toFixed(1) : calculatedSpin); // Format spin to 1 decimal place or show string
-    const formattedCalculatedCharge = calculatedCharge instanceof Decimal && (calculatedCharge.isNaN() || !calculatedCharge.isFinite()) ? 'N/A' : (calculatedCharge instanceof Decimal ? calculatedCharge.toFixed(0) : calculatedCharge); // Format charge to 0 decimal places or show string
+    // Format calculated spin and charge (now guaranteed to be Decimal or NaN)
+    const formattedCalculatedSpin = finalCalculatedSpin.isNaN() ? 'N/A' : finalCalculatedSpin.toFixed(1); // Format spin to 1 decimal place
+    const formattedCalculatedCharge = finalCalculatedCharge.isNaN() ? 'N/A' : finalCalculatedCharge.toFixed(0); // Format charge to 0 decimal places
 
 
      let shellLayerFormatted = shellLayerDisplay;
@@ -1165,10 +1176,10 @@ function getParticleData(input, particleDataSource) { // Accept data source
         subModeNames: subModeNames,
         measuredMassMeV: measuredMassMeV,
         measuredMassKg: measuredMassKg,
-        standardModelSpin: standardModelSpin,
-        expectedWindingNumber: expectedWindingNumber,
-        expectedCalculatedSpin: expectedCalculatedSpin,
-        expectedCalculatedCharge: expectedCalculatedCharge,
+        standardModelSpin: standardModelSpin, // Keep as Decimal
+        expectedWindingNumber: expectedWindingNumber, // Keep as Decimal
+        expectedCalculatedSpin: expectedCalculatedSpin, // Keep as Decimal
+        expectedCalculatedCharge: expectedCalculatedCharge, // Keep as Decimal
         chargeNote: chargeNote,
         predictedMeV: predictedMeVDisplay,
         predictedKg: predictedKgDisplay,
@@ -1178,10 +1189,13 @@ function getParticleData(input, particleDataSource) { // Accept data source
         entropy: entropyDisplay,
         shellLayer: shellLayerFormatted,
         shellMatchNote: shellMatchNote,
-        calculatedSpin: formattedCalculatedSpin, // Use formatted calculated spin
-        calculatedCharge: formattedCalculatedCharge, // Use formatted calculated charge
+        calculatedSpin: formattedCalculatedSpin, // Use formatted calculated spin string
+        calculatedCharge: formattedCalculatedCharge, // Use formatted calculated charge string
         isComposite: isComposite,
-        deltaIJKCalculated: deltaIJKCalculatedDisplay
+        deltaIJKCalculated: deltaIJKCalculatedDisplay,
+        // Also return the raw Decimal values for internal comparison in showParticle
+        rawCalculatedSpin: finalCalculatedSpin,
+        rawCalculatedCharge: finalCalculatedCharge
     };
 }
 
@@ -1198,12 +1212,12 @@ function showParticle(name, particleDataSource) { // Accept data source
 
         const displayN = "[See list on right]";
 
-        // Check if calculated spin matches expected (only if calculatedSpin is a Decimal)
-        const spinMatch = data.calculatedSpin instanceof Decimal && data.expectedCalculatedSpin instanceof Decimal && data.calculatedSpin.equals(data.expectedCalculatedSpin);
+        // Check if calculated spin matches expected using Decimal comparison
+        const spinMatch = data.rawCalculatedSpin instanceof Decimal && data.expectedCalculatedSpin instanceof Decimal && data.rawCalculatedSpin.equals(data.expectedCalculatedSpin);
         const calculatedSpinHTML = spinMatch ? `<span class="highlight-green">${data.calculatedSpin}</span>` : data.calculatedSpin;
 
-        // Check if calculated charge matches expected (only if calculatedCharge is a Decimal)
-        const chargeMatch = data.calculatedCharge instanceof Decimal && data.expectedCalculatedCharge instanceof Decimal && data.calculatedCharge.equals(data.expectedCalculatedCharge);
+        // Check if calculated charge matches expected using Decimal comparison
+        const chargeMatch = data.rawCalculatedCharge instanceof Decimal && data.expectedCalculatedCharge instanceof Decimal && data.rawCalculatedCharge.equals(data.expectedCalculatedCharge);
         const calculatedChargeHTML = chargeMatch ? `<span class="highlight-green">${data.calculatedCharge}</span>` : data.calculatedCharge;
 
 
@@ -1226,8 +1240,8 @@ function showParticle(name, particleDataSource) { // Accept data source
         const decoherenceTimeError = data.decoherenceTime === 'N/A' && !isNZero && typeof data.decoherenceTime !== 'string' ? `<span class="error-message"> (Error)</span>` : '';
         const entropyError = data.entropy === 'N/A' && !isNZero && typeof data.entropy !== 'string' ? `<span class="error-message"> (Error)</span>` : '';
         const shellLayerError = data.shellLayer === 'N/A' && !isNZero && typeof data.shellLayer !== 'string' ? `<span class="error-message"> (Error)</span>` : '';
-        const calculatedSpinError = data.calculatedSpin === 'N/A' || data.calculatedSpin === 'Error' || data.calculatedSpin === 'Estimation Error' ? `<span class="error-message"> (Error)</span>` : '';
-        const calculatedChargeError = data.calculatedCharge === 'N/A' || data.calculatedCharge === 'Error' || data.calculatedCharge === 'Estimation Error' ? `<span class="error-message"> (Error)</span>` : '';
+        const calculatedSpinError = data.calculatedSpin === 'N/A' ? `<span class="error-message"> (Calculation Error)</span>` : '';
+        const calculatedChargeError = data.calculatedCharge === 'N/A' ? `<span class="error-message"> (Calculation Error)</span>` : '';
         const deltaIJKCalculatedError = data.deltaIJKCalculated === 'N/A' && data.isComposite ? `<span class="error-message"> (Error)</span>` : '';
 
 
@@ -1241,7 +1255,7 @@ function showParticle(name, particleDataSource) { // Accept data source
             Quantum Decoherence Time (τ<sub>D</sub>) (fs): ${decoherenceTimeHTML}${decoherenceTimeError}<br>
             Entropy Contribution (S<sub>n</sub>) (J/K): ${entropyHTML}${entropyError}<br>
             Resonance Shell Layer k: ${shellLayerHTML}${shellLayerError}${data.shellMatchNote}<br>
-            Standard Model Spin: ${data.standardModelSpin}<br> Predicted Spin (CNG Winding): ${calculatedSpinHTML}${calculatedSpinError}<br>
+            Standard Model Spin: ${data.standardModelSpin instanceof Decimal ? data.standardModelSpin.toFixed(1) : data.standardModelSpin}<br> Predicted Spin (CNG Winding): ${calculatedSpinHTML}${calculatedSpinError}<br>
             Predicted Charge (CNG Winding): ${calculatedChargeHTML}${calculatedChargeError} <span class="text-sm text-[#c5c6c7]">(${data.chargeNote})</span><br>
         `;
 
@@ -1282,7 +1296,8 @@ function showParticle(name, particleDataSource) { // Accept data source
 
         const button = document.querySelector(`button[data-particle-name="${name}"]`);
         if (button) {
-             if (isAlignmentCorrect(data.predictedMeV, data.measuredMassMeV)) {
+             // Highlight button if mass alignment is correct (using MeV alignment as the primary check)
+             if (data.predictedMeV !== 'N/A' && !data.measuredMassMeV.isNaN() && data.measuredMassMeV.gt(0) && isAlignmentCorrect(data.predictedMeV, data.measuredMassMeV)) {
                  button.classList.add('highlight-green');
              } else {
                  button.classList.remove('highlight-green');
@@ -1335,8 +1350,8 @@ function showCngPrediction(name, particleDataSource) { // Accept data source
         const decoherenceTimeError = data.decoherenceTime === 'N/A' ? `<span class="error-message"> (Error)</span>` : '';
         const entropyError = data.entropy === 'N/A' ? `<span class="error-message"> (Error)</span>` : '';
         const shellLayerError = data.shellLayer === 'N/A' ? `<span class="error-message"> (Error)</span>` : '';
-        const calculatedSpinError = data.calculatedSpin === 'N/A' || data.calculatedSpin === 'Error' || data.calculatedSpin === 'Estimation Error' ? `<span class="error-message"> (Error)</span>` : '';
-        const calculatedChargeError = data.calculatedCharge === 'N/A' || data.calculatedCharge === 'Error' || data.calculatedCharge === 'Estimation Error' ? `<span class="error-message"> (Error)</span>` : '';
+        const calculatedSpinError = data.calculatedSpin === 'N/A' ? `<span class="error-message"> (Calculation Error)</span>` : '';
+        const calculatedChargeError = data.calculatedCharge === 'N/A' ? `<span class="error-message"> (Calculation Error)</span>` : '';
 
 
          let displayHTML = `
@@ -1380,8 +1395,8 @@ function showCngPrediction(name, particleDataSource) { // Accept data source
 // Function to handle custom mode index input (triggered by left button)
 function customN(particleDataSource) { // Accept data source
     try {
-        const nInput = prompt("Enter mode index n:");
-        if (nInput === null) return;
+        const nInput = prompt("Enter a positive mode index (n) to calculate its properties:");
+        if (nInput === null) return; // User cancelled
 
         let n;
         try {
@@ -1392,11 +1407,17 @@ function customN(particleDataSource) { // Accept data source
             return;
         }
 
-        if (!n.isFinite() || n.lt(0)) {
-            alert("Invalid input. Please enter a non-negative finite number.");
-            console.error("Invalid custom input: not finite or negative.", n);
+        if (!n.isFinite()) {
+            alert("Invalid input. Please enter a finite number.");
+            console.error("Invalid custom input: not finite.", n);
             return;
         }
+
+         if (n.lt(0)) {
+             alert("Invalid input. Please enter a non-negative number (n ≥ 0).");
+             console.error("Invalid custom input: negative.", n);
+             return;
+         }
 
         if (n.abs().gt(N_MAX_LIMIT)) {
              alert(`Input too large. Please enter a value less than or equal to ${N_MAX_LIMIT.toExponential()}.`);
@@ -1438,8 +1459,8 @@ function customN(particleDataSource) { // Accept data source
         const decoherenceTimeError = data.decoherenceTime === 'N/A' && !(isNZero && (data.decoherenceTime === '0.000000e+0' || data.decoherenceTime === 'N/A')) && typeof data.decoherenceTime !== 'string' ? `<span class="error-message"> (Error)</span>` : '';
         const entropyError = data.entropy === 'N/A' && !(isNZero && (data.entropy === '0.000000e+0' || data.entropy === 'N/A')) && typeof data.entropy !== 'string' ? `<span class="error-message"> (Error)</span>` : '';
         const shellLayerError = data.shellLayer === 'N/A' && !(isNZero && (data.shellLayer === '0' || data.shellLayer === 'N/A')) && typeof data.shellLayer !== 'string' ? `<span class="error-message"> (Error)</span>` : '';
-        const calculatedSpinError = data.calculatedSpin === 'N/A' || data.calculatedSpin === 'Error' || data.calculatedSpin === 'Estimation Error' ? `<span class="error-message"> (Error)</span>` : '';
-        const calculatedChargeError = data.calculatedCharge === 'N/A' || data.calculatedCharge === 'Error' || data.calculatedCharge === 'Estimation Error' ? `<span class="error-message"> (Error)</span>` : '';
+        const calculatedSpinError = data.calculatedSpin === 'N/A' ? `<span class="error-message"> (Calculation Error)</span>` : '';
+        const calculatedChargeError = data.calculatedCharge === 'N/A' ? `<span class="error-message"> (Calculation Error)</span>` : '';
 
 
         let displayHTML = `
